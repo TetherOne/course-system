@@ -1,3 +1,9 @@
+from django.http import HttpResponse
+from django.http import HttpRequest
+
 from django.shortcuts import render
 
-# Create your views here.
+
+
+def main_page(request: HttpRequest) -> HttpResponse:
+    return render(request, 'courseapp/main-page.html')
