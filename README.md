@@ -12,7 +12,7 @@
 
 # Архитектура бд
 
-![Image alt](https://github.com/TetherOne/course-system/raw/master/github-pages/img.png)
+![Image alt](https://github.com/TetherOne/course-system/raw/master/github-pages/img_1.png)
 
 
 
