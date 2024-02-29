@@ -2,6 +2,20 @@
 ![Django 3.0](https://img.shields.io/badge/Django-4.2.7-green.svg)
 
 
-## Архитектура бд
+
+# Описание проекта:
+
+
+    Система для ведения курсов.
+    ...
+
+
+# Архитектура бд
 
 ![Image alt](https://github.com/TetherOne/course-system/raw/master/github-pages/img.png)
+
+
+
+# Техническая информация:
+
+  - Django + DRF
