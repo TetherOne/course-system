@@ -16,7 +16,6 @@ class TeacherProfile(models.Model):
     )
 
 
-
 class Course(models.Model):
 
     id = models.AutoField(primary_key=True)
