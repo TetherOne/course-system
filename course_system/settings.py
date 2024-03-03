@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'courseapp.apps.CourseappConfig',
     'myauth.apps.MyauthConfig',
     'rest_framework',
-    'apiapp.apps.ApiappConfig',
 ]
 
 MIDDLEWARE = [
