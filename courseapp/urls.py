@@ -1,17 +1,26 @@
-from courseapp.views import main_page, CoursesViewSet, TeacherProfilesViewSet
+from courseapp.views import TeacherProfilesViewSet
+from courseapp.views import CoursesViewSet
 
-from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+
+from django.urls import include
+from django.urls import path
+
 
 app_name = 'courseapp'
 
 
 routers = DefaultRouter()
-routers.register('courses', CoursesViewSet,)
-routers.register('teacher-profiles', TeacherProfilesViewSet,)
+routers.register(
+    'courses',
+    CoursesViewSet,
+)
+routers.register(
+    'teacher-profiles',
+    TeacherProfilesViewSet,
+)
 
 
 urlpatterns = [
-    path('main/', main_page, name='main-page'),
     path('api/', include(routers.urls)),
 ]

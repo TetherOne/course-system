@@ -1,16 +1,10 @@
-from django.http import HttpResponse
-from django.http import HttpRequest
-
-from django.shortcuts import render
+from courseapp.serializers import TeacherProfileSerializer
+from courseapp.serializers import CoursesSerializer
 
 from rest_framework.viewsets import ModelViewSet
 
-from courseapp.models import Course, TeacherProfile
-from courseapp.serializers import CoursesSerializer, TeacherProfileSerializer
-
-
-def main_page(request: HttpRequest) -> HttpResponse:
-    return render(request, 'courseapp/main-page.html')
+from courseapp.models import TeacherProfile
+from courseapp.models import Course
 
 
 class CoursesViewSet(ModelViewSet):

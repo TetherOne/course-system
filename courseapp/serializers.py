@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from .models import Course, TeacherProfile
+from .models import TeacherProfile
+from .models import Course
 
 
 class CoursesSerializer(serializers.ModelSerializer):
