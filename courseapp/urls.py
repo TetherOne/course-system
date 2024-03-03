@@ -1,4 +1,4 @@
-from courseapp.views import TeacherProfilesViewSet
+from courseapp.views import TeacherProfilesViewSet, teacher_profiles
 from courseapp.views import CoursesViewSet
 
 from rest_framework.routers import DefaultRouter
@@ -23,4 +23,5 @@ routers.register(
 
 urlpatterns = [
     path('api/', include(routers.urls)),
+    path('platform/', teacher_profiles)
 ]

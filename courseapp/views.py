@@ -1,3 +1,5 @@
+from django.shortcuts import render
+
 from courseapp.serializers import TeacherProfileSerializer
 from courseapp.serializers import CoursesSerializer
 
@@ -17,3 +19,8 @@ class TeacherProfilesViewSet(ModelViewSet):
 
     queryset = TeacherProfile.objects.all()
     serializer_class = TeacherProfileSerializer
+
+
+def teacher_profiles(request):
+    return render(request, 'courseapp/teacher-profiles.html')
+
