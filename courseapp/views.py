@@ -8,10 +8,12 @@ from courseapp.models import Course
 
 
 class CoursesViewSet(ModelViewSet):
+
     queryset = Course.objects.all()
     serializer_class = CoursesSerializer
 
 
 class TeacherProfilesViewSet(ModelViewSet):
+
     queryset = TeacherProfile.objects.all()
     serializer_class = TeacherProfileSerializer
