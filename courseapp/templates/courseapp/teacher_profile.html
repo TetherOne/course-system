@@ -1,23 +1,26 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Преподаватель – {teacher}</title>
-    <link rel="stylesheet" href="/style.css">
-    <script type="module" src="/script.js"></script>
+    <link rel="stylesheet" href="{% static "style.css" %}">
 </head>
 <body>
     <div>
         <img src="{avatar}" alt="Аватар">
     </div>
     <div>
-        {surname}
-        {name}
-        {fatherName}
+        <div>{surname}</div>
+        <div>{name}</div>
+        <div>{fatherName}</div>
+        <div>{faculty}</div>
     </div>
     <div class="flex-column">
         {courses}
     </div>
+
+    <script type="module" src="{% static "get_teacher.js" %}"></script>
 </body>
 </html>
