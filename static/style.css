@@ -1,0 +1,46 @@
+:root {
+    --font: 'Segoe UI';
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font);
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: #323232;
+    padding: 1rem;
+}
+
+header * {
+    margin: 1rem;
+}
+
+header .label {
+    background-color: #FFF;
+    border-radius: .5em;
+    padding: 0.5em;
+}
+
+.courses {
+}
+
+.courses > div {
+    margin: 1rem;
+    background-color: #FFF;
+    border: 1em solid #c0c0c0;
+    padding: 1em;
+    border-radius: 0.7em;
+}

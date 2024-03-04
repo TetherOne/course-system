@@ -1,25 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.14/vue.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.js"></script>
+    <title>Изучаем Vue 3</title>
+    <meta charset="utf-8"/>
+    <script src="https://unpkg.com/vue"></script>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-
 {% verbatim %}
-<div class="container" id="teacher-profiles">
-    <div v-for="teacher_profile in teacherprofiles">
-
-        {{ teacher_profile.surname }}
-
+<div id="app" class="flex-column">
+    <div class="flex-row">
+        <div class="flex-column">
+            <button @click="loadTeacher">Преподаватель:</button>
+            <input id="teacherInput" type="text">
+        </div>
+        <div>
+            <button @click="loadCourses">Список курсов</button>
+        </div>
+    </div>
+    <div id="content" class="flex-column">
+        
     </div>
 </div>
 {% endverbatim %}
-
 <script src="/static/app.js"></script>
 </body>
 </html>
-
