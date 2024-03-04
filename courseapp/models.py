@@ -26,3 +26,14 @@ class Course(models.Model):
         null=True,
         related_name='courses',
     )
+
+
+class Video(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    # upload = models.FileField(upload_to="uploads/")  у каждого курса должна быть отдельная папка и т.д
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        related_name='videos',
+    )
