@@ -28,3 +28,5 @@ def teacher_profiles(request):
 def courses_list(request):
     return render(request, 'courseapp/courses-list.html')
 
+def teacher(request, id):
+    return render(request, 'courseapp/teacher.html')
