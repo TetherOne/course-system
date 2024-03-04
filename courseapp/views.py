@@ -24,3 +24,7 @@ class TeacherProfilesViewSet(ModelViewSet):
 def teacher_profiles(request):
     return render(request, 'courseapp/teacher-profiles.html')
 
+
+def courses_list(request):
+    return render(request, 'courseapp/courses-list.html')
+
