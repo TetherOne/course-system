@@ -6,11 +6,11 @@ import { Path } from '/static/js/path.js';
 Vue.createApp({
     data() {
         return {
-            surname: null,
-            name: null,
-            father_name: null,
-            faculty: null,
-            coursesList: document.createElement('div')
+            surname: 'surname',
+            name: 'name',
+            father_name: 'father_name',
+            faculty: 'faculty',
+            coursesList: []
         }
     },
     created() {
@@ -30,21 +30,13 @@ Vue.createApp({
             response => response.json()
         ).then(
             courses => {
-                this.coursesList.id = 'courses-list';
-
                 const N = courses.length;
 
                 for (let i = 0; i < N; i++) {
-                    if (courses[i].teacher_profile === i) {
-                        this.coursesList.innerHTML += `
-                            <div class="label">
-                                ${courses[i].description};
-                            </div>
-                        `;
+                    if (courses[i].teacher_profile == id) {
+                        this.coursesList.push(courses[i].description);
                     }
                 }
-
-                document.body.append(this.coursesList);
             }
         )
     }

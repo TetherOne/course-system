@@ -38,6 +38,11 @@ body {
 }
 
 
+.avatar {
+    width: 100px;
+}
+
+
 header {
     background-color: var(--header-color);
     padding: 1rem;
@@ -57,5 +62,16 @@ header .label {
 
 
 #courses-list {
-    background-color: var(--course-bg-color);
+    margin-top: 1rem;
+    align-self: center;
+    background-color: var(--courses-table-bg-color);
+    border-radius: 7px;
+}
+
+.course {
+    border: .5em solid var(--course-bg-color);
+    background-color: var(--course-label-color);
+    justify-content: space-between;
+    margin: 1rem;
+    border-radius: 7px;
 }

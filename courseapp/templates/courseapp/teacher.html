@@ -10,21 +10,29 @@
     <script src="https://unpkg.com/vue"></script>
 </head>
 <body class="flex-column">
-    <header class="flex-row cross-axis-cent">
-        <img src="#">
-        <div class="flex-column">
-            <div class="label">
-                {{surname}} {{name}} {{father_name}}
-            </div>
-            <div class="label">
-                Факультет: {{faculty}}
-            </div>
+
+<header class="flex-row cross-axis-cent">
+    <img src="/static/img/avatar.png" class="avatar">
+    <div class="flex-column">
+        <div class="label">
+            {{surname}} {{name}} {{father_name}}
         </div>
-    </header>
+        <div class="label">
+            Факультет: {{faculty}}
+        </div>
+    </div>
+</header>
 
-    {{coursesList}}
+<div id="courses-list" class="flex-column">
+    <div class="course flex-row" v-for="description in coursesList">
+        <div class="label">
+            {{description}}
+        </div>
+        <button>Успеваемость</button>
+    </div>
+</div>
 
-    <script type="module" src="/static/js/teacher.js"></script>
+<script type="module" src="/static/js/teacher.js"></script>
 </body>
 
 {% endverbatim %}
