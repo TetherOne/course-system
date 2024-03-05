@@ -9,11 +9,15 @@ class TeacherProfile(models.Model):
     surname = models.CharField(max_length=100, blank=True, null=True)
     father_name = models.CharField(max_length=100, blank=True, null=True)
     faculty = models.CharField(max_length=100, blank=True, null=True)
+    avatar = models.FileField(null=True, upload_to='teacher-avatars/')
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
         related_name='teacher_profile',
     )
+
+    def __str__(self):
+        return f'Преподаватель: {self.surname}, факультет {self.faculty}'
 
 
 class StudentProfile(models.Model):
@@ -23,6 +27,7 @@ class StudentProfile(models.Model):
     father_name = models.CharField(max_length=100, blank=True, null=True)
     faculty = models.CharField(max_length=100, blank=True, null=True)
     group = models.CharField(max_length=100, blank=True, null=True)
+    avatar = models.FileField(null=True, upload_to='student-avatars/')
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
