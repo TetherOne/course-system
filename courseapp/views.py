@@ -33,5 +33,5 @@ def courses_list(request):
     return render(request, 'courseapp/courses-list.html')
 
 
-def teachers_list(request, id):
+def teachers_list(request, id):  # А чё он стал teachers_list? Эта функция ведь выдаёт страницу одного учителя
     return render(request, 'courseapp/teacher.html')
