@@ -1,9 +1,10 @@
-from rest_framework.routers import DefaultRouter
-
 from courseapp.views import TeacherProfilesViewSet
+from courseapp.views import StudentProfilesViewSet
 from courseapp.views import CoursesViewSet
 from courseapp.views import teachers_list
 from courseapp.views import courses_list
+
+from rest_framework.routers import DefaultRouter
 
 from django.urls import include
 from django.urls import path
@@ -20,6 +21,10 @@ routers.register(
 routers.register(
     'teacher-profiles',
     TeacherProfilesViewSet,
+)
+routers.register(
+    'student-profiles',
+    StudentProfilesViewSet,
 )
 
 
