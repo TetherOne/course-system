@@ -6,12 +6,6 @@ from .models import StudentProfile
 from .models import Course
 
 
-class CoursesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Course
-        fields = '__all__'
-
-
 class TeacherProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeacherProfile
@@ -22,3 +16,10 @@ class StudentProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentProfile
         fields = '__all__'
+
+
+class CoursesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = '__all__'
+

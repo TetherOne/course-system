@@ -11,12 +11,6 @@ from courseapp.models import Course
 from django.shortcuts import render
 
 
-class CoursesViewSet(ModelViewSet):
-
-    queryset = Course.objects.all()
-    serializer_class = CoursesSerializer
-
-
 class TeacherProfilesViewSet(ModelViewSet):
 
     queryset = TeacherProfile.objects.all()
@@ -27,6 +21,12 @@ class StudentProfilesViewSet(ModelViewSet):
 
     queryset = StudentProfile.objects.all()
     serializer_class = StudentProfileSerializer
+
+
+class CoursesViewSet(ModelViewSet):
+
+    queryset = Course.objects.all()
+    serializer_class = CoursesSerializer
 
 
 def courses_list(request):
