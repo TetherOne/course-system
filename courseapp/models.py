@@ -38,6 +38,7 @@ class StudentProfile(models.Model):
 class Course(models.Model):
 
     id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(max_length=10000, blank=True, null=True)
     teacher_profile = models.ForeignKey(
         TeacherProfile,
@@ -46,10 +47,14 @@ class Course(models.Model):
         related_name='courses',
     )
 
+    def __str__(self):
+        return f'Курс: {self.name}'
+
 
 class Video(models.Model):
 
     id = models.AutoField(primary_key=True)
+    description = models.TextField(max_length=10000, blank=True, null=True)
     # upload = models.FileField(upload_to="uploads/")  у каждого курса должна быть отдельная папка и т.д
     course = models.ForeignKey(
         Course,
