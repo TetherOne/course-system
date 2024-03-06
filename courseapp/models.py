@@ -9,7 +9,7 @@ class TeacherProfile(models.Model):
     surname = models.CharField(max_length=100, blank=True, null=True)
     father_name = models.CharField(max_length=100, blank=True, null=True)
     faculty = models.CharField(max_length=100, blank=True, null=True)
-    avatar = models.FileField(null=True, upload_to='teacher-avatars/')
+    avatar = models.FileField(null=True, upload_to='teacher-avatars/', blank=True)
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
@@ -38,7 +38,7 @@ class StudentProfile(models.Model):
 class Course(models.Model):
 
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100, blank=True, null=True)
+    course_name = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(max_length=10000, blank=True, null=True)
     teacher_profile = models.ForeignKey(
         TeacherProfile,
@@ -48,14 +48,19 @@ class Course(models.Model):
     )
 
     def __str__(self):
-        return f'Курс: {self.name}'
+        return f'Курс: {self.course_name}'
+
+
+def course_video_directory_path(instance: 'Video', filename: str) -> str:
+    return f'videos/{instance.course.course_name}/{filename}'
 
 
 class Video(models.Model):
 
     id = models.AutoField(primary_key=True)
+    lesson_name = models.CharField(max_length=100, blank=True, null=True)
+    video = models.FileField(null=True, upload_to=course_video_directory_path)
     description = models.TextField(max_length=10000, blank=True, null=True)
-    # upload = models.FileField(upload_to="uploads/")  у каждого курса должна быть отдельная папка и т.д
     course = models.ForeignKey(
         Course,
         on_delete=models.CASCADE,

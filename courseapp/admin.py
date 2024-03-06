@@ -5,9 +5,17 @@ from courseapp.models import Course
 from django.contrib import admin
 
 
+class TeacherCoursesInline(admin.StackedInline):
+
+    model = Course
+
+
 @admin.register(TeacherProfile)
 class TeacherProfileAdmin(admin.ModelAdmin):
 
+    inlines = [
+        TeacherCoursesInline,
+    ]
     list_display = 'id', 'surname', 'father_name', 'faculty', 'avatar'
     list_display_links = 'id', 'surname'
     search_fields = 'surname', 'father_name', 'faculty'
@@ -27,12 +35,20 @@ class StudentProfileAdmin(admin.ModelAdmin):
     list_per_page = 10
 
 
+class CourseInline(admin.StackedInline):
+
+    model = Video
+
+
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
 
-    list_display = 'id', 'name', 'description', 'teacher_profile'
-    list_display_links = 'id', 'name'
-    search_fields = 'name',
+    inlines = [
+        CourseInline,
+    ]
+    list_display = 'id', 'course_name', 'description', 'teacher_profile'
+    list_display_links = 'id', 'course_name'
+    search_fields = 'course_name',
     list_filter = 'teacher_profile',
     ordering = 'id',
     list_per_page = 10
@@ -44,7 +60,7 @@ class CourseAdmin(admin.ModelAdmin):
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
 
-    list_display = 'id', 'description', 'course'
+    list_display = 'id', 'lesson_name', 'description', 'video', 'course'
     list_display_links = 'id', 'description'
     search_fields = 'description',
     list_filter = 'course',
