@@ -16,23 +16,29 @@ class TeacherProfileAdmin(admin.ModelAdmin):
     inlines = [
         TeacherCoursesInline,
     ]
-    list_display = 'id', 'surname', 'father_name', 'faculty', 'avatar'
+    list_display = 'id', 'username', 'surname', 'father_name', 'faculty', 'avatar'
     list_display_links = 'id', 'surname'
     search_fields = 'surname', 'father_name', 'faculty'
     list_filter = 'surname', 'father_name', 'faculty'
     ordering = 'id',
     list_per_page = 10
 
+    def username(self, obj):
+        return obj.user.first_name
+
 
 @admin.register(StudentProfile)
 class StudentProfileAdmin(admin.ModelAdmin):
 
-    list_display = 'id', 'surname', 'father_name', 'faculty', 'group', 'avatar'
+    list_display = 'id', 'username', 'surname', 'father_name', 'faculty', 'group', 'avatar'
     list_display_links = 'id', 'surname'
     search_fields = 'surname', 'father_name', 'faculty', 'group'
     list_filter = 'surname', 'father_name', 'faculty', 'group'
     ordering = 'id',
     list_per_page = 10
+
+    def username(self, obj):
+        return obj.user.first_name
 
 
 class CourseInline(admin.StackedInline):
