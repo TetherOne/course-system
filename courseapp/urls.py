@@ -1,6 +1,7 @@
 from courseapp.views import TeacherProfilesViewSet
 from courseapp.views import StudentProfilesViewSet
 from courseapp.views import CoursesViewSet
+from courseapp.views import VideosViewSet
 from courseapp.views import teachers_list
 from courseapp.views import courses_list
 
@@ -25,6 +26,10 @@ routers.register(
 routers.register(
     'student-profiles',
     StudentProfilesViewSet,
+)
+routers.register(
+    'videos',
+    VideosViewSet,
 )
 
 
