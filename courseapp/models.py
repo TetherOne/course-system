@@ -19,6 +19,9 @@ class TeacherProfile(models.Model):
     def __str__(self):
         return f'Преподаватель: {self.surname}, факультет {self.faculty}'
 
+    def get_first_name(self):
+        return self.user.first_name
+
 
 class StudentProfile(models.Model):
 
@@ -27,12 +30,15 @@ class StudentProfile(models.Model):
     father_name = models.CharField(max_length=100, blank=True, null=True)
     faculty = models.CharField(max_length=100, blank=True, null=True)
     group = models.CharField(max_length=100, blank=True, null=True)
-    avatar = models.FileField(null=True, upload_to='student-avatars/')
+    avatar = models.FileField(null=True, upload_to='student-avatars/', blank=True)
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
         related_name='student_profile',
     )
+
+    def __str__(self):
+        return self.user.first_name
 
 
 class Course(models.Model):
