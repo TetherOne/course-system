@@ -1,6 +1,7 @@
-from courseapp.models import TeacherProfile, Video
+from courseapp.models import TeacherProfile
 from courseapp.models import StudentProfile
 from courseapp.models import Course
+from courseapp.models import Video
 
 from django.contrib import admin
 

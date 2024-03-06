@@ -17,7 +17,7 @@ class TeacherProfile(models.Model):
     )
 
     def __str__(self):
-        return f'Преподаватель: {self.surname}, факультет {self.faculty}'
+        return f'{self.surname}, {self.faculty}'
 
     def get_first_name(self):
         return self.user.first_name
@@ -54,7 +54,7 @@ class Course(models.Model):
     )
 
     def __str__(self):
-        return f'Курс: {self.course_name}'
+        return f'{self.course_name}'
 
 
 def course_video_directory_path(instance: 'Video', filename: str) -> str:
