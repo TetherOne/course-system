@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+{% verbatim %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Scart</title>
+    <link rel="stylesheet" href="/front/static/css/style.css">
+    <script src="https://unpkg.com/vue"></script>
+</head>
+<body class="flex-column">
+
+<header class="flex-row cross-axis-cent">
+    <img src="/front/static/img/avatar.png" class="avatar">
+    <div class="flex-column">
+        <div class="label">
+            {{surname}} {{name}} {{father_name}}
+        </div>
+        <div class="label">
+            Факультет: {{faculty}}
+        </div>
+    </div>
+</header>
+
+<div id="courses-list" class="flex-column">
+    <div class="course flex-row" v-for="description in coursesList">
+        <div class="label">
+            {{description}}
+        </div>
+        <button>Успеваемость</button>
+    </div>
+</div>
+
+<<<<<<< HEAD
+<script type="module" src="/js/components/teacher.js"></script>
+=======
+<script type="module" src="/front/static/js/teacher.js"></script>
+>>>>>>> 58354b948e8cc116f727cff79c924da2d66c5f9d
+</body>
+
+{% endverbatim %}
+</html>
