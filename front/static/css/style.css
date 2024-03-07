@@ -1,0 +1,69 @@
+:root {
+    --font: 'Segoe UI';
+
+    --background-color: #F5F5F5;
+
+    --header-color: #323232;
+    --header-label-color: #FFF;
+
+    --courses-table-bg-color: #E4E4E4;
+    --course-bg-color: #B9B8B8;
+    --course-label-color: var(--header-label-color);
+
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font);
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.avatar {
+    width: 100px;
+}
+
+
+header {
+    background-color: var(--header-color);
+    padding: 1rem;
+    width: 100vw;
+}
+
+.label {
+    background-color: var(--header-label-color);
+    padding: 5px;
+    border-radius: 5px;
+    margin-left: 15px;
+    margin-bottom: 5px;
+}
+
+#user-info {
+
+}
+
+
+.spacer {
+    flex-grow: .8;
+}
+
+
+button {
+    height: fit-content;
+    border-radius: 5px;
+}
+
+button:hover {
+    cursor: pointer;
+}
