@@ -7,7 +7,7 @@ export const student = {
         <header class="flex-row">
             <img src="{{avatar_src}}" alt="Фото">
             <div id="user-info" class="flex-column">
-                <a class="label" href="/student/{{id}}">{{surname}} {{name}} {{fatherName}}</a>
+                <a class="label" href="/student/{{id}}">{{userInfo.surname}} {{userInfo.name}} {{userInfo.father_name}}</a>
                 <div class="label">{{faculty}}</div>
                 <div class="label">{{email}}</div>
             </div>
@@ -32,9 +32,11 @@ export const student = {
     `,
     data() {
         return {
-            surname: '{surname}',
-            name: '{name}',
-            fatherName: '{fatherName}',
+            userInfo: {
+                surname: '{surname}',
+                name: '{name}',
+                father_name: '{fatherName}',
+            },
             faculty: '{faculty}',
             email: '{email}',
             courses: [],
@@ -60,9 +62,7 @@ export const student = {
             }
         ).then(
             json => {
-                this.surname = json.surname;
-                // this.name = json.name // Пока не реализовано
-                this.fatherName = json.father_name;
+                this.userInfo = json;
             }
         );
     }
