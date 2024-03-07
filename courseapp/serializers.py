@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import TeacherProfile
+from .models import TeacherProfile, Test
 from .models import StudentProfile
 from .models import Course
 from .models import Video
@@ -27,4 +27,10 @@ class CoursesSerializer(serializers.ModelSerializer):
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
+        fields = '__all__'
+
+
+class TestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Test
         fields = '__all__'
