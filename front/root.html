@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Scart</title>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vue-router"></script>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<router-view></router-view>
+<script type="module">
+    import {student} from '/components/student.js';
+    import {teacher} from '/components/teacher.js';
+    import {course} from '/components/course.js';
+    import {registration} from '/components/registration.js';
+
+
+    const routes = [
+        {
+            path: '/student/:id',
+            component: student
+        }, {
+            path: '/teacher',
+            component: teacher
+        }, {
+            path: '/course',
+            component: course
+        }, {
+            path: '/registration',
+            component: registration
+        }
+    ];
+
+    const router = VueRouter.createRouter({
+        history: VueRouter.createWebHistory(),
+        routes,
+    });
+
+    const app = Vue.createApp({});
+
+
+    app.use(router);
+    app.mount('body');
+</script>
+
+
+</body>
+</html>
