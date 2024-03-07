@@ -14,9 +14,7 @@ app.use(express.static('static/js'));
 
 
 app.get('*/get_student/*', (request, response) => {
-    console.log(request.url)
     const id = Path.getLastElement(request.url);
-    console.log('FLAG')
     fetch(`${djangoURL}/api/student-profiles/${id}/?format=json`).then(
         res => res.json()
     ).then(
@@ -27,7 +25,6 @@ app.get('*/get_student/*', (request, response) => {
 app.get('*', (request, response) => {
     FS.promises.readFile('root.html', 'utf8').then(
         data => {
-            console.log('PIDORAS')
             response.send(data)
         }
     );
