@@ -1,10 +1,12 @@
-from django.utils.html import format_html
-
-from courseapp.models import TeacherProfile, Question, Answer
+from courseapp.models import TeacherProfile
 from courseapp.models import StudentProfile
+from courseapp.models import Question
+from courseapp.models import Answer
 from courseapp.models import Course
 from courseapp.models import Video
 from courseapp.models import Test
+
+from django.utils.html import format_html
 
 from django.contrib import admin
 
@@ -79,7 +81,7 @@ class VideoAdmin(admin.ModelAdmin):
     list_display = 'id', 'lesson_name', 'description', 'display_video', 'course'
     list_display_links = 'id', 'description'
     search_fields = 'description',
-    list_filter = 'course',
+    list_filter = ('course__course_name', 'lesson_name')
     ordering = 'id',
     list_per_page = 10
 
@@ -104,6 +106,7 @@ class TestAdmin(admin.ModelAdmin):
     list_display = 'id', 'title', 'lesson', 'course_name'
     list_display_links = 'id', 'title'
     search_fields = 'title',
+    list_filter = ('video__lesson_name', 'video__course__course_name')
     ordering = 'id',
     list_per_page = 10
 
@@ -124,8 +127,19 @@ class QuestionAdmin(admin.ModelAdmin):
     inlines = [
         AnswerInline,
     ]
-    list_display = 'id', 'question_text', 'test'
+    list_display = 'id', 'question_text', 'lesson', 'course_name'
     list_display_links = 'id', 'question_text'
     search_fields = 'question_text',
+    list_filter = ('test__video__lesson_name', 'test__video__course__course_name')
     ordering = 'id',
     list_per_page = 10
+
+    def lesson(self, obj):
+        if obj.test and obj.test.video:
+            return obj.test.video.lesson_name
+        return None
+
+    def course_name(self, obj):
+        if obj.test and obj.test.video:
+            return obj.test.video.course.course_name
+        return None
