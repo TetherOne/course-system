@@ -1,3 +1,5 @@
+from django.utils.html import format_html
+
 from courseapp.models import TeacherProfile
 from courseapp.models import StudentProfile
 from courseapp.models import Course
@@ -67,7 +69,7 @@ class CourseAdmin(admin.ModelAdmin):
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
 
-    list_display = 'id', 'lesson_name', 'description', 'video', 'course'
+    list_display = ('id', 'lesson_name', 'description', 'display_video', 'course')
     list_display_links = 'id', 'description'
     search_fields = 'description',
     list_filter = 'course',
@@ -76,3 +78,7 @@ class VideoAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         return Video.objects.select_related('course')
+
+    def display_video(self, obj):
+        if obj.video:
+            return format_html(f'<video src="{obj.video.url}" controls width="200px" height="150px"></video>')
