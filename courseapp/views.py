@@ -1,11 +1,11 @@
-from courseapp.serializers import TeacherProfileSerializer
+from courseapp.serializers import TeacherProfileSerializer, TestSerializer
 from courseapp.serializers import StudentProfileSerializer
 from courseapp.serializers import CoursesSerializer
 from courseapp.serializers import VideoSerializer
 
 from rest_framework.viewsets import ModelViewSet
 
-from courseapp.models import TeacherProfile
+from courseapp.models import TeacherProfile, Test
 from courseapp.models import StudentProfile
 from courseapp.models import Course
 from courseapp.models import Video
@@ -35,6 +35,12 @@ class VideosViewSet(ModelViewSet):
 
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
+
+
+class TestsViewSet(ModelViewSet):
+
+    queryset = Test.objects.all()
+    serializer_class = TestSerializer
 
 
 # def courses_list(request):
