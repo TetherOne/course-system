@@ -1,4 +1,4 @@
-from courseapp.views import TeacherProfilesViewSet
+from courseapp.views import TeacherProfilesViewSet, TestsViewSet
 from courseapp.views import StudentProfilesViewSet
 from courseapp.views import CoursesViewSet
 from courseapp.views import VideosViewSet
@@ -29,6 +29,10 @@ routers.register(
 routers.register(
     'videos',
     VideosViewSet,
+)
+routers.register(
+    'tests',
+    TestsViewSet,
 )
 
 
