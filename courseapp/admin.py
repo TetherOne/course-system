@@ -1,17 +1,17 @@
 from django.utils.html import format_html
 
-from courseapp.models import TeacherProfile
+from courseapp.models import TeacherProfile, Question, Answer
 from courseapp.models import StudentProfile
 from courseapp.models import Course
 from courseapp.models import Video
+from courseapp.models import Test
 
 from django.contrib import admin
 
 
+
 class TeacherCoursesInline(admin.StackedInline):
-
     model = Course
-
 
 @admin.register(TeacherProfile)
 class TeacherProfileAdmin(admin.ModelAdmin):
@@ -30,6 +30,7 @@ class TeacherProfileAdmin(admin.ModelAdmin):
         return obj.user.first_name
 
 
+
 @admin.register(StudentProfile)
 class StudentProfileAdmin(admin.ModelAdmin):
 
@@ -44,10 +45,9 @@ class StudentProfileAdmin(admin.ModelAdmin):
         return obj.user.first_name
 
 
+
 class CourseInline(admin.StackedInline):
-
     model = Video
-
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
@@ -66,10 +66,17 @@ class CourseAdmin(admin.ModelAdmin):
         return Course.objects.select_related('teacher_profile')
 
 
+
+class TestInline(admin.StackedInline):
+    model = Test
+
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'lesson_name', 'description', 'display_video', 'course')
+    inlines = [
+        TestInline,
+    ]
+    list_display = 'id', 'lesson_name', 'description', 'display_video', 'course'
     list_display_links = 'id', 'description'
     search_fields = 'description',
     list_filter = 'course',
@@ -82,3 +89,43 @@ class VideoAdmin(admin.ModelAdmin):
     def display_video(self, obj):
         if obj.video:
             return format_html(f'<video src="{obj.video.url}" controls width="200px" height="150px"></video>')
+
+
+
+class QuestionInline(admin.StackedInline):
+    model = Question
+
+@admin.register(Test)
+class TestAdmin(admin.ModelAdmin):
+
+    inlines = [
+        QuestionInline,
+    ]
+    list_display = 'id', 'title', 'lesson', 'course_name'
+    list_display_links = 'id', 'title'
+    search_fields = 'title',
+    ordering = 'id',
+    list_per_page = 10
+
+    def lesson(self, obj):
+        return obj.video.lesson_name if obj.video else None
+
+    def course_name(self, obj):
+        return obj.video.course.course_name if obj.video else None
+
+
+
+class AnswerInline(admin.StackedInline):
+    model = Answer
+
+@admin.register(Question)
+class QuestionAdmin(admin.ModelAdmin):
+
+    inlines = [
+        AnswerInline,
+    ]
+    list_display = 'id', 'question_text', 'test'
+    list_display_links = 'id', 'question_text'
+    search_fields = 'question_text',
+    ordering = 'id',
+    list_per_page = 10
