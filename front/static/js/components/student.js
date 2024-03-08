@@ -56,7 +56,7 @@ export const student = {
             json => {
                 this.surname = json.surname;
                 this.name = json.name
-                this.fatherName = json.father_name;
+                this.father_name = json.father_name;
             }
         );
 
