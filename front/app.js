@@ -13,27 +13,40 @@ app.use(express.static('static/css'));
 app.use(express.static('static/js'));
 
 
-app.get('*/get_student/*', (request, response) => {
-    console.log(request.url)
-    const id = Path.getLastElement(request.url);
-    console.log('FLAG')
+
+app.get('/get_student?*', (req, res) => {
+    const id = req.query.id;
     fetch(`${djangoURL}/api/student-profiles/${id}/?format=json`).then(
-        res => res.json()
+        result => result.json()
     ).then(
-        json => response.send(json)
+        json => res.send(json)
     );
 });
 
-app.get('*', (request, response) => {
-    FS.promises.readFile('root.html', 'utf8').then(
-        data => {
-            console.log('PIDORAS')
-            response.send(data)
+app.get('/get_student_courses/:id', (req, res) => {
+    const studentID = req.params['id'];
+    fetch(`${djangoURL}/api/enrollments/?format=json`).then(
+        response => response.json()
+    ).then(
+        enrollments => {
+
+            enrollments.forEach(enrollment => {
+                if (enrollment.student === studentID) {
+                    const courseID = enrollment.course;
+                    fetch(`${djangoURL}/courses/${courseID}`)
+                }
+            })
         }
+    )
+});
+
+app.get('/*', (request, response) => {
+    FS.promises.readFile('root.html', 'utf8').then(
+        data => response.send(data)
     );
 });
 
 
 app.listen(frontPort, hostname, () => {
     console.log(`Сервер начал приём запросов по адресу ${frontURL}\n`);
-})
+});
