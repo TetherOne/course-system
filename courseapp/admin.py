@@ -1,5 +1,6 @@
 from courseapp.models import TeacherProfile
 from courseapp.models import StudentProfile
+from courseapp.models import Enrollment
 from courseapp.models import Question
 from courseapp.models import Answer
 from courseapp.models import Course
@@ -9,6 +10,20 @@ from courseapp.models import Test
 from django.utils.html import format_html
 
 from django.contrib import admin
+
+
+@admin.register(Enrollment)
+class EnrollmentAdmin(admin.ModelAdmin):
+
+    list_display = 'id', 'student_full_name', 'course', 'enrollment_date'
+    list_display_links = 'id', 'student_full_name'
+    search_fields = 'student__name', 'student__surname', 'student__father_name', 'course__course_name'
+    list_filter = 'student__name', 'student__surname', 'student__father_name', 'course__course_name', 'enrollment_date'
+    ordering = 'id',
+    list_per_page = 10
+
+    def student_full_name(self, obj):
+        return f"{obj.student.surname} {obj.student.name} {obj.student.father_name}"
 
 
 

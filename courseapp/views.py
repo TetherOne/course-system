@@ -1,14 +1,16 @@
-from courseapp.serializers import TeacherProfileSerializer, TestSerializer
+from courseapp.serializers import TeacherProfileSerializer
 from courseapp.serializers import StudentProfileSerializer
 from courseapp.serializers import CoursesSerializer
 from courseapp.serializers import VideoSerializer
+from courseapp.serializers import TestSerializer
 
 from rest_framework.viewsets import ModelViewSet
 
-from courseapp.models import TeacherProfile, Test
+from courseapp.models import TeacherProfile
 from courseapp.models import StudentProfile
 from courseapp.models import Course
 from courseapp.models import Video
+from courseapp.models import Test
 
 from django.shortcuts import render
 
