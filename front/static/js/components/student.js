@@ -1,5 +1,4 @@
-import { frontURL } from "../server.js";
-
+import {frontURL} from "../server.js";
 
 
 export const student = {
@@ -7,12 +6,12 @@ export const student = {
         <header class="flex-row">
             <img src="{{avatar_src}}" alt="Фото">
             <div id="user-info" class="flex-column">
-                <div class="label">{{ surname }} {{ name }} {{ fatherName }}</div>
+                <div class="label">{{ surname }} {{ name }} {{ father_name }}</div>
                 <div class="label">{{ faculty }}</div>
                 <div class="label">{{ email }}</div>
             </div>
             <div class="spacer"></div>
-            <button v-if="role === 'student'">Ввести код курса</button>
+            <button>Ввести код курса</button>
             <button>Искать</button> <!-- Кого искать? -->
         </header>
         <div class="flex-row">
@@ -24,19 +23,17 @@ export const student = {
         </div>
         <div>
             <div>Мои курсы:</div>
-            <div v-for="course in courses">
-                <div>{{ course.name }}</div>
+            <div class="label" v-for="course in courses">
+                <div>{{ course.course_name }}</div>
                 <div>{{ course.description }}</div>
             </div>
         </div>
     `,
     data() {
         return {
-            userInfo: {
-                surname: '{surname}',
-                name: '{name}',
-                father_name: '{fatherName}',
-            },
+            surname: '{surname}',
+            name: '{name}',
+            father_name: '{fatherName}',
             faculty: '{faculty}',
             email: '{email}',
             courses: [],
@@ -44,9 +41,7 @@ export const student = {
             id: localStorage.id
         }
     },
-    methods: {
-
-    },
+    methods: {},
     created() {
         fetch(`${frontURL}/get_student?id=${this.id}`).then(
             response => {
@@ -60,14 +55,13 @@ export const student = {
             }
         );
 
-        fetch(`${frontURL}/get_student_courses?${this.id}`).then(
+        fetch(`${frontURL}/get_student_courses?id=${this.id}`).then(
             response => response.json()
         ).then(
             courses => {
-                courses.forEach(course => {
-
-                })
+                console.log(courses);
+                this.courses = courses
             }
-        )
+        );
     }
 };

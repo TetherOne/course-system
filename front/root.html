@@ -6,12 +6,13 @@
     <title>Scart</title>
     <link rel="stylesheet" href="/style.css">
 </head>
-
 <body>
+
 
 <div id="app">
     <router-view></router-view>
 </div>
+
 
 <script src="https://unpkg.com/vue"></script>
 <script src="https://unpkg.com/vue-router"></script>
@@ -29,7 +30,7 @@
             path: '/',
             component: authorization
         }, {
-            path: '/student/:id',
+            path: '/student',
             component: student
         }, {
             path: '/teacher/:id',
@@ -52,17 +53,10 @@
             }
         },
         methods: {
-            autoLogIn() {
-                console.log('Вход в метод autoLogIn')
-                if (sessionStorage.logged !== '1' && localStorage.logged === '1') {
-                    sessionStorage.logged = '1';
-                    sessionStorage.id = localStorage.id;
-                    sessionStorage.role = localStorage.role;
-                    window.location.pathname = `/${localStorage.role}/${localStorage.id}`;
-                }
-            }
+
         }
     });
+
 
 
     app.use(router);

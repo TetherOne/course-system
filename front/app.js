@@ -1,12 +1,40 @@
 import express from 'express';
 import FS from 'fs';
 
-import { hostname, djangoURL, frontPort, frontURL } from "./static/js/server.js";
-import { Path } from './static/js/path.js';
+import {
+    hostname,
+    djangoURL,
+    frontPort,
+    frontURL
+} from "./static/js/server.js";
+import {
+    Path
+} from './static/js/path.js';
 
 
 
 const app = express();
+
+
+
+function getStudentInfo(id) {
+    return fetch(`${djangoURL}/api/student-profiles/${id}/?format=json`).then(
+        response => response.json()
+    );
+}
+
+function getCoursesList() {
+    return fetch(`${djangoURL}/api/courses`).then(
+        response => response.json()
+    );
+}
+
+function getTeacherInfo(id) {
+    return fetch(`${djangoURL}/api/teacher-profiles/${id}/?format=json`).then(
+        response => response.json()
+    );
+}
+
 
 
 app.use(express.static('static/css'));
@@ -14,31 +42,23 @@ app.use(express.static('static/js'));
 
 
 
-app.get('/get_student?*', (req, res) => {
-    const id = req.query.id;
-    fetch(`${djangoURL}/api/student-profiles/${id}/?format=json`).then(
-        result => result.json()
-    ).then(
-        json => res.send(json)
-    );
+app.get('/get_student_courses?*', async (req, res) => {
+    const studentID = req.url.id;
+    let courses = await getCoursesList();
+    courses = courses.filter(course => course.student === studentID);
+    courses.forEach(async course => {
+        course.teacher = await getTeacherInfo(course.teacher_profile);
+    })
+
+    res.send(courses);
 });
 
-
-app.get('/get_student_courses/:id', (req, res) => {
-    const studentID = req.params['id'];
-    fetch(`${djangoURL}/api/enrollments/?format=json`).then(
-        response => response.json()
-    ).then(
-        enrollments => {
-
-            enrollments.forEach(enrollment => {
-                if (enrollment.student === studentID) {
-                    const courseID = enrollment.course;
-                    fetch(`${djangoURL}/courses/${courseID}`)
-                }
-            })
-        }
-    )
+app.get('/get_student?*', (req, res) => {
+    const id = req.query.id;
+    console.log('Выведется только один раз')
+    getStudentInfo(id).then(
+        studentInfo => res.send(studentInfo)
+    );
 });
 
 app.get('/*', (request, response) => {
