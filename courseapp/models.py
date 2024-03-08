@@ -3,6 +3,24 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
+class Enrollment(models.Model):
+
+    student = models.ForeignKey(
+        'StudentProfile',
+        on_delete=models.CASCADE,
+        related_name='enrollments'
+    )
+    course = models.ForeignKey(
+        'Course',
+        on_delete=models.CASCADE,
+        related_name='enrollments'
+    )
+    enrollment_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('student', 'course')
+
+
 class TeacherProfile(models.Model):
 
     id = models.AutoField(primary_key=True)
@@ -36,6 +54,9 @@ class StudentProfile(models.Model):
         related_name='student_profile',
     )
 
+    def __str__(self):
+        return f"{self.surname} {self.name} {self.father_name}"
+
 
 class Course(models.Model):
 
@@ -61,7 +82,7 @@ class Video(models.Model):
 
     id = models.AutoField(primary_key=True)
     lesson_name = models.CharField(max_length=100, blank=True, null=True)
-    video = models.FileField(null=True, upload_to=course_video_directory_path)
+    video = models.FileField(null=True, upload_to=course_video_directory_path, blank=True)
     description = models.TextField(max_length=10000, blank=True, null=True)
     course = models.ForeignKey(
         Course,
