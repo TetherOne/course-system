@@ -4,7 +4,7 @@ import {frontURL} from "../server.js";
 export const student = {
     template: `
         <header class="flex-row">
-            <img src="{{avatar_src}}" alt="Фото">
+            <img src="/avatar.png" alt="Фото" class="avatar">
             <div id="user-info" class="flex-column">
                 <div class="label">{{ surname }} {{ name }} {{ father_name }}</div>
                 <div class="label">{{ faculty }}</div>

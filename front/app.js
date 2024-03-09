@@ -1,15 +1,12 @@
 import express from 'express';
-import FS from 'fs';
+import fileSystem from 'fs';
 
 import {
-    hostname,
+    hostName,
     djangoURL,
     frontPort,
     frontURL
 } from "./static/js/server.js";
-import {
-    Path
-} from './static/js/path.js';
 
 
 
@@ -37,6 +34,7 @@ function getTeacherInfo(id) {
 
 
 
+app.use(express.static('static/img'));
 app.use(express.static('static/css'));
 app.use(express.static('static/js'));
 
@@ -62,12 +60,12 @@ app.get('/get_student?*', (req, res) => {
 });
 
 app.get('/*', (request, response) => {
-    FS.promises.readFile('root.html', 'utf8').then(
+    fileSystem.promises.readFile('root.html', 'utf8').then(
         data => response.send(data)
     );
 });
 
 
-app.listen(frontPort, hostname, () => {
+app.listen(frontPort, hostName, () => {
     console.log(`Сервер начал приём запросов по адресу ${frontURL}\n`);
 });
