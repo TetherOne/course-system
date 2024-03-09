@@ -1,4 +1,6 @@
-from courseapp.serializers import TeacherProfileSerializer
+from django.contrib.auth.models import User
+
+from courseapp.serializers import TeacherProfileSerializer, UsersSerializer
 from courseapp.serializers import StudentProfileSerializer
 from courseapp.serializers import EnrollmentSerializer
 from courseapp.serializers import CoursesSerializer
@@ -15,6 +17,12 @@ from courseapp.models import Video
 from courseapp.models import Test
 
 from django.shortcuts import render
+
+
+class UsersViewSet(ModelViewSet):
+
+    queryset = User.objects.all()
+    serializer_class = UsersSerializer
 
 
 class TeacherProfilesViewSet(ModelViewSet):
