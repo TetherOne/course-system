@@ -1,7 +1,3 @@
-from django.contrib.auth.models import User
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.permissions import IsAdminUser
-
 from courseapp.serializers import UserRegistrationSerializer
 from courseapp.serializers import TeacherProfileSerializer
 from courseapp.serializers import StudentProfileSerializer
@@ -10,7 +6,11 @@ from courseapp.serializers import CoursesSerializer
 from courseapp.serializers import VideoSerializer
 from courseapp.serializers import TestSerializer
 
+from rest_framework.permissions import IsAuthenticated
+
 from rest_framework.viewsets import ModelViewSet
+
+from django.contrib.auth.models import User
 
 from courseapp.models import TeacherProfile
 from courseapp.models import StudentProfile
@@ -35,14 +35,14 @@ class TeacherProfilesViewSet(ModelViewSet):
 
     queryset = TeacherProfile.objects.all()
     serializer_class = TeacherProfileSerializer
-    permission_classes = IsAdminUser,
+    permission_classes = IsAuthenticated,
 
 
 class StudentProfilesViewSet(ModelViewSet):
 
     queryset = StudentProfile.objects.all()
     serializer_class = StudentProfileSerializer
-    permission_classes = IsAdminUser,
+    permission_classes = IsAuthenticated,
 
 
 class CoursesViewSet(ModelViewSet):
