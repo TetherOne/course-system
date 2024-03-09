@@ -1,6 +1,8 @@
+from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAdminUser
 
+from courseapp.serializers import UserRegistrationSerializer
 from courseapp.serializers import TeacherProfileSerializer
 from courseapp.serializers import StudentProfileSerializer
 from courseapp.serializers import EnrollmentSerializer
@@ -18,6 +20,15 @@ from courseapp.models import Video
 from courseapp.models import Test
 
 from django.shortcuts import render
+
+
+class UsersViewSet(ModelViewSet):
+
+    queryset = User.objects.all()
+    serializer_class = UserRegistrationSerializer
+
+    def perform_create(self, serializer):
+        serializer.save()
 
 
 class TeacherProfilesViewSet(ModelViewSet):
