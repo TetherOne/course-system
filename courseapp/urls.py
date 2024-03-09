@@ -43,6 +43,6 @@ routers.register(
 
 
 urlpatterns = [
-    path('api/', include(routers.urls)),
+    path('', include(routers.urls)),
     path('courses/', courses_list),
 ]
