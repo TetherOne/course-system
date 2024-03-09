@@ -1,4 +1,4 @@
-from courseapp.views import TeacherProfilesViewSet, UsersViewSet
+from courseapp.views import TeacherProfilesViewSet, UserViewSet
 from courseapp.views import StudentProfilesViewSet
 from courseapp.views import EnrollmentViewSet
 from courseapp.views import CoursesViewSet
@@ -18,7 +18,7 @@ app_name = 'courseapp'
 routers = DefaultRouter()
 routers.register(
     'users',
-    UsersViewSet,
+    UserViewSet,
 )
 routers.register(
     'courses',
