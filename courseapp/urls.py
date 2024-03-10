@@ -1,9 +1,8 @@
-from courseapp.views import TeacherProfilesViewSet, UserViewSet
+from courseapp.views import TeacherProfilesViewSet, UsersViewSet
 from courseapp.views import StudentProfilesViewSet
 from courseapp.views import EnrollmentViewSet
 from courseapp.views import CoursesViewSet
 from courseapp.views import VideosViewSet
-from courseapp.views import courses_list
 from courseapp.views import TestsViewSet
 
 from rest_framework.routers import DefaultRouter
@@ -18,7 +17,7 @@ app_name = 'courseapp'
 routers = DefaultRouter()
 routers.register(
     'users',
-    UserViewSet,
+    UsersViewSet,
 )
 routers.register(
     'courses',
@@ -48,5 +47,4 @@ routers.register(
 
 urlpatterns = [
     path('', include(routers.urls)),
-    path('courses/', courses_list),
 ]
