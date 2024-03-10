@@ -3,7 +3,6 @@ from courseapp.views import StudentProfilesViewSet
 from courseapp.views import EnrollmentViewSet
 from courseapp.views import CoursesViewSet
 from courseapp.views import VideosViewSet
-from courseapp.views import courses_list
 from courseapp.views import TestsViewSet
 
 from rest_framework.routers import DefaultRouter
@@ -48,5 +47,4 @@ routers.register(
 
 urlpatterns = [
     path('', include(routers.urls)),
-    path('courses/', courses_list),
 ]
