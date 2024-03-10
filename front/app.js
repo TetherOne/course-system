@@ -9,9 +9,7 @@ import {
 } from "./static/js/server.js";
 
 
-
 const app = express();
-
 
 
 function getStudentInfo(id) {
@@ -33,12 +31,37 @@ function getTeacherInfo(id) {
 }
 
 
-
 app.use(express.static('static/img'));
 app.use(express.static('static/css'));
 app.use(express.static('static/js'));
 
 
+app.post('/signUp*', (request, response) => {
+    // const newUser = {
+    //     username: decodeURIComponent(request.query.login),
+    //     email: decodeURIComponent(request.query.email),
+    //     password: decodeURIComponent(request.query.password),
+    //     is_teacher: request.query.isTeacher
+    // };
+    const newUser = {
+        email: request.query.email,
+        username: request.query.login,
+        password: request.query.password,
+        is_teacher: request.query.isTeacher
+    };
+    const newUserJSON = encodeURIComponent(JSON.stringify(newUser));
+    fetch(`${djangoURL}/api/users/${newUserJSON}`, {
+        method: 'POST'
+    });
+});
+
+app.get('/getUserInfo*', (request, response) => {
+    const login = decodeURIComponent(request.query.login);
+    const password = decodeURIComponent(request.query.password);
+    fetch(`${djangoURL}/api/users`).then(
+
+    )
+});
 
 app.get('/get_student_courses?*', async (req, res) => {
     const studentID = req.url.id;
