@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+=======
+from rest_framework.permissions import IsAuthenticated
+>>>>>>> backend_branch
 
 from courseapp.serializers import UserRegistrationSerializer
 from courseapp.serializers import TeacherProfileSerializer
