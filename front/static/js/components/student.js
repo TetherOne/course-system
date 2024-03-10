@@ -3,29 +3,40 @@ import {frontURL} from "../server.js";
 
 export const student = {
     template: `
-        <header class="flex-row">
-            <img src="/avatar.png" alt="Фото" class="avatar">
-            <div id="user-info" class="flex-column">
-                <div class="label">{{ surname }} {{ name }} {{ father_name }}</div>
-                <div class="label">{{ faculty }}</div>
-                <div class="label">{{ email }}</div>
-            </div>
-            <div class="spacer"></div>
-            <button>Ввести код курса</button>
-            <button>Искать</button> <!-- Кого искать? -->
-        </header>
-        <div class="flex-row">
-            <div v-if="role === 'student'">Моё обучение</div>
-            <div class="flex-row">
-                <img src="/magnifiers.png" alt="Поиск">
-                <input type="text" name="" id="" placeholder="Название курса">
-            </div>
-        </div>
-        <div>
-            <div>Мои курсы:</div>
-            <div class="label" v-for="course in courses">
-                <div>{{ course.course_name }}</div>
-                <div>{{ course.description }}</div>
+        <div class="flex-column">
+            <header class="profile-header flex-row">
+                <img src="/avatar.png" alt="Фото" class="avatar">
+                <div class="flex-column spacer">
+                    <div class="flex-row"> 
+                        <div class="label">{{ surname }} {{ name }} {{ father_name }}</div>
+                        <div class="spacer"></div>
+                        <button class="btn profile-header-btn">Выход</button>
+                    </div>
+                    <div class="flex-row"> 
+                        <div class="label">{{ faculty }}</div>
+                        <div class="spacer"></div>
+                        <button class="btn profile-header-btn">Смен. тем.</button>
+                        <button class="btn profile-header-btn">Настр.</button>
+                    </div>
+                </div>
+            </header>
+            <div id="learning" class="flex-column"> 
+                <div id="learning-header" class="flex-row">
+                    <div>Моё обучение</div>
+                    <div class="spacer"></div>
+                    <input type="text" class="input-text" placeholder="Название курса">
+                </div>
+                <div id="courses-list" class="flex-column">
+                    <div class="course-wrap flex-row" v-for="course in courses"> 
+                        <div class="label">
+                            {{ course.course_name }}
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="label"> 
+                            {{ course.teacherInfo }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     `,
@@ -52,6 +63,7 @@ export const student = {
                 this.surname = json.surname;
                 this.name = json.name
                 this.father_name = json.father_name;
+                this.faculty = json.faculty;
             }
         );
 
@@ -59,8 +71,7 @@ export const student = {
             response => response.json()
         ).then(
             courses => {
-                console.log(courses);
-                this.courses = courses
+                this.courses = courses;
             }
         );
     }

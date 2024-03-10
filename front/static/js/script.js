@@ -1,7 +1,8 @@
+import {authorization} from "/components/authorization.js";
 import {student} from '/components/student.js';
 import {teacher} from '/components/teacher.js';
 import {course} from '/components/course.js';
-import {authorization} from "/components/authorization.js";
+
 
 
 const routes = [
@@ -22,7 +23,7 @@ const routes = [
 
 const router = VueRouter.createRouter({
     history: VueRouter.createWebHistory(),
-    routes,
+    routes
 });
 
 const app = Vue.createApp({
@@ -33,5 +34,6 @@ const app = Vue.createApp({
 });
 
 
+
 app.use(router);
-app.mount('body');
+app.mount('#app');

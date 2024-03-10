@@ -1,18 +1,17 @@
 :root {
     --font: 'Segoe UI';
 
-    --background-color: #F5F5F5;
+    --background-color: #fff;
 
-    --header-color: #323232;
-    --header-label-color: #FFF;
+    --profile-header-color: #323232;
+    --profile-header-label-color: #fff;
+    --profile-header-btn-border-color: gray;
 
-    --courses-table-bg-color: #E4E4E4;
-    --course-bg-color: #B9B8B8;
-    --course-label-color: var(--header-label-color);
-}
+    --btn-border-color: black;
+    --btn-color: white;
 
-*, *::before, *::after {
-    box-sizing: border-box;
+    --courses-list-color: #e4e4e4;
+    --course-padding-color: #b9b8b8;
 }
 
 body {
@@ -32,92 +31,79 @@ body {
 }
 
 
-input {
-    height: calc(2.25rem + 2px);
-    padding: 0.375rem 0.75rem;
-    font-family: inherit;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #212529;
-    background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #bdbdbd;
-    border-radius: 0.25rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    margin-bottom: 1em;
-}
-
-input:focus {
-    color: #212529;
-    background-color: #fff;
-    border-color: #bdbdbd;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(158, 158, 158, 0.25);
-}
-
-
-#sign-in-up-form {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-#sign-switch > div {
-    margin: 1rem;
-}
-
-#sign-switch > div:hover {
-    cursor: pointer;
-}
-
-#sign-in-form {
-    background-color: #323232;
-    padding: 3rem;
-}
-
-#sign-up-form {
-    background-color: #323232;
-    padding: 3rem;
-}
-
-
 .avatar {
     width: 3rem;
     height: 3rem;
 }
 
 
-header {
-    background-color: var(--header-color);
-    padding: 1rem;
-    width: 100vw;
+.spacer {
+    flex-grow: 1;
+}
+
+
+.btn {
+    height: fit-content;
+    border: none;
+    border-radius: 5px;
+    padding: 3px;
+    background-color: var(--btn-color);
+}
+
+.btn:hover {
+    cursor: pointer;
+    background-color: lightgray;
+}
+
+
+.inline-img {
+    width: 1rem;
+    height: 1rem;
+}
+
+
+.input-text {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 3px 10px 3px 10px;
+}
+
+
+
+.profile-header {
+    background: var(--profile-header-color);
+    align-items: center;
+    padding: 10px;
+}
+
+.profile-header-btn {
+    margin: 0 1px 0 1px;
 }
 
 .label {
-    background-color: var(--header-label-color);
+    background-color: var(--profile-header-label-color);
     padding: 5px;
     border-radius: 5px;
     margin-left: 15px;
     margin-bottom: 5px;
 }
 
-#user-info {
 
+
+#learning {
+    align-self: center;
 }
 
-
-.spacer {
-    flex-grow: .8;
+#learning-header {
+    margin: 10px 0 10px 0;
 }
 
-
-button {
-    height: fit-content;
-    border-radius: 5px;
+#courses-list {
+    padding: 5px;
+    background-color:var(--courses-list-color);
 }
 
-button:hover {
-    cursor: pointer;
+.course-wrap {
+    padding: 5px;
+    background-color: var(--course-padding-color);
 }
