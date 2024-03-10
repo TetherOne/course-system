@@ -19,8 +19,6 @@ from courseapp.models import Course
 from courseapp.models import Video
 from courseapp.models import Test
 
-from django.shortcuts import render
-
 
 class UsersViewSet(ModelViewSet):
 
@@ -53,7 +51,9 @@ class CoursesViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
 
-        serializer.save(teacher_profile=self.request.user.teacher_profile)
+        serializer.save(
+            teacher_profile=self.request.user.teacher_profile,
+        )
 
 
 class VideosViewSet(ModelViewSet):
@@ -75,7 +75,3 @@ class EnrollmentViewSet(ModelViewSet):
     queryset = Enrollment.objects.all()
     serializer_class = EnrollmentSerializer
     permission_classes = IsAuthenticated,
-
-
-def courses_list(request):
-    return render(request, 'courseapp/courses-list.html')
