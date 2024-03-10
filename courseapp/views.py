@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-=======
-from rest_framework.permissions import IsAuthenticated
->>>>>>> backend_branch
-
 from courseapp.serializers import UserRegistrationSerializer
 from courseapp.serializers import TeacherProfileSerializer
 from courseapp.serializers import StudentProfileSerializer
@@ -50,7 +44,6 @@ class CoursesViewSet(ModelViewSet):
 
     queryset = Course.objects.all()
     serializer_class = CoursesSerializer
-    permission_classes = IsAuthenticated,
 
     def perform_create(self, serializer):
 
