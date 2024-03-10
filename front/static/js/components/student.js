@@ -1,32 +1,42 @@
-import { frontURL } from "../server.js";
-
+import {frontURL} from "../server.js";
 
 
 export const student = {
     template: `
-        <header class="flex-row">
-            <img src="{{avatar_src}}" alt="Фото">
-            <div id="user-info" class="flex-column">
-                <div class="label">{{surname}} {{name}} {{fatherName}}</div>
-                <div class="label">{{faculty}}</div>
-                <div class="label">{{email}}</div>
-            </div>
-            <div class="spacer"></div>
-            <button v-if="role === 'student'">Ввести код курса</button>
-            <button>Искать</button> <!-- Кого искать? -->
-        </header>
-        <div class="flex-row">
-            <div v-if="role === 'student'">Моё обучение</div>
-            <div class="flex-row">
-                <img src="/magnifiers.png" alt="Поиск">
-                <input type="text" name="" id="" placeholder="Название курса">
-            </div>
-        </div>
-        <div>
-            <div>Мои курсы:</div>
-            <div v-for="course in courses">
-                <div>{{course.name}}</div>
-                <div>{{course.description}}</div>
+        <div class="flex-column">
+            <header class="profile-header flex-row">
+                <img src="/avatar.png" alt="Фото" class="avatar">
+                <div class="flex-column spacer">
+                    <div class="flex-row"> 
+                        <div class="label">{{ surname }} {{ name }} {{ father_name }}</div>
+                        <div class="spacer"></div>
+                        <button class="btn profile-header-btn">Выход</button>
+                    </div>
+                    <div class="flex-row"> 
+                        <div class="label">{{ faculty }}</div>
+                        <div class="spacer"></div>
+                        <button class="btn profile-header-btn">Смен. тем.</button>
+                        <button class="btn profile-header-btn">Настр.</button>
+                    </div>
+                </div>
+            </header>
+            <div id="learning" class="flex-column"> 
+                <div id="learning-header" class="flex-row">
+                    <div>Моё обучение</div>
+                    <div class="spacer"></div>
+                    <input type="text" class="input-text" placeholder="Название курса">
+                </div>
+                <div id="courses-list" class="flex-column">
+                    <div class="course-wrap flex-row" v-for="course in courses"> 
+                        <div class="label">
+                            {{ course.course_name }}
+                        </div>
+                        <div class="spacer"></div>
+                        <div class="label"> 
+                            {{ course.teacherInfo }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     `,
@@ -34,7 +44,7 @@ export const student = {
         return {
             surname: '{surname}',
             name: '{name}',
-            fatherName: '{fatherName}',
+            father_name: '{fatherName}',
             faculty: '{faculty}',
             email: '{email}',
             courses: [],
@@ -42,9 +52,7 @@ export const student = {
             id: localStorage.id
         }
     },
-    methods: {
-
-    },
+    methods: {},
     created() {
         fetch(`${frontURL}/get_student?id=${this.id}`).then(
             response => {
@@ -54,18 +62,17 @@ export const student = {
             json => {
                 this.surname = json.surname;
                 this.name = json.name
-                this.fatherName = json.father_name;
+                this.father_name = json.father_name;
+                this.faculty = json.faculty;
             }
         );
 
-        fetch(`${frontURL}/get_student_courses?${this.id}`).then(
+        fetch(`${frontURL}/get_student_courses?id=${this.id}`).then(
             response => response.json()
         ).then(
             courses => {
-                courses.forEach(course => {
-
-                })
+                this.courses = courses;
             }
-        )
+        );
     }
 };
