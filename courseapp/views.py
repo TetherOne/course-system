@@ -1,7 +1,3 @@
-from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-
 from courseapp.serializers import UserRegistrationSerializer
 from courseapp.serializers import TeacherProfileSerializer
 from courseapp.serializers import StudentProfileSerializer
@@ -10,10 +6,17 @@ from courseapp.serializers import CoursesSerializer
 from courseapp.serializers import VideoSerializer
 from courseapp.serializers import TestSerializer
 
+from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.viewsets import ModelViewSet
 
+from rest_framework.response import Response
+
+from rest_framework.decorators import action
+
 from django.contrib.auth.models import User
+
+from django.core.cache import cache
 
 from courseapp.models import TeacherProfile
 from courseapp.models import StudentProfile
