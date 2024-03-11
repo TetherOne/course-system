@@ -6,10 +6,17 @@ from courseapp.serializers import CoursesSerializer
 from courseapp.serializers import VideoSerializer
 from courseapp.serializers import TestSerializer
 
+from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.viewsets import ModelViewSet
 
+from rest_framework.response import Response
+
+from rest_framework.decorators import action
+
 from django.contrib.auth.models import User
+
+from django.core.cache import cache
 
 from courseapp.models import TeacherProfile
 from courseapp.models import StudentProfile
@@ -42,14 +49,24 @@ class StudentProfilesViewSet(ModelViewSet):
 
 class CoursesViewSet(ModelViewSet):
 
-    queryset = Course.objects.all()
+    queryset = Course.objects.select_related('teacher_profile').all()
     serializer_class = CoursesSerializer
 
-    def perform_create(self, serializer):
+    # def perform_create(self, serializer):
+    #
+    #     serializer.save(
+    #         teacher_profile=self.request.user.teacher_profile,
+    #     )
 
-        serializer.save(
-            teacher_profile=self.request.user.teacher_profile,
-        )
+    @action(detail=True, methods=['get'])
+    def students_list(self, request, pk=None):
+
+        course = self.get_object()
+        enrollments = Enrollment.objects.filter(course=course)
+        students = [enrollment.student for enrollment in enrollments]
+        serializer = StudentProfileSerializer(students, many=True)
+
+        return Response(serializer.data)
 
 
 class VideosViewSet(ModelViewSet):

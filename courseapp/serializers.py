@@ -58,9 +58,22 @@ class StudentProfileSerializer(serializers.ModelSerializer):
 
 
 class CoursesSerializer(serializers.ModelSerializer):
+
+    teacher_name = serializers.SerializerMethodField()
+
     class Meta:
         model = Course
         fields = '__all__'
+
+    def get_teacher_name(self, obj):
+        if obj.teacher_profile:
+            teacher_profile = obj.teacher_profile
+            return {
+                'name': teacher_profile.name,
+                'surname': teacher_profile.surname,
+                'father_name': teacher_profile.father_name
+            }
+        return None
 
 
 class VideoSerializer(serializers.ModelSerializer):
