@@ -46,7 +46,6 @@ class CoursesViewSet(ModelViewSet):
 
     queryset = Course.objects.all()
     serializer_class = CoursesSerializer
-    permissions_classes = IsAuthenticated,
 
     def perform_create(self, serializer):
 
