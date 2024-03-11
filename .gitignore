@@ -16,3 +16,5 @@ idea/
 /.idea/
 /.idea
 .idea/
+/front_vue/.vscode/
+/front_vue/node_modules/
