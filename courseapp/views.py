@@ -1,4 +1,6 @@
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from courseapp.serializers import UserRegistrationSerializer
 from courseapp.serializers import TeacherProfileSerializer
@@ -52,6 +54,16 @@ class CoursesViewSet(ModelViewSet):
     #     serializer.save(
     #         teacher_profile=self.request.user.teacher_profile,
     #     )
+
+    @action(detail=True, methods=['get'])
+    def students_list(self, request, pk=None):
+
+        course = self.get_object()
+        enrollments = Enrollment.objects.filter(course=course)
+        students = [enrollment.student for enrollment in enrollments]
+        serializer = StudentProfileSerializer(students, many=True)
+
+        return Response(serializer.data)
 
 
 class VideosViewSet(ModelViewSet):

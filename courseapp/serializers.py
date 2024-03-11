@@ -58,6 +58,7 @@ class StudentProfileSerializer(serializers.ModelSerializer):
 
 
 class CoursesSerializer(serializers.ModelSerializer):
+
     teacher_name = serializers.SerializerMethodField()
 
     class Meta:
