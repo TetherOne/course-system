@@ -44,14 +44,14 @@ class StudentProfilesViewSet(ModelViewSet):
 
 class CoursesViewSet(ModelViewSet):
 
-    queryset = Course.objects.all()
+    queryset = Course.objects.select_related('teacher_profile').all()
     serializer_class = CoursesSerializer
 
-    def perform_create(self, serializer):
-
-        serializer.save(
-            teacher_profile=self.request.user.teacher_profile,
-        )
+    # def perform_create(self, serializer):
+    #
+    #     serializer.save(
+    #         teacher_profile=self.request.user.teacher_profile,
+    #     )
 
 
 class VideosViewSet(ModelViewSet):
