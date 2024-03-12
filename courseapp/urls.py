@@ -1,6 +1,6 @@
-from courseapp.views import TeacherProfilesViewSet, UsersViewSet
+from courseapp.views import TeacherProfilesViewSet, UsersViewSet, QuestionsViewSet
 from courseapp.views import StudentProfilesViewSet
-from courseapp.views import EnrollmentViewSet
+from courseapp.views import EnrollmentsViewSet
 from courseapp.views import CoursesViewSet
 from courseapp.views import VideosViewSet
 from courseapp.views import TestsViewSet
@@ -32,6 +32,10 @@ routers.register(
     StudentProfilesViewSet,
 )
 routers.register(
+    'enrollments',
+    EnrollmentsViewSet,
+)
+routers.register(
     'videos',
     VideosViewSet,
 )
@@ -40,8 +44,12 @@ routers.register(
     TestsViewSet,
 )
 routers.register(
-    'enrollments',
-    EnrollmentViewSet,
+    'questions',
+    QuestionsViewSet,
+)
+routers.register(
+    r'tests/(?P<test_pk>\d+)/questions',
+    QuestionsViewSet
 )
 
 

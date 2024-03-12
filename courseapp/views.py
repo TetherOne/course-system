@@ -1,4 +1,6 @@
-from courseapp.serializers import UserRegistrationSerializer
+from rest_framework import status
+
+from courseapp.serializers import UserRegistrationSerializer, QuestionSerializer
 from courseapp.serializers import TeacherProfileSerializer
 from courseapp.serializers import StudentProfileSerializer
 from courseapp.serializers import EnrollmentSerializer
@@ -18,7 +20,7 @@ from django.contrib.auth.models import User
 
 from django.core.cache import cache
 
-from courseapp.models import TeacherProfile
+from courseapp.models import TeacherProfile, Question
 from courseapp.models import StudentProfile
 from courseapp.models import Enrollment
 from courseapp.models import Course
@@ -81,7 +83,19 @@ class TestsViewSet(ModelViewSet):
     serializer_class = TestSerializer
 
 
-class EnrollmentViewSet(ModelViewSet):
+class EnrollmentsViewSet(ModelViewSet):
 
     queryset = Enrollment.objects.all()
     serializer_class = EnrollmentSerializer
+
+
+class QuestionsViewSet(ModelViewSet):
+
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(test_id=kwargs['test_pk'])  # Сохраняем ID теста для создания связи
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

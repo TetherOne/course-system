@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-from .models import TeacherProfile
+from .models import TeacherProfile, Question, Answer
 from .models import StudentProfile
 from .models import Enrollment
 from .models import Course
@@ -76,19 +76,37 @@ class CoursesSerializer(serializers.ModelSerializer):
         return None
 
 
+class EnrollmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Enrollment
+        fields = '__all__'
+
+
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
         fields = '__all__'
 
 
-class TestSerializer(serializers.ModelSerializer):
+class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Test
+        model = Answer
         fields = '__all__'
 
 
-class EnrollmentSerializer(serializers.ModelSerializer):
+class QuestionSerializer(serializers.ModelSerializer):
+
+    answers = AnswerSerializer(many=True, read_only=True)
+
     class Meta:
-        model = Enrollment
+        model = Question
+        fields = '__all__'
+
+
+class TestSerializer(serializers.ModelSerializer):
+
+    questions = QuestionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Test
         fields = '__all__'
