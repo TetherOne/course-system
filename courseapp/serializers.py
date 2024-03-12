@@ -2,9 +2,11 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-from .models import TeacherProfile, Question, Answer
+from .models import TeacherProfile
 from .models import StudentProfile
 from .models import Enrollment
+from .models import Question
+from .models import Answer
 from .models import Course
 from .models import Video
 from .models import Test
@@ -52,19 +54,9 @@ class TeacherProfileSerializer(serializers.ModelSerializer):
 
 
 class StudentProfileSerializer(serializers.ModelSerializer):
-
-    enrollments = serializers.SerializerMethodField()
-
     class Meta:
         model = StudentProfile
         fields = '__all__'
-
-    def get_enrollments(self, obj):
-
-        enrollments = Enrollment.objects.filter(student=obj)
-        serializer = EnrollmentSerializer(enrollments, many=True)
-
-        return serializer.data
 
 
 class CoursesSerializer(serializers.ModelSerializer):

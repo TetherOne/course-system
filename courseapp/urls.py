@@ -1,8 +1,9 @@
-from courseapp.views import TeacherProfilesViewSet, UsersViewSet, QuestionsViewSet
+from courseapp.views import TeacherProfilesViewSet
 from courseapp.views import StudentProfilesViewSet
 from courseapp.views import EnrollmentsViewSet
-# from courseapp.views import CoursesViewSet
+from courseapp.views import QuestionsViewSet
 from courseapp.views import VideosViewSet
+from courseapp.views import UsersViewSet
 from courseapp.views import TestsViewSet
 
 from rest_framework.routers import DefaultRouter
@@ -19,10 +20,6 @@ routers.register(
     'users',
     UsersViewSet,
 )
-# routers.register(
-#     'courses',
-#     CoursesViewSet,
-# )
 routers.register(
     'teacher-profiles',
     TeacherProfilesViewSet,
