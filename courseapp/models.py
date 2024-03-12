@@ -78,7 +78,7 @@ def course_video_directory_path(instance: 'Video', filename: str) -> str:
     return f'videos/{instance.course.course_name}/{filename}'
 
 
-class Video(models.Model):
+class Lesson(models.Model):
 
     id = models.AutoField(primary_key=True)
     lesson_name = models.CharField(max_length=100, blank=True, null=True)
@@ -95,7 +95,7 @@ class Test(models.Model):
 
     id = models.AutoField(primary_key=True)
     video = models.ForeignKey(
-        Video,
+        Lesson,
         on_delete=models.SET_NULL,
         null=True,
         related_name='test',

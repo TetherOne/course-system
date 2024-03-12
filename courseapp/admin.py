@@ -4,7 +4,7 @@ from courseapp.models import Enrollment
 from courseapp.models import Question
 from courseapp.models import Answer
 from courseapp.models import Course
-from courseapp.models import Video
+from courseapp.models import Lesson
 from courseapp.models import Test
 
 from django.utils.html import format_html
@@ -58,7 +58,7 @@ class StudentProfileAdmin(admin.ModelAdmin):
 
 
 class CourseInline(admin.StackedInline):
-    model = Video
+    model = Lesson
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
@@ -81,8 +81,8 @@ class CourseAdmin(admin.ModelAdmin):
 class TestInline(admin.StackedInline):
     model = Test
 
-@admin.register(Video)
-class VideoAdmin(admin.ModelAdmin):
+@admin.register(Lesson)
+class LessonAdmin(admin.ModelAdmin):
 
     inlines = [
         TestInline,
@@ -95,7 +95,7 @@ class VideoAdmin(admin.ModelAdmin):
     list_per_page = 10
 
     def get_queryset(self, request):
-        return Video.objects.select_related('course')
+        return Lesson.objects.select_related('course')
 
     def display_video(self, obj):
         if obj.video:
