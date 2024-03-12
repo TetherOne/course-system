@@ -52,9 +52,19 @@ class TeacherProfileSerializer(serializers.ModelSerializer):
 
 
 class StudentProfileSerializer(serializers.ModelSerializer):
+
+    enrollments = serializers.SerializerMethodField()
+
     class Meta:
         model = StudentProfile
         fields = '__all__'
+
+    def get_enrollments(self, obj):
+
+        enrollments = Enrollment.objects.filter(student=obj)
+        serializer = EnrollmentSerializer(enrollments, many=True)
+
+        return serializer.data
 
 
 class CoursesSerializer(serializers.ModelSerializer):
