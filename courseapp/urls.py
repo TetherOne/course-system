@@ -1,7 +1,7 @@
 from courseapp.views import TeacherProfilesViewSet, UsersViewSet, QuestionsViewSet
 from courseapp.views import StudentProfilesViewSet
 from courseapp.views import EnrollmentsViewSet
-from courseapp.views import CoursesViewSet
+# from courseapp.views import CoursesViewSet
 from courseapp.views import VideosViewSet
 from courseapp.views import TestsViewSet
 
@@ -19,10 +19,10 @@ routers.register(
     'users',
     UsersViewSet,
 )
-routers.register(
-    'courses',
-    CoursesViewSet,
-)
+# routers.register(
+#     'courses',
+#     CoursesViewSet,
+# )
 routers.register(
     'teacher-profiles',
     TeacherProfilesViewSet,

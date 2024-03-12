@@ -68,30 +68,9 @@ class StudentProfileSerializer(serializers.ModelSerializer):
 
 
 class CoursesSerializer(serializers.ModelSerializer):
-
-    teacher_name = serializers.SerializerMethodField()
-
     class Meta:
         model = Course
         fields = '__all__'
-
-    def get_teacher_name(self, obj):
-        if obj.teacher_profile:
-            teacher_profile = obj.teacher_profile
-            return {
-                'name': teacher_profile.name,
-                'surname': teacher_profile.surname,
-                'father_name': teacher_profile.father_name
-            }
-        return None
-
-    def get_videos(self, obj):
-        videos = obj.videos.all()
-        return VideoSerializer(videos, many=True).data
-
-    def get_tests(self, obj):
-        tests = obj.videos.all().values_list('test__id', flat=True).distinct()
-        return TestSerializer(Test.objects.filter(id__in=tests), many=True).data
 
 
 class EnrollmentSerializer(serializers.ModelSerializer):

@@ -19,7 +19,6 @@ from courseapp.models import TeacherProfile
 from courseapp.models import StudentProfile
 from courseapp.models import Enrollment
 from courseapp.models import Question
-from courseapp.models import Course
 from courseapp.models import Video
 from courseapp.models import Test
 
@@ -42,57 +41,23 @@ class TeacherProfilesViewSet(ModelViewSet):
 
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        courses_serializer = CoursesSerializer(instance.courses.all(), many=True)
-        data = serializer.data
-        data['courses'] = courses_serializer.data
 
-        return Response(data)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def courses(self, request, pk=None):
+
+        instance = self.get_object()
+        courses = instance.courses.all()
+        serializer = CoursesSerializer(courses, many=True)
+
+        return Response(serializer.data)
 
 
 class StudentProfilesViewSet(ModelViewSet):
 
     queryset = StudentProfile.objects.all()
     serializer_class = StudentProfileSerializer
-
-
-class CoursesViewSet(ModelViewSet):
-
-    queryset = Course.objects.select_related('teacher_profile').all()
-    serializer_class = CoursesSerializer
-
-    # def perform_create(self, serializer):
-    #
-    #     serializer.save(
-    #         teacher_profile=self.request.user.teacher_profile,
-    #     )
-
-    @action(detail=True, methods=['get'])
-    def students_list(self, request, pk=None):
-
-        course = self.get_object()
-        enrollments = Enrollment.objects.filter(course=course)
-        students = [enrollment.student for enrollment in enrollments]
-        serializer = StudentProfileSerializer(students, many=True)
-
-        return Response(serializer.data)
-
-    @action(detail=True, methods=['get'])
-    def videos_list(self, request, pk=None):
-
-        course = self.get_object()
-        videos = Video.objects.filter(course=course)
-        serializer = VideoSerializer(videos, many=True)
-
-        return Response(serializer.data)
-
-    @action(detail=True, methods=['get'])
-    def tests_list(self, request, pk=None):
-
-        course = self.get_object()
-        tests = Test.objects.filter(video__course=course)
-        serializer = TestSerializer(tests, many=True)
-
-        return Response(serializer.data)
 
 
 class VideosViewSet(ModelViewSet):
