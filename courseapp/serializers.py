@@ -5,11 +5,7 @@ from rest_framework import serializers
 from .models import TeacherProfile
 from .models import StudentProfile
 from .models import Enrollment
-from .models import Question
-from .models import Answer
 from .models import Course
-from .models import Video
-from .models import Test
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -68,34 +64,4 @@ class CoursesSerializer(serializers.ModelSerializer):
 class EnrollmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
-        fields = '__all__'
-
-
-class VideoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Video
-        fields = '__all__'
-
-
-class AnswerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Answer
-        fields = '__all__'
-
-
-class QuestionSerializer(serializers.ModelSerializer):
-
-    answers = AnswerSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Question
-        fields = '__all__'
-
-
-class TestSerializer(serializers.ModelSerializer):
-
-    questions = QuestionSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Test
         fields = '__all__'
