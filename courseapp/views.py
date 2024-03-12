@@ -1,14 +1,11 @@
-from rest_framework import status
-
-from courseapp.serializers import UserRegistrationSerializer, QuestionSerializer
+from courseapp.serializers import UserRegistrationSerializer
 from courseapp.serializers import TeacherProfileSerializer
 from courseapp.serializers import StudentProfileSerializer
 from courseapp.serializers import EnrollmentSerializer
+from courseapp.serializers import QuestionSerializer
 from courseapp.serializers import CoursesSerializer
 from courseapp.serializers import VideoSerializer
 from courseapp.serializers import TestSerializer
-
-from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.viewsets import ModelViewSet
 
@@ -18,11 +15,10 @@ from rest_framework.decorators import action
 
 from django.contrib.auth.models import User
 
-from django.core.cache import cache
-
-from courseapp.models import TeacherProfile, Question
+from courseapp.models import TeacherProfile
 from courseapp.models import StudentProfile
 from courseapp.models import Enrollment
+from courseapp.models import Question
 from courseapp.models import Course
 from courseapp.models import Video
 from courseapp.models import Test
@@ -41,6 +37,16 @@ class TeacherProfilesViewSet(ModelViewSet):
 
     queryset = TeacherProfile.objects.all()
     serializer_class = TeacherProfileSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        courses_serializer = CoursesSerializer(instance.courses.all(), many=True)
+        data = serializer.data
+        data['courses'] = courses_serializer.data
+
+        return Response(data)
 
 
 class StudentProfilesViewSet(ModelViewSet):
@@ -72,6 +78,7 @@ class CoursesViewSet(ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def videos_list(self, request, pk=None):
+
         course = self.get_object()
         videos = Video.objects.filter(course=course)
         serializer = VideoSerializer(videos, many=True)
