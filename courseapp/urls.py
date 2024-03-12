@@ -47,10 +47,6 @@ routers.register(
     'questions',
     QuestionsViewSet,
 )
-routers.register(
-    r'tests/(?P<test_pk>\d+)/questions',
-    QuestionsViewSet
-)
 
 
 urlpatterns = [

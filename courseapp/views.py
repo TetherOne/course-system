@@ -93,11 +93,3 @@ class QuestionsViewSet(ModelViewSet):
 
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-
-    def create(self, request, *args, **kwargs):
-
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(test_id=kwargs['test_pk'])
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
