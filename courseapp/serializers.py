@@ -75,6 +75,14 @@ class CoursesSerializer(serializers.ModelSerializer):
             }
         return None
 
+    def get_videos(self, obj):
+        videos = obj.videos.all()
+        return VideoSerializer(videos, many=True).data
+
+    def get_tests(self, obj):
+        tests = obj.videos.all().values_list('test__id', flat=True).distinct()
+        return TestSerializer(Test.objects.filter(id__in=tests), many=True).data
+
 
 class EnrollmentSerializer(serializers.ModelSerializer):
     class Meta:

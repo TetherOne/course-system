@@ -70,6 +70,23 @@ class CoursesViewSet(ModelViewSet):
 
         return Response(serializer.data)
 
+    @action(detail=True, methods=['get'])
+    def videos_list(self, request, pk=None):
+        course = self.get_object()
+        videos = Video.objects.filter(course=course)
+        serializer = VideoSerializer(videos, many=True)
+
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def tests_list(self, request, pk=None):
+
+        course = self.get_object()
+        tests = Test.objects.filter(video__course=course)
+        serializer = TestSerializer(tests, many=True)
+
+        return Response(serializer.data)
+
 
 class VideosViewSet(ModelViewSet):
 
