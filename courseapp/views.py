@@ -68,4 +68,4 @@ class TestsViewSet(ModelViewSet):
     queryset = Test.objects.prefetch_related('questions__answers').all()
     serializer_class = TestsSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['video']
+    filterset_fields = ['lesson']

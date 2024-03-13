@@ -87,7 +87,7 @@ class LessonAdmin(admin.ModelAdmin):
     inlines = [
         TestInline,
     ]
-    list_display = 'id', 'lesson_name', 'description', 'display_video', 'course'
+    list_display = 'id', 'lesson_name', 'description', 'display_lesson', 'course'
     list_display_links = 'id', 'description'
     search_fields = 'description',
     list_filter = ('course__course_name', 'lesson_name')
@@ -97,58 +97,58 @@ class LessonAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return Lesson.objects.select_related('course')
 
-    def display_video(self, obj):
+    def display_lesson(self, obj):
         if obj.video:
             return format_html(f'<video src="{obj.video.url}" controls width="200px" height="150px"></video>')
 
 
-
-class QuestionInline(admin.StackedInline):
-    model = Question
-
-@admin.register(Test)
-class TestAdmin(admin.ModelAdmin):
-
-    inlines = [
-        QuestionInline,
-    ]
-    list_display = 'id', 'title', 'lesson', 'course_name'
-    list_display_links = 'id', 'title'
-    search_fields = 'title',
-    list_filter = ('video__lesson_name', 'video__course__course_name')
-    ordering = 'id',
-    list_per_page = 10
-
-    def lesson(self, obj):
-        return obj.video.lesson_name if obj.video else None
-
-    def course_name(self, obj):
-        return obj.video.course.course_name if obj.video else None
-
-
-
-class AnswerInline(admin.StackedInline):
-    model = Answer
-
-@admin.register(Question)
-class QuestionAdmin(admin.ModelAdmin):
-
-    inlines = [
-        AnswerInline,
-    ]
-    list_display = 'id', 'question_text', 'lesson', 'course_name'
-    list_display_links = 'id', 'question_text'
-    search_fields = 'question_text',
-    list_filter = ('test__video__lesson_name', 'test__video__course__course_name')
-    ordering = 'id',
-    list_per_page = 10
-
-    def lesson(self, obj):
-        if obj.test and obj.test.video:
-            return obj.test.video.lesson_name
-        return None
-
-    def course_name(self, obj):
-        if obj.test and obj.test.video:
-            return obj.test.video.course.course_name
-        return None
+#
+# class QuestionInline(admin.StackedInline):
+#     model = Question
+#
+# @admin.register(Test)
+# class TestAdmin(admin.ModelAdmin):
+#
+#     inlines = [
+#         QuestionInline,
+#     ]
+#     list_display = 'id', 'title', 'lesson', 'course_name'
+#     list_display_links = 'id', 'title'
+#     search_fields = 'title',
+#     list_filter = ('lesson__lesson_name', 'lesson__course__course_name')
+#     ordering = 'id',
+#     list_per_page = 10
+#
+#     def lesson(self, obj):
+#         return obj.video.lesson_name if obj.video else None
+#
+#     def course_name(self, obj):
+#         return obj.video.course.course_name if obj.video else None
+#
+#
+#
+# class AnswerInline(admin.StackedInline):
+#     model = Answer
+#
+# @admin.register(Question)
+# class QuestionAdmin(admin.ModelAdmin):
+#
+#     inlines = [
+#         AnswerInline,
+#     ]
+#     list_display = 'id', 'question_text', 'lesson', 'course_name'
+#     list_display_links = 'id', 'question_text'
+#     search_fields = 'question_text',
+#     list_filter = ('test__lesson__lesson_name', 'test__lesson__course__course_name')
+#     ordering = 'id',
+#     list_per_page = 10
+#
+#     def lesson(self, obj):
+#         if obj.test and obj.test.video:
+#             return obj.test.video.lesson_name
+#         return None
+#
+#     def course_name(self, obj):
+#         if obj.test and obj.test.video:
+#             return obj.test.video.course.course_name
+#         return None
