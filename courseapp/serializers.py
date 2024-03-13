@@ -77,19 +77,23 @@ class LessonsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class TestsSerializer(serializers.ModelSerializer):
+class AnswersSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Test
+        model = Answer
         fields = '__all__'
 
 
 class QuestionsSerializer(serializers.ModelSerializer):
+    answers = AnswersSerializer(many=True, read_only=True)
+
     class Meta:
         model = Question
         fields = '__all__'
 
 
-class AnswersSerializer(serializers.ModelSerializer):
+class TestsSerializer(serializers.ModelSerializer):
+    questions = QuestionsSerializer(many=True, read_only=True)
+
     class Meta:
-        model = Answer
+        model = Test
         fields = '__all__'

@@ -85,17 +85,5 @@ class LessonsViewSet(ModelViewSet):
 
 class TestsViewSet(ModelViewSet):
 
-    queryset = Test.objects.all()
+    queryset = Test.objects.prefetch_related('questions__answers').all()
     serializer_class = TestsSerializer
-
-
-class QuestionsViewSet(ModelViewSet):
-
-    queryset = Question.objects.all()
-    serializer_class = QuestionsSerializer
-
-
-class AnswersViewSet(ModelViewSet):
-
-    queryset = Answer.objects.all()
-    serializer_class = AnswersSerializer
