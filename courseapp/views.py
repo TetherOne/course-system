@@ -1,3 +1,5 @@
+from django_filters.rest_framework import DjangoFilterBackend
+
 from courseapp.serializers import UserRegistrationSerializer
 from courseapp.serializers import TeacherProfileSerializer
 from courseapp.serializers import StudentProfileSerializer
