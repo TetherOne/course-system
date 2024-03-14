@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-from .models import TeacherProfile
+from .models import TeacherProfile, PassedTest
 from .models import StudentProfile
 from .models import Enrollment
 from .models import Question
@@ -98,4 +98,10 @@ class TestsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test
+        fields = '__all__'
+
+
+class PassedTestsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PassedTest
         fields = '__all__'

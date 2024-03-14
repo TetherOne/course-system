@@ -1,6 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 
-from courseapp.serializers import UserRegistrationSerializer
+from courseapp.serializers import UserRegistrationSerializer, QuestionsSerializer, PassedTestsSerializer
 from courseapp.serializers import TeacherProfileSerializer
 from courseapp.serializers import StudentProfileSerializer
 from courseapp.serializers import EnrollmentsSerializer
@@ -14,7 +14,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from django.contrib.auth.models import User
 
-from courseapp.models import TeacherProfile
+from courseapp.models import TeacherProfile, Question, PassedTest
 from courseapp.models import StudentProfile
 from courseapp.models import Enrollment
 from courseapp.models import Course
@@ -72,3 +72,18 @@ class TestsViewSet(ModelViewSet):
     serializer_class = TestsSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['lesson']
+
+
+class QuestionsViewSet(ModelViewSet):
+
+    queryset = Question.objects.all()
+    serializer_class = QuestionsSerializer
+
+
+class PassedTestsViewSet(ModelViewSet):
+
+    queryset = PassedTest.objects.all()
+    serializer_class = PassedTestsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['test', 'student']
+    ordering_fields = ['created_at']

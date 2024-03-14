@@ -117,6 +117,7 @@ class Question(models.Model):
         related_name='questions'
     )
     question_text = models.CharField(max_length=255)
+    max_points = models.IntegerField()
 
 
 class Answer(models.Model):
@@ -129,3 +130,21 @@ class Answer(models.Model):
     )
     answer_text = models.CharField(max_length=255)
     is_correct = models.BooleanField(default=False)
+
+
+class PassedTest(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    student = models.ForeignKey(
+        StudentProfile,
+        on_delete=models.CASCADE,
+        related_name='passed_tests'
+    )
+    test = models.ForeignKey(
+        Test,
+        on_delete=models.CASCADE,
+        related_name='passed_tests'
+    )
+    points = models.IntegerField()
+    percent = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)

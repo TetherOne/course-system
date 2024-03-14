@@ -1,4 +1,4 @@
-from courseapp.views import StudentProfilesViewSet
+from courseapp.views import StudentProfilesViewSet, QuestionsViewSet, PassedTestsViewSet
 from courseapp.views import TeacherProfilesViewSet
 from courseapp.views import EnrollmentsViewSet
 from courseapp.views import CoursesViewSet
@@ -43,6 +43,14 @@ routers.register(
 routers.register(
     'tests',
     TestsViewSet,
+)
+routers.register(
+    'questions',
+    QuestionsViewSet
+)
+routers.register(
+    'passed-tests',
+    PassedTestsViewSet
 )
 
 

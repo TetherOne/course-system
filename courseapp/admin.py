@@ -1,4 +1,4 @@
-from courseapp.models import TeacherProfile
+from courseapp.models import TeacherProfile, PassedTest
 from courseapp.models import StudentProfile
 from courseapp.models import Question
 from courseapp.models import Answer
@@ -117,9 +117,9 @@ class QuestionAdmin(admin.ModelAdmin):
     inlines = [
         AnswerInline,
     ]
-    list_display = ('id', 'question_text', 'lesson_name', 'course_name')
-    list_display_links = ('id', 'question_text')
-    search_fields = ('question_text', )
+    list_display = 'id', 'question_text', 'lesson_name', 'course_name', 'max_points'
+    list_display_links = 'id', 'question_text'
+    search_fields = 'question_text',
     list_filter = 'test__lesson__lesson_name', 'test__lesson__course__course_name'
     ordering = 'id',
     list_per_page = 10
@@ -132,3 +132,19 @@ class QuestionAdmin(admin.ModelAdmin):
     def course_name(self, obj):
         return getattr(obj.test.lesson.course, 'course_name', None)
     course_name.short_description = 'Course'
+
+
+@admin.register(PassedTest)
+class PassedTestAdmin(admin.ModelAdmin):
+
+    list_display = 'id', 'student', 'test', 'points', 'created_at'
+    list_display_links = 'id', 'student'
+    search_fields = 'student__surname', 'student__name', 'test__title'
+    list_filter = 'student', 'test'
+    ordering = 'id',
+    list_per_page = 10
+
+    def points(self, obj):
+        return obj.points
+
+    points.short_description = 'Points'
