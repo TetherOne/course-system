@@ -84,6 +84,7 @@ class AnswersSerializer(serializers.ModelSerializer):
 
 
 class QuestionsSerializer(serializers.ModelSerializer):
+
     answers = AnswersSerializer(many=True, read_only=True)
 
     class Meta:
@@ -92,6 +93,7 @@ class QuestionsSerializer(serializers.ModelSerializer):
 
 
 class TestsSerializer(serializers.ModelSerializer):
+
     questions = QuestionsSerializer(many=True, read_only=True)
 
     class Meta:
