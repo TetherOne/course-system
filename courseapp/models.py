@@ -55,9 +55,9 @@ class StudentProfile(models.Model):
         on_delete=models.CASCADE,
         related_name='student_profile',
     )
-
-    def __str__(self):
-        return f"{self.surname} {self.name} {self.father_name}"
+    #
+    # def __str__(self):
+    #     return f"{self.surname} {self.name} {self.father_name}"
 
 
 class Course(models.Model):

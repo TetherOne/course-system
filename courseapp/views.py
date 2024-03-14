@@ -8,6 +8,8 @@ from courseapp.serializers import CoursesSerializer
 from courseapp.serializers import LessonsSerializer
 from courseapp.serializers import TestsSerializer
 
+from rest_framework.filters import OrderingFilter
+
 from rest_framework.viewsets import ModelViewSet
 
 from django.contrib.auth.models import User
@@ -51,8 +53,9 @@ class CoursesViewSet(ModelViewSet):
 
     queryset = Course.objects.all()
     serializer_class = CoursesSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ['teacher_profile']
+    ordering_fields = ['created_at']
 
 
 class LessonsViewSet(ModelViewSet):
