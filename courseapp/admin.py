@@ -136,15 +136,15 @@ class QuestionAdmin(admin.ModelAdmin):
 
 @admin.register(PassedTest)
 class PassedTestAdmin(admin.ModelAdmin):
-
-    list_display = 'id', 'student', 'test', 'points', 'created_at'
-    list_display_links = 'id', 'student'
-    search_fields = 'student__surname', 'student__name', 'test__title'
-    list_filter = 'student', 'test'
-    ordering = 'id',
+    list_display = ('id', 'student', 'test', 'total_points', 'created_at')
+    list_display_links = ('id', 'student')
+    search_fields = ('student__surname', 'student__name', 'test__title')
+    list_filter = ('student', 'test')
+    ordering = ('id',)
     list_per_page = 10
 
-    def points(self, obj):
-        return obj.points
-
-    points.short_description = 'Points'
+    def total_points(self, obj):
+        # Assuming that each test can have multiple questions,
+        # we need to sum up the points for each question in the test.
+        total_points = obj.test.questions.aggregate(total=models.Sum('max_points'))['total']
+        return total_points if total_points is not None else 0
