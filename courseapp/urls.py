@@ -15,52 +15,40 @@ from django.urls import include
 from django.urls import path
 
 
-app_name = 'courseapp'
+app_name = "courseapp"
 
 
 routers = DefaultRouter()
 routers.register(
-    'users',
+    "users",
     UsersViewSet,
 )
 routers.register(
-    'teacher-profiles',
+    "teacher-profiles",
     TeacherProfilesViewSet,
 )
 routers.register(
-    'student-profiles',
+    "student-profiles",
     StudentProfilesViewSet,
 )
 routers.register(
-    'enrollments',
+    "enrollments",
     EnrollmentsViewSet,
 )
+routers.register("courses", CoursesViewSet)
 routers.register(
-    'courses',
-    CoursesViewSet
-)
-routers.register(
-    'lessons',
+    "lessons",
     LessonsViewSet,
 )
 routers.register(
-    'tests',
+    "tests",
     TestsViewSet,
 )
-routers.register(
-    'questions',
-    QuestionsViewSet
-)
-routers.register(
-    'answers',
-    AnswersViewSet
-)
-routers.register(
-    'passed-tests',
-    PassedTestsViewSet
-)
+routers.register("questions", QuestionsViewSet)
+routers.register("answers", AnswersViewSet)
+routers.register("passed-tests", PassedTestsViewSet)
 
 
 urlpatterns = [
-    path('', include(routers.urls)),
+    path("", include(routers.urls)),
 ]

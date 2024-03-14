@@ -15,13 +15,23 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='TeacherProfile',
+            name="TeacherProfile",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('surname', models.CharField(blank=True, max_length=100, null=True)),
-                ('father_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('faculty', models.CharField(blank=True, max_length=100, null=True)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='teacher_profile', to=settings.AUTH_USER_MODEL)),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("surname", models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "father_name",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                ("faculty", models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="teacher_profile",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

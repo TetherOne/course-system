@@ -60,8 +60,8 @@ class CoursesViewSet(ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CoursesSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ['teacher_profile']
-    ordering_fields = ['created_at']
+    filterset_fields = ["teacher_profile"]
+    ordering_fields = ["created_at"]
 
 
 class LessonsViewSet(ModelViewSet):
@@ -69,15 +69,15 @@ class LessonsViewSet(ModelViewSet):
     queryset = Lesson.objects.all()
     serializer_class = LessonsSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['course']
+    filterset_fields = ["course"]
 
 
 class TestsViewSet(ModelViewSet):
 
-    queryset = Test.objects.prefetch_related('questions__answers').all()
+    queryset = Test.objects.prefetch_related("questions__answers").all()
     serializer_class = TestsSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['lesson']
+    filterset_fields = ["lesson"]
 
 
 class QuestionsViewSet(ModelViewSet):
@@ -97,5 +97,5 @@ class PassedTestsViewSet(ModelViewSet):
     queryset = PassedTest.objects.all()
     serializer_class = PassedTestsSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['test', 'student']
-    ordering_fields = ['created_at']
+    filterset_fields = ["test", "student"]
+    ordering_fields = ["created_at"]
