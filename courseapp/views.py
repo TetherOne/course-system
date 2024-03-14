@@ -1,10 +1,12 @@
 from django_filters.rest_framework import DjangoFilterBackend
 
-from courseapp.serializers import UserRegistrationSerializer, QuestionsSerializer, PassedTestsSerializer, \
-    AnswersSerializer
+from courseapp.serializers import UserRegistrationSerializer
 from courseapp.serializers import TeacherProfileSerializer
 from courseapp.serializers import StudentProfileSerializer
 from courseapp.serializers import EnrollmentsSerializer
+from courseapp.serializers import PassedTestsSerializer
+from courseapp.serializers import QuestionsSerializer
+from courseapp.serializers import AnswersSerializer
 from courseapp.serializers import CoursesSerializer
 from courseapp.serializers import LessonsSerializer
 from courseapp.serializers import TestsSerializer
@@ -15,9 +17,12 @@ from rest_framework.viewsets import ModelViewSet
 
 from django.contrib.auth.models import User
 
-from courseapp.models import TeacherProfile, Question, PassedTest, Answer
+from courseapp.models import TeacherProfile
 from courseapp.models import StudentProfile
+from courseapp.models import PassedTest
 from courseapp.models import Enrollment
+from courseapp.models import Question
+from courseapp.models import Answer
 from courseapp.models import Course
 from courseapp.models import Lesson
 from courseapp.models import Test

@@ -2,8 +2,9 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-from .models import TeacherProfile, PassedTest
+from .models import TeacherProfile
 from .models import StudentProfile
+from .models import PassedTest
 from .models import Enrollment
 from .models import Question
 from .models import Course

@@ -1,6 +1,9 @@
-from courseapp.views import StudentProfilesViewSet, QuestionsViewSet, PassedTestsViewSet, AnswersViewSet
+from courseapp.views import StudentProfilesViewSet
 from courseapp.views import TeacherProfilesViewSet
 from courseapp.views import EnrollmentsViewSet
+from courseapp.views import PassedTestsViewSet
+from courseapp.views import QuestionsViewSet
+from courseapp.views import AnswersViewSet
 from courseapp.views import CoursesViewSet
 from courseapp.views import LessonsViewSet
 from courseapp.views import TestsViewSet
