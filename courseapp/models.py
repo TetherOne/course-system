@@ -26,7 +26,7 @@ class TeacherProfile(models.Model):
     surname = models.CharField(max_length=100, blank=True, null=True)
     father_name = models.CharField(max_length=100, blank=True, null=True)
     faculty = models.CharField(max_length=100, blank=True, null=True)
-    avatar = models.FileField(null=True, upload_to="teacher-avatars/", blank=True)
+    avatar = models.ImageField(null=True, upload_to="teacher-avatars/", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.OneToOneField(
         User,
@@ -46,7 +46,7 @@ class StudentProfile(models.Model):
     father_name = models.CharField(max_length=100, blank=True, null=True)
     faculty = models.CharField(max_length=100, blank=True, null=True)
     group = models.CharField(max_length=100, blank=True, null=True)
-    avatar = models.FileField(null=True, upload_to="student-avatars/", blank=True)
+    avatar = models.ImageField(null=True, upload_to="student-avatars/", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.OneToOneField(
         User,
