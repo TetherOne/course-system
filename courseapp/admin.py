@@ -18,7 +18,7 @@ class TeacherProfileAdmin(admin.ModelAdmin):
     list_display_links = "id", "surname"
     search_fields = "surname", "father_name", "faculty"
     list_filter = "surname", "father_name", "faculty"
-    ordering = "id",
+    ordering = ("id",)
     list_per_page = 10
 
 
@@ -29,7 +29,7 @@ class StudentProfileAdmin(admin.ModelAdmin):
     list_display_links = "id", "surname"
     search_fields = "surname", "father_name", "faculty", "group"
     list_filter = "surname", "father_name", "faculty", "group"
-    ordering = "id",
+    ordering = ("id",)
     list_per_page = 10
 
 
@@ -45,9 +45,9 @@ class CourseAdmin(admin.ModelAdmin):
     ]
     list_display = "id", "course_name", "description", "teacher_profile"
     list_display_links = "id", "course_name"
-    search_fields = "course_name",
-    list_filter = "teacher_profile",
-    ordering = "id",
+    search_fields = ("course_name",)
+    list_filter = ("teacher_profile",)
+    ordering = ("id",)
     list_per_page = 10
 
     def get_queryset(self, request):
@@ -66,9 +66,9 @@ class LessonAdmin(admin.ModelAdmin):
     ]
     list_display = "id", "lesson_name", "description", "display_lesson", "course"
     list_display_links = "id", "description"
-    search_fields = "description",
+    search_fields = ("description",)
     list_filter = "course__course_name", "lesson_name"
-    ordering = "id",
+    ordering = ("id",)
     list_per_page = 10
 
     def get_queryset(self, request):
@@ -93,9 +93,9 @@ class TestAdmin(admin.ModelAdmin):
     ]
     list_display = "id", "title", "lesson_name", "course_name"
     list_display_links = "id", "title"
-    search_fields = "title",
+    search_fields = ("title",)
     list_filter = "lesson__lesson_name", "lesson__course__course_name"
-    ordering = "id",
+    ordering = ("id",)
     list_per_page = 10
     readonly_fields = "lesson_name", "course_name"
 
@@ -122,9 +122,9 @@ class QuestionAdmin(admin.ModelAdmin):
     ]
     list_display = "id", "question_text", "lesson_name", "course_name", "max_points"
     list_display_links = "id", "question_text"
-    search_fields = "question_text",
+    search_fields = ("question_text",)
     list_filter = "test__lesson__lesson_name", "test__lesson__course__course_name"
-    ordering = "id",
+    ordering = ("id",)
     list_per_page = 10
     readonly_fields = "lesson_name", "course_name"
 
@@ -145,5 +145,5 @@ class PassedTestAdmin(admin.ModelAdmin):
     list_display_links = "id", "student"
     search_fields = "student__surname", "student__name", "test__title"
     list_filter = "student", "test"
-    ordering = "id",
+    ordering = ("id",)
     list_per_page = 10

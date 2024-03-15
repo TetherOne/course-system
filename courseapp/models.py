@@ -1,8 +1,8 @@
-import uuid
-
 from django.contrib.auth.models import User
 
 from django.db import models
+
+import uuid
 
 
 class Enrollment(models.Model):
@@ -67,14 +67,14 @@ class Course(models.Model):
         null=True,
         related_name="courses",
     )
-    course_password = models.CharField(max_length=50, default='', blank=True)
+    course_password = models.CharField(max_length=50, default="", blank=True)
 
     def __str__(self):
         return f"{self.course_name}"
 
     def save(self, *args, **kwargs):
         if not self.course_password:
-            self.course_password = str(uuid.uuid4())[:8].replace('-', '')
+            self.course_password = str(uuid.uuid4())[:8].replace("-", "")
         super().save(*args, **kwargs)
 
 
