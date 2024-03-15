@@ -12,7 +12,7 @@ def test_register_teacher():
         "email": "test@ya.ru",
         "username": "test_teacher",
         "password": "test123",
-        "is_teacher": True
+        "is_teacher": True,
     }
 
     response = client.post("/api/users/", payload)
@@ -32,7 +32,7 @@ def test_register_student():
         "email": "test@ya.ru",
         "username": "test_student",
         "password": "test123",
-        "is_teacher": False
+        "is_teacher": False,
     }
 
     response = client.post("/api/users/", payload)
