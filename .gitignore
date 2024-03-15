@@ -18,3 +18,7 @@ idea/
 .idea/
 /front_vue/.vscode/
 /front_vue/node_modules/
+
+.pytest_cache/
+/.pytest_cache/
+.pytest_cache

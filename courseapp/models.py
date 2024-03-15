@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 
 from django.db import models
 
+import uuid
+
 
 class Enrollment(models.Model):
 
@@ -24,7 +26,7 @@ class TeacherProfile(models.Model):
     surname = models.CharField(max_length=100, blank=True, null=True)
     father_name = models.CharField(max_length=100, blank=True, null=True)
     faculty = models.CharField(max_length=100, blank=True, null=True)
-    avatar = models.FileField(null=True, upload_to="teacher-avatars/", blank=True)
+    avatar = models.ImageField(null=True, upload_to="teacher-avatars/", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.OneToOneField(
         User,
@@ -44,7 +46,7 @@ class StudentProfile(models.Model):
     father_name = models.CharField(max_length=100, blank=True, null=True)
     faculty = models.CharField(max_length=100, blank=True, null=True)
     group = models.CharField(max_length=100, blank=True, null=True)
-    avatar = models.FileField(null=True, upload_to="student-avatars/", blank=True)
+    avatar = models.ImageField(null=True, upload_to="student-avatars/", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.OneToOneField(
         User,
@@ -65,9 +67,15 @@ class Course(models.Model):
         null=True,
         related_name="courses",
     )
+    course_password = models.CharField(max_length=50, default="", blank=True)
 
     def __str__(self):
         return f"{self.course_name}"
+
+    def save(self, *args, **kwargs):
+        if not self.course_password:
+            self.course_password = str(uuid.uuid4())[:8].replace("-", "")
+        super().save(*args, **kwargs)
 
 
 def course_video_directory_path(instance: "Video", filename: str) -> str:
