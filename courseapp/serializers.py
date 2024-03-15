@@ -2,11 +2,14 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-from .models import TeacherProfile, Question, Answer
+from .models import TeacherProfile
 from .models import StudentProfile
+from .models import PassedTest
 from .models import Enrollment
+from .models import Question
 from .models import Course
-from .models import Video
+from .models import Answer
+from .models import Lesson
 from .models import Test
 
 
@@ -16,12 +19,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = 'id', 'email', 'username', 'password', 'is_teacher'
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = "id", "email", "username", "password", "is_teacher"
+        extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
 
-        is_teacher = validated_data.pop('is_teacher', False)
+        is_teacher = validated_data.pop("is_teacher", False)
         user = User.objects.create_user(**validated_data)
 
         if is_teacher:
@@ -36,11 +39,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
         data = super().to_representation(instance)
 
-        if hasattr(instance, 'teacher_profile'):
-            data['is_teacher'] = True
+        if hasattr(instance, "teacher_profile"):
+            data["is_teacher"] = True
 
         else:
-            data['is_teacher'] = False
+            data["is_teacher"] = False
 
         return data
 
@@ -48,73 +51,58 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class TeacherProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeacherProfile
-        fields = '__all__'
+        fields = "__all__"
 
 
 class StudentProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentProfile
-        fields = '__all__'
+        fields = "__all__"
+
+
+class EnrollmentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Enrollment
+        fields = "__all__"
 
 
 class CoursesSerializer(serializers.ModelSerializer):
-
-    teacher_name = serializers.SerializerMethodField()
-
     class Meta:
         model = Course
-        fields = '__all__'
-
-    def get_teacher_name(self, obj):
-        if obj.teacher_profile:
-            teacher_profile = obj.teacher_profile
-            return {
-                'name': teacher_profile.name,
-                'surname': teacher_profile.surname,
-                'father_name': teacher_profile.father_name
-            }
-        return None
-
-    def get_videos(self, obj):
-        videos = obj.videos.all()
-        return VideoSerializer(videos, many=True).data
-
-    def get_tests(self, obj):
-        tests = obj.videos.all().values_list('test__id', flat=True).distinct()
-        return TestSerializer(Test.objects.filter(id__in=tests), many=True).data
+        fields = "__all__"
 
 
-class EnrollmentSerializer(serializers.ModelSerializer):
+class LessonsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Enrollment
-        fields = '__all__'
+        model = Lesson
+        fields = "__all__"
 
 
-class VideoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Video
-        fields = '__all__'
-
-
-class AnswerSerializer(serializers.ModelSerializer):
+class AnswersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = '__all__'
+        fields = "__all__"
 
 
-class QuestionSerializer(serializers.ModelSerializer):
+class QuestionsSerializer(serializers.ModelSerializer):
 
-    answers = AnswerSerializer(many=True, read_only=True)
+    answers = AnswersSerializer(many=True, read_only=True)
 
     class Meta:
         model = Question
-        fields = '__all__'
+        fields = "__all__"
 
 
-class TestSerializer(serializers.ModelSerializer):
+class TestsSerializer(serializers.ModelSerializer):
 
-    questions = QuestionSerializer(many=True, read_only=True)
+    questions = QuestionsSerializer(many=True, read_only=True)
 
     class Meta:
         model = Test
-        fields = '__all__'
+        fields = "__all__"
+
+
+class PassedTestsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PassedTest
+        fields = "__all__"

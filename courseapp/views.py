@@ -1,26 +1,30 @@
+from django_filters.rest_framework import DjangoFilterBackend
+
 from courseapp.serializers import UserRegistrationSerializer
 from courseapp.serializers import TeacherProfileSerializer
 from courseapp.serializers import StudentProfileSerializer
-from courseapp.serializers import EnrollmentSerializer
-from courseapp.serializers import QuestionSerializer
+from courseapp.serializers import EnrollmentsSerializer
+from courseapp.serializers import PassedTestsSerializer
+from courseapp.serializers import QuestionsSerializer
+from courseapp.serializers import AnswersSerializer
 from courseapp.serializers import CoursesSerializer
-from courseapp.serializers import VideoSerializer
-from courseapp.serializers import TestSerializer
+from courseapp.serializers import LessonsSerializer
+from courseapp.serializers import TestsSerializer
+
+from rest_framework.filters import OrderingFilter
 
 from rest_framework.viewsets import ModelViewSet
-
-from rest_framework.response import Response
-
-from rest_framework.decorators import action
 
 from django.contrib.auth.models import User
 
 from courseapp.models import TeacherProfile
 from courseapp.models import StudentProfile
+from courseapp.models import PassedTest
 from courseapp.models import Enrollment
 from courseapp.models import Question
+from courseapp.models import Answer
 from courseapp.models import Course
-from courseapp.models import Video
+from courseapp.models import Lesson
 from courseapp.models import Test
 
 
@@ -38,16 +42,6 @@ class TeacherProfilesViewSet(ModelViewSet):
     queryset = TeacherProfile.objects.all()
     serializer_class = TeacherProfileSerializer
 
-    def retrieve(self, request, *args, **kwargs):
-
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        courses_serializer = CoursesSerializer(instance.courses.all(), many=True)
-        data = serializer.data
-        data['courses'] = courses_serializer.data
-
-        return Response(data)
-
 
 class StudentProfilesViewSet(ModelViewSet):
 
@@ -55,65 +49,53 @@ class StudentProfilesViewSet(ModelViewSet):
     serializer_class = StudentProfileSerializer
 
 
+class EnrollmentsViewSet(ModelViewSet):
+
+    queryset = Enrollment.objects.all()
+    serializer_class = EnrollmentsSerializer
+
+
 class CoursesViewSet(ModelViewSet):
 
-    queryset = Course.objects.select_related('teacher_profile').all()
+    queryset = Course.objects.all()
     serializer_class = CoursesSerializer
-
-    # def perform_create(self, serializer):
-    #
-    #     serializer.save(
-    #         teacher_profile=self.request.user.teacher_profile,
-    #     )
-
-    @action(detail=True, methods=['get'])
-    def students_list(self, request, pk=None):
-
-        course = self.get_object()
-        enrollments = Enrollment.objects.filter(course=course)
-        students = [enrollment.student for enrollment in enrollments]
-        serializer = StudentProfileSerializer(students, many=True)
-
-        return Response(serializer.data)
-
-    @action(detail=True, methods=['get'])
-    def videos_list(self, request, pk=None):
-
-        course = self.get_object()
-        videos = Video.objects.filter(course=course)
-        serializer = VideoSerializer(videos, many=True)
-
-        return Response(serializer.data)
-
-    @action(detail=True, methods=['get'])
-    def tests_list(self, request, pk=None):
-
-        course = self.get_object()
-        tests = Test.objects.filter(video__course=course)
-        serializer = TestSerializer(tests, many=True)
-
-        return Response(serializer.data)
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filterset_fields = ["teacher_profile"]
+    ordering_fields = ["created_at"]
 
 
-class VideosViewSet(ModelViewSet):
+class LessonsViewSet(ModelViewSet):
 
-    queryset = Video.objects.all()
-    serializer_class = VideoSerializer
+    queryset = Lesson.objects.all()
+    serializer_class = LessonsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["course"]
 
 
 class TestsViewSet(ModelViewSet):
 
-    queryset = Test.objects.all()
-    serializer_class = TestSerializer
-
-
-class EnrollmentsViewSet(ModelViewSet):
-
-    queryset = Enrollment.objects.all()
-    serializer_class = EnrollmentSerializer
+    queryset = Test.objects.prefetch_related("questions__answers").all()
+    serializer_class = TestsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["lesson"]
 
 
 class QuestionsViewSet(ModelViewSet):
 
     queryset = Question.objects.all()
-    serializer_class = QuestionSerializer
+    serializer_class = QuestionsSerializer
+
+
+class AnswersViewSet(ModelViewSet):
+
+    queryset = Answer.objects.all()
+    serializer_class = AnswersSerializer
+
+
+class PassedTestsViewSet(ModelViewSet):
+
+    queryset = PassedTest.objects.all()
+    serializer_class = PassedTestsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["test", "student"]
+    ordering_fields = ["created_at"]

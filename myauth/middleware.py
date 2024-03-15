@@ -20,7 +20,7 @@ class JWTRefreshMiddleware:
 
                 if refresh_response.status_code == 200:
 
-                    new_access_token = refresh_response.data.get('access')
+                    new_access_token = refresh_response.data.get("access")
                     request.auth = new_access_token
 
         response = self.get_response(request)

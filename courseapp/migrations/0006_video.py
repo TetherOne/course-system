@@ -7,15 +7,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('courseapp', '0005_rename_teacher_course_teacher_profile'),
+        ("courseapp", "0005_rename_teacher_course_teacher_profile"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Video',
+            name="Video",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='videos', to='courseapp.course')),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                (
+                    "course",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="videos",
+                        to="courseapp.course",
+                    ),
+                ),
             ],
         ),
     ]
