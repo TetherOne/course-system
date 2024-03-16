@@ -7,10 +7,14 @@ import uuid
 
 class Enrollment(models.Model):
     student = models.ForeignKey(
-        "userapp.StudentProfile", on_delete=models.CASCADE, related_name="enrollments"
+        "userapp.StudentProfile",
+        on_delete=models.CASCADE,
+        related_name="enrollments",
     )
     course = models.ForeignKey(
-        "Course", on_delete=models.CASCADE, related_name="enrollments"
+        "Course",
+        on_delete=models.CASCADE,
+        related_name="enrollments",
     )
     enrollment_date = models.DateTimeField(auto_now_add=True)
 
