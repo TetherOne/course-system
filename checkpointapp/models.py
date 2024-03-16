@@ -47,13 +47,15 @@ class PassedCheckPoint(models.Model):
     id = models.AutoField(primary_key=True)
     student = models.ForeignKey(
         StudentProfile,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name="passed_checkpoints",
+        null=True,
     )
     checkpoint = models.ForeignKey(
         CheckPoint,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name="passed_checkpoints",
+        null=True,
     )
     points = models.IntegerField()
     percent = models.FloatField()

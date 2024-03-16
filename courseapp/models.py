@@ -48,7 +48,9 @@ class Lesson(models.Model):
     id = models.AutoField(primary_key=True)
     lesson_name = models.CharField(max_length=100, blank=True, null=True)
     video = models.FileField(
-        null=True, upload_to=course_video_directory_path, blank=True
+        null=True,
+        upload_to=course_video_directory_path,
+        blank=True,
     )
     description = models.TextField(max_length=10000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
