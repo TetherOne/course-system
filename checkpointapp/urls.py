@@ -16,7 +16,7 @@ routers = DefaultRouter()
 
 
 routers.register(
-    'checkpoints',
+    "checkpoints",
     CheckPointViewSet,
 )
 routers.register(
@@ -34,5 +34,5 @@ routers.register(
 
 
 urlpatterns = [
-    path('', include(routers.urls)),
+    path("", include(routers.urls)),
 ]

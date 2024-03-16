@@ -1,22 +1,22 @@
 from django_filters.rest_framework import DjangoFilterBackend
 
+from courseapp.serializers import EnrollmentSerializer
+from courseapp.serializers import CourseSerializer
+from courseapp.serializers import LessonSerializer
+
 from rest_framework.filters import OrderingFilter
 
 from rest_framework.viewsets import ModelViewSet
 
-# from courseapp.models import Enrollment
-
-from courseapp.serializers import CourseSerializer
-from courseapp.serializers import LessonSerializer
-
+from courseapp.models import Enrollment
 from courseapp.models import Course
 from courseapp.models import Lesson
 
 
-# class EnrollmentViewSet(ModelViewSet):
-#
-#     queryset = Enrollment.objects.all()
-#     serializer_class = EnrollmentSerializer
+class EnrollmentViewSet(ModelViewSet):
+
+    queryset = Enrollment.objects.all()
+    serializer_class = EnrollmentSerializer
 
 
 class CourseViewSet(ModelViewSet):
@@ -34,6 +34,3 @@ class LessonViewSet(ModelViewSet):
     serializer_class = LessonSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["course"]
-
-
-

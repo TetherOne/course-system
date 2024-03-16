@@ -34,7 +34,8 @@ class Answer(models.Model):
 
     id = models.AutoField(primary_key=True)
     question = models.ForeignKey(
-        Question, on_delete=models.CASCADE,
+        Question,
+        on_delete=models.CASCADE,
         related_name="answers",
     )
     answer_text = models.CharField(max_length=255)
