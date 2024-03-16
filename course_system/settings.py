@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "courseapp.apps.CourseappConfig",
     "userapp.apps.AuthappConfig",
+    'checkpointapp.apps.CheckpointappConfig',
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
