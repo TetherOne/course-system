@@ -1,5 +1,5 @@
 # from courseapp.views import EnrollmentViewSet
-from courseapp.views import CourseViewSet
+from courseapp.views import CourseViewSet, EnrollmentViewSet
 from courseapp.views import LessonViewSet
 
 from rest_framework.routers import DefaultRouter
@@ -12,10 +12,10 @@ app_name = "courseapp"
 
 
 routers = DefaultRouter()
-# routers.register(
-#     "enrollments",
-#     EnrollmentViewSet,
-# )
+routers.register(
+    "enrollments",
+    EnrollmentViewSet,
+)
 routers.register(
     "courses",
     CourseViewSet,
