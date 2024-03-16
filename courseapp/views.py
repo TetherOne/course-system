@@ -6,9 +6,11 @@ from rest_framework.viewsets import ModelViewSet
 
 # from courseapp.models import Enrollment
 
+from courseapp.serializers import CourseSerializer
+from courseapp.serializers import LessonSerializer
+
 from courseapp.models import Course
 from courseapp.models import Lesson
-from courseapp.serializers import LessonSerializer, CourseSerializer
 
 
 # class EnrollmentViewSet(ModelViewSet):

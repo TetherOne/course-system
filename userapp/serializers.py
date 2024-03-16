@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
 
-from rest_framework import serializers
-
 from userapp.models import TeacherProfile
 from userapp.models import StudentProfile
+
+from rest_framework import serializers
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
