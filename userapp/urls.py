@@ -18,7 +18,7 @@ routers = DefaultRouter()
 
 
 routers.register(
-    "users",
+    "list",
     UserViewSet,
 )
 routers.register(
