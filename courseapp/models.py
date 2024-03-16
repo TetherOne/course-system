@@ -1,22 +1,21 @@
-from django.db import models
-import uuid
-
 from userapp.models import TeacherProfile
 
+from django.db import models
+
+import uuid
 
 
-#
-# class Enrollment(models.Model):
-#     student = models.ForeignKey(
-#         "StudentProfile", on_delete=models.CASCADE, related_name="enrollments"
-#     )
-#     course = models.ForeignKey(
-#         "Course", on_delete=models.CASCADE, related_name="enrollments"
-#     )
-#     enrollment_date = models.DateTimeField(auto_now_add=True)
-#
-#     class Meta:
-#         unique_together = ("student", "course")
+class Enrollment(models.Model):
+    student = models.ForeignKey(
+        "userapp.StudentProfile", on_delete=models.CASCADE, related_name="enrollments"
+    )
+    course = models.ForeignKey(
+        "Course", on_delete=models.CASCADE, related_name="enrollments"
+    )
+    enrollment_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("student", "course")
 
 
 class Course(models.Model):
