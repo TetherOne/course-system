@@ -37,5 +37,5 @@ class PassedCheckPointViewSet(ModelViewSet):
     queryset = PassedCheckPoint.objects.all()
     serializer_class = PassedCheckPointSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["test", "student"]
+    filterset_fields = ["checkpoint", "student"]
     ordering_fields = ["created_at"]
