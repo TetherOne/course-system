@@ -1,62 +1,25 @@
-from django.contrib.auth.models import User
-
 from django.db import models
-
 import uuid
 
-
-class Enrollment(models.Model):
-
-    student = models.ForeignKey(
-        "StudentProfile", on_delete=models.CASCADE, related_name="enrollments"
-    )
-    course = models.ForeignKey(
-        "Course", on_delete=models.CASCADE, related_name="enrollments"
-    )
-    enrollment_date = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ("student", "course")
+from userapp.models import TeacherProfile
 
 
-class TeacherProfile(models.Model):
 
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100, blank=True, null=True)
-    surname = models.CharField(max_length=100, blank=True, null=True)
-    father_name = models.CharField(max_length=100, blank=True, null=True)
-    faculty = models.CharField(max_length=100, blank=True, null=True)
-    avatar = models.ImageField(null=True, upload_to="teacher-avatars/", blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        related_name="teacher_profile",
-    )
-
-    def __str__(self):
-        return f"{self.surname}, {self.faculty}"
-
-
-class StudentProfile(models.Model):
-
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100, blank=True, null=True)
-    surname = models.CharField(max_length=100, blank=True, null=True)
-    father_name = models.CharField(max_length=100, blank=True, null=True)
-    faculty = models.CharField(max_length=100, blank=True, null=True)
-    group = models.CharField(max_length=100, blank=True, null=True)
-    avatar = models.ImageField(null=True, upload_to="student-avatars/", blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        related_name="student_profile",
-    )
+#
+# class Enrollment(models.Model):
+#     student = models.ForeignKey(
+#         "StudentProfile", on_delete=models.CASCADE, related_name="enrollments"
+#     )
+#     course = models.ForeignKey(
+#         "Course", on_delete=models.CASCADE, related_name="enrollments"
+#     )
+#     enrollment_date = models.DateTimeField(auto_now_add=True)
+#
+#     class Meta:
+#         unique_together = ("student", "course")
 
 
 class Course(models.Model):
-
     id = models.AutoField(primary_key=True)
     course_name = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(max_length=10000, blank=True, null=True)
@@ -83,7 +46,6 @@ def course_video_directory_path(instance: "Video", filename: str) -> str:
 
 
 class Lesson(models.Model):
-
     id = models.AutoField(primary_key=True)
     lesson_name = models.CharField(max_length=100, blank=True, null=True)
     video = models.FileField(
@@ -92,52 +54,7 @@ class Lesson(models.Model):
     description = models.TextField(max_length=10000, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     course = models.ForeignKey(
-        Course,
+        "Course",
         on_delete=models.CASCADE,
-        related_name="videos",
+        related_name="lessons",
     )
-
-
-class Test(models.Model):
-
-    id = models.AutoField(primary_key=True)
-    lesson = models.ForeignKey(
-        Lesson,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name="test",
-    )
-    title = models.TextField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
-class Question(models.Model):
-
-    id = models.AutoField(primary_key=True)
-    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name="questions")
-    question_text = models.CharField(max_length=255)
-    max_points = models.IntegerField()
-
-
-class Answer(models.Model):
-
-    id = models.AutoField(primary_key=True)
-    question = models.ForeignKey(
-        Question, on_delete=models.CASCADE, related_name="answers"
-    )
-    answer_text = models.CharField(max_length=255)
-    is_correct = models.BooleanField(default=False)
-
-
-class PassedTest(models.Model):
-
-    id = models.AutoField(primary_key=True)
-    student = models.ForeignKey(
-        StudentProfile, on_delete=models.CASCADE, related_name="passed_tests"
-    )
-    test = models.ForeignKey(
-        Test, on_delete=models.CASCADE, related_name="passed_tests"
-    )
-    points = models.IntegerField()
-    percent = models.FloatField()
-    created_at = models.DateTimeField(auto_now_add=True)

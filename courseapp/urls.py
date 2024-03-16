@@ -1,13 +1,6 @@
-from courseapp.views import StudentProfilesViewSet
-from courseapp.views import TeacherProfilesViewSet
-from courseapp.views import EnrollmentsViewSet
-from courseapp.views import PassedTestsViewSet
-from courseapp.views import QuestionsViewSet
-from courseapp.views import AnswersViewSet
-from courseapp.views import CoursesViewSet
-from courseapp.views import LessonsViewSet
-from courseapp.views import TestsViewSet
-from courseapp.views import UsersViewSet
+# from courseapp.views import EnrollmentViewSet
+from courseapp.views import CourseViewSet
+from courseapp.views import LessonViewSet
 
 from rest_framework.routers import DefaultRouter
 
@@ -19,34 +12,18 @@ app_name = "courseapp"
 
 
 routers = DefaultRouter()
+# routers.register(
+#     "enrollments",
+#     EnrollmentViewSet,
+# )
 routers.register(
-    "users",
-    UsersViewSet,
+    "courses",
+    CourseViewSet,
 )
-routers.register(
-    "teacher-profiles",
-    TeacherProfilesViewSet,
-)
-routers.register(
-    "student-profiles",
-    StudentProfilesViewSet,
-)
-routers.register(
-    "enrollments",
-    EnrollmentsViewSet,
-)
-routers.register("courses", CoursesViewSet)
 routers.register(
     "lessons",
-    LessonsViewSet,
+    LessonViewSet,
 )
-routers.register(
-    "tests",
-    TestsViewSet,
-)
-routers.register("questions", QuestionsViewSet)
-routers.register("answers", AnswersViewSet)
-routers.register("passed-tests", PassedTestsViewSet)
 
 
 urlpatterns = [
