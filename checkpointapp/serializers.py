@@ -1,6 +1,9 @@
-from rest_framework import serializers
+from checkpointapp.models import PassedCheckPoint
+from checkpointapp.models import CheckPoint
+from checkpointapp.models import Question
+from checkpointapp.models import Answer
 
-from checkpointapp.models import Answer, Question, CheckPoint, PassedCheckPoint
+from rest_framework import serializers
 
 
 class AnswerSerializer(serializers.ModelSerializer):

@@ -1,7 +1,8 @@
-from django.db import models
+from userapp.models import StudentProfile
 
 from courseapp.models import Lesson
-from userapp.models import StudentProfile
+
+from django.db import models
 
 
 class CheckPoint(models.Model):

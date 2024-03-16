@@ -1,13 +1,20 @@
-from django.urls import path, include
+from checkpointapp.views import PassedCheckPointViewSet
+from checkpointapp.views import CheckPointViewSet
+from checkpointapp.views import QuestionViewSet
+from checkpointapp.views import AnswerViewSet
+
 from rest_framework.routers import DefaultRouter
 
-from checkpointapp.views import CheckPointViewSet, QuestionViewSet, AnswerViewSet, PassedCheckPointViewSet
+from django.urls import include
+from django.urls import path
 
 
 app_name = "checkpointapp"
 
 
 routers = DefaultRouter()
+
+
 routers.register(
     'checkpoints',
     CheckPointViewSet,
