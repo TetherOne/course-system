@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "courseapp.apps.CourseappConfig",
-    "usersapp.apps.AuthappConfig",
+    "userapp.apps.AuthappConfig",
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",

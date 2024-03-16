@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from django.urls import path
 
 
-app_name = "usersapp"
+app_name = "userapp"
 
 
 urlpatterns = [
