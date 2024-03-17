@@ -10,12 +10,14 @@ class CheckPoint(models.Model):
     id = models.AutoField(primary_key=True)
     lesson = models.ForeignKey(
         Lesson,
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.CASCADE,
         related_name="checkpoint",
     )
     title = models.TextField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title}"
 
 
 class Question(models.Model):
@@ -28,6 +30,9 @@ class Question(models.Model):
     )
     question_text = models.CharField(max_length=255)
     max_points = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.question_text}"
 
 
 class Answer(models.Model):

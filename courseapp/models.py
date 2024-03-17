@@ -66,3 +66,6 @@ class Lesson(models.Model):
         on_delete=models.CASCADE,
         related_name="lessons",
     )
+
+    def __str__(self):
+        return f"{self.lesson_name}"

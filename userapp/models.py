@@ -14,9 +14,8 @@ class TeacherProfile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.OneToOneField(
         User,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name="teacher_profile",
-        null=True,
     )
 
     def __str__(self):
@@ -35,9 +34,8 @@ class StudentProfile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.OneToOneField(
         User,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name="student_profile",
-        null=True,
     )
 
     def __str__(self):
