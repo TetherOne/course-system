@@ -24,12 +24,16 @@ class QuestionViewSet(ModelViewSet):
 
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["checkpoint"]
 
 
 class AnswerViewSet(ModelViewSet):
 
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["question"]
 
 
 class PassedCheckPointViewSet(ModelViewSet):
