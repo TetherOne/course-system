@@ -44,6 +44,12 @@ checkpoint_payload = {
 
 
 question_payload = {
-    "question_text": "",
+    "question_text": "Test Question",
     "max_points": 1
+}
+
+
+answer_payload = {
+    "answer_text": "Test Answer",
+    "is_correct": False,
 }
