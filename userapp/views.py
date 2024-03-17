@@ -1,3 +1,5 @@
+from django_filters.rest_framework import DjangoFilterBackend
+
 from userapp.serializers import UserRegistrationSerializer
 from userapp.serializers import TeacherSerializer
 from userapp.serializers import StudentSerializer
@@ -22,9 +24,13 @@ class TeacherProfileViewSet(ModelViewSet):
 
     queryset = TeacherProfile.objects.all()
     serializer_class = TeacherSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["user"]
 
 
 class StudentProfileViewSet(ModelViewSet):
 
     queryset = StudentProfile.objects.all()
     serializer_class = StudentSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["user"]
