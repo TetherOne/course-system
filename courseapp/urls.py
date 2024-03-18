@@ -15,16 +15,16 @@ routers = DefaultRouter()
 
 
 routers.register(
-    "enrollments",
-    EnrollmentViewSet,
-)
-routers.register(
     "courses",
     CourseViewSet,
 )
 routers.register(
     "lessons",
     LessonViewSet,
+)
+routers.register(
+    "enrollments",
+    EnrollmentViewSet,
 )
 
 
