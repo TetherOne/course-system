@@ -23,8 +23,8 @@ export default {
         <img class="avatar" src="./../../assets/avatar.png" alt="Аватар">
         <div class="label">
             {{ userInfo.surname }}
-            {{ `${userInfo.name.slice(0, 1)}.` }}
-            {{ `${userInfo.father_name.slice(0, 1)}.` }}
+            {{ `${userInfo.name}` }}
+            {{ `${userInfo.father_name}` }}
         </div>
         <div class="spacer"></div>
         <button>Сменить тему</button>
@@ -38,6 +38,7 @@ export default {
     gap: 10px;
     padding: 10px;
     align-items: center;
+    align-self: stretch;
 }
 
 .label {

@@ -5,42 +5,30 @@ import {frontURL} from './config.js';
 
 export function getStudentInfo(id) {
     return axios.get(`${frontURL}/api/userapp/students/${id}/?format=json`).then(
-        response => {
-            return response.data;
-        }
+        response => response.data
+    );
+}
+
+export function getTeacherInfo(id) {
+    return axios.get(`${frontURL}/api/userapp/teachers/${id}/?format=json`).then(
+        response => response.data
     );
 }
 
 export function getStudentCourses(id) {
-    axios.get(`${frontURL}/api/courseapp/enrollments/?format=json`).then(
-        response => {
-            return response.data.filter(enrollment => {
-                return enrollment.student === id;
-            });
-        }
+    return axios.get(`${frontURL}/api/courseapp/enrollments/?student=${id}&format=json`).then(
+        response => response.data
     ).then(
         enrollments => {
-            const courses = [];
-            enrollments.forEach(enrollment => {
-                const course = {};
-                course.id = enrollment.course;
-                getCourseInfo(course.id).then(
-                    response => {
-                        const info = response.data;
-                        course.name = info.course_name;
-                        course.description = info.description;
-                        course.teacherId = info.teacher_profile;
-                    }
-                )
-            });
+            const courses = enrollments.map(enrollment => {
+
+            })
         }
-    )
+    );
 }
 
 export function getCourseInfo(id) {
     return axios.get(`${frontURL}/api/courseapp/courses/${id}/?format=json`).then(
-        response => {
-            return response.data;
-        }
+        response => response.data
     );
 }
