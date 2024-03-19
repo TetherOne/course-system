@@ -18,10 +18,12 @@ routers = DefaultRouter()
 routers.register(
     "checkpoints",
     CheckPointViewSet,
+    basename="checkpoints",
 )
 routers.register(
     "questions",
     QuestionViewSet,
+    basename="questions",
 )
 routers.register(
     "answers",
@@ -30,6 +32,7 @@ routers.register(
 routers.register(
     "passed-checkpoints",
     PassedCheckPointViewSet,
+    basename="passed-checkpoints",
 )
 
 

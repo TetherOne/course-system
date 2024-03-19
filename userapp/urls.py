@@ -20,14 +20,17 @@ routers = DefaultRouter()
 routers.register(
     "users",
     UserViewSet,
+    basename="users",
 )
 routers.register(
     "teachers",
     TeacherProfileViewSet,
+    basename="teachers",
 )
 routers.register(
     "students",
     StudentProfileViewSet,
+    basename="students",
 )
 
 

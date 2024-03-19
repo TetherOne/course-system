@@ -17,14 +17,17 @@ routers = DefaultRouter()
 routers.register(
     "courses",
     CourseViewSet,
+    basename="courses",
 )
 routers.register(
     "lessons",
     LessonViewSet,
+    basename="lessons",
 )
 routers.register(
     "enrollments",
     EnrollmentViewSet,
+    basename="enrollments",
 )
 
 
