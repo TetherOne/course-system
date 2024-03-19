@@ -1,43 +1,23 @@
 :root {
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-
-    --background-color: #fff;
-
-    --profile-header-color: #323232;
-    --profile-header-label-color: #fff;
-    --profile-header-btn-border-color: gray;
-
-    --btn-border-color: black;
-    --btn-color: white;
-
-    --courses-list-color: #e4e4e4;
-    --course-padding-color: #b9b8b8;
+    --font: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: var(--font);
 }
 
 .flex-row {
     display: flex;
-    gap: 10px;
 }
 
 .flex-column {
     display: flex;
     flex-direction: column;
-    gap: 10px;
 }
 
 .spacer {
     flex-grow: 1;
-}
-
-
-.label {
-    background-color: var(--profile-header-label-color);
-    padding: 5px;
-    border-radius: 5px;
 }

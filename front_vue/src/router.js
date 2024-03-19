@@ -1,8 +1,13 @@
-import {createRouter, createWebHistory} from "vue-router";
-import SignInUp from "./components/SignInUp.vue";
-import Student from "./components/Student.vue";
-import Teacher from "./components/Teacher.vue";
-import Course from "./components/Course.vue";
+import {
+    createRouter,
+    createWebHistory
+} from 'vue-router';
+
+import SignInUp from './components/pages/SignInUp.vue';
+import Student from './components/pages/Student.vue';
+import Teacher from './components/pages/Teacher.vue';
+import Course from './components/pages/Course.vue';
+
 
 const routes = [
     {
@@ -27,5 +32,6 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 });
+
 
 export default router;
