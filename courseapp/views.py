@@ -18,7 +18,7 @@ class EnrollmentViewSet(ModelViewSet):
     queryset = Enrollment.objects.all()
     serializer_class = EnrollmentSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["student_profile", "course"]
+    filterset_fields = ["student", "course"]
 
 
 class CourseViewSet(ModelViewSet):
