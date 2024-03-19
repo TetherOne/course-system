@@ -1,7 +1,4 @@
-from tests.test_api.conftest import student_payload
-from tests.test_api.conftest import teacher_payload
-
-from tests.test_api.conftest import client
+from tests.test_creation.conftest import client, teacher_payload, student_payload
 
 import pytest
 
@@ -9,7 +6,7 @@ import pytest
 @pytest.mark.django_db
 def test_register_teacher(client):
 
-    response = client.post("/test_api/userapp/users/", teacher_payload)
+    response = client.post("/api/userapp/users/", teacher_payload)
 
     data = response.data
 
@@ -23,7 +20,7 @@ def test_register_teacher(client):
 @pytest.mark.django_db
 def test_register_student(client):
 
-    response = client.post("/test_api/userapp/users/", student_payload)
+    response = client.post("/api/userapp/users/", student_payload)
 
     data = response.data
 

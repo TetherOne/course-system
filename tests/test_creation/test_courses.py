@@ -1,6 +1,6 @@
-from tests.api.conftest import teacher_payload
-from tests.api.conftest import lesson_payload
-from tests.api.conftest import course_payload
+from tests.test_creation.conftest import teacher_payload
+from tests.test_creation.conftest import course_payload
+from tests.test_creation.conftest import lesson_payload
 
 import pytest
 
