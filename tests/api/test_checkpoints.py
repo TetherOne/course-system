@@ -42,17 +42,20 @@ def test_create_checkpoint(client):
     assert lesson_details["course"] == course_id
 
     checkpoint_payload["lesson"] = lesson_id
-    checkpoint_response = client.post("/api/checkpointapp/checkpoints/", checkpoint_payload)
+    checkpoint_response = client.post(
+        "/api/checkpointapp/checkpoints/", checkpoint_payload
+    )
     assert checkpoint_response.status_code == 201
 
     checkpoint_id = checkpoint_response.json()["id"]
     assert checkpoint_id is not None
 
-    checkpoint_details_response = client.get(f"/api/checkpointapp/checkpoints/{checkpoint_id}/")
+    checkpoint_details_response = client.get(
+        f"/api/checkpointapp/checkpoints/{checkpoint_id}/"
+    )
     assert checkpoint_details_response.status_code == 200
     checkpoint_details = checkpoint_details_response.json()
     assert checkpoint_details["title"] == checkpoint_payload["title"]
-
 
 
 @pytest.mark.django_db
@@ -88,13 +91,17 @@ def test_create_question(client):
     assert lesson_details["course"] == course_id
 
     checkpoint_payload["lesson"] = lesson_id
-    checkpoint_response = client.post("/api/checkpointapp/checkpoints/", checkpoint_payload)
+    checkpoint_response = client.post(
+        "/api/checkpointapp/checkpoints/", checkpoint_payload
+    )
     assert checkpoint_response.status_code == 201
 
     checkpoint_id = checkpoint_response.json()["id"]
     assert checkpoint_id is not None
 
-    checkpoint_details_response = client.get(f"/api/checkpointapp/checkpoints/{checkpoint_id}/")
+    checkpoint_details_response = client.get(
+        f"/api/checkpointapp/checkpoints/{checkpoint_id}/"
+    )
     assert checkpoint_details_response.status_code == 200
     checkpoint_details = checkpoint_details_response.json()
     assert checkpoint_details["title"] == checkpoint_payload["title"]
@@ -106,7 +113,9 @@ def test_create_question(client):
     question_id = question_response.json()["id"]
     assert question_id is not None
 
-    question_details_response = client.get(f"/api/checkpointapp/questions/{question_id}/")
+    question_details_response = client.get(
+        f"/api/checkpointapp/questions/{question_id}/"
+    )
     assert question_details_response.status_code == 200
     question_details = question_details_response.json()
     assert question_details["question_text"] == question_payload["question_text"]
@@ -145,13 +154,17 @@ def test_create_answers(client):
     assert lesson_details["course"] == course_id
 
     checkpoint_payload["lesson"] = lesson_id
-    checkpoint_response = client.post("/api/checkpointapp/checkpoints/", checkpoint_payload)
+    checkpoint_response = client.post(
+        "/api/checkpointapp/checkpoints/", checkpoint_payload
+    )
     assert checkpoint_response.status_code == 201
 
     checkpoint_id = checkpoint_response.json()["id"]
     assert checkpoint_id is not None
 
-    checkpoint_details_response = client.get(f"/api/checkpointapp/checkpoints/{checkpoint_id}/")
+    checkpoint_details_response = client.get(
+        f"/api/checkpointapp/checkpoints/{checkpoint_id}/"
+    )
     assert checkpoint_details_response.status_code == 200
     checkpoint_details = checkpoint_details_response.json()
     assert checkpoint_details["title"] == checkpoint_payload["title"]
@@ -163,7 +176,9 @@ def test_create_answers(client):
     question_id = question_response.json()["id"]
     assert question_id is not None
 
-    question_details_response = client.get(f"/api/checkpointapp/questions/{question_id}/")
+    question_details_response = client.get(
+        f"/api/checkpointapp/questions/{question_id}/"
+    )
     assert question_details_response.status_code == 200
     question_details = question_details_response.json()
     assert question_details["question_text"] == question_payload["question_text"]
@@ -179,7 +194,3 @@ def test_create_answers(client):
     assert answer_details_response.status_code == 200
     answer_details = answer_details_response.json()
     assert answer_details["answer_text"] == answer_payload["answer_text"]
-
-
-
-

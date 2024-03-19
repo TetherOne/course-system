@@ -12,7 +12,7 @@ teacher_payload = {
     "email": "teacher@example.com",
     "username": "teacher_username",
     "password": "test123",
-    "is_teacher": True
+    "is_teacher": True,
 }
 
 
@@ -20,21 +20,21 @@ student_payload = {
     "email": "student@example.com",
     "username": "student_username",
     "password": "test123",
-    "is_teacher": False
+    "is_teacher": False,
 }
 
 
 course_payload = {
     "course_name": "Test Course",
     "description": "Test course description",
-    "course_password": "coursepass"
+    "course_password": "coursepass",
 }
 
 
 lesson_payload = {
     "lesson_name": "Test Lesson",
     "video": "",
-    "description": "Test lesson description"
+    "description": "Test lesson description",
 }
 
 
@@ -43,10 +43,7 @@ checkpoint_payload = {
 }
 
 
-question_payload = {
-    "question_text": "Test Question",
-    "max_points": 1
-}
+question_payload = {"question_text": "Test Question", "max_points": 1}
 
 
 answer_payload = {
