@@ -1,4 +1,4 @@
-from tests.api.conftest import client, teacher_payload, student_payload
+from tests.test_creation.conftest import client, teacher_payload, student_payload
 
 import pytest
 

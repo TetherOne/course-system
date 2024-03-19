@@ -28,6 +28,7 @@ routers.register(
 routers.register(
     "answers",
     AnswerViewSet,
+    basename="answers",
 )
 routers.register(
     "passed-checkpoints",

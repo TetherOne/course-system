@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 
 import pytest
@@ -7,6 +8,17 @@ import pytest
 def client():
     return APIClient()
 
+
+@pytest.fixture()
+def teacher():
+    user = User.objects.create_user({
+        "email": "teacher@example.com",
+        "username": "teacher_username",
+        "password": "test123",
+        "is_teacher": True
+    })
+
+    return user
 
 teacher_payload = {
     "email": "teacher@example.com",
