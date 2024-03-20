@@ -1,4 +1,6 @@
-from checkpointapp.models import PassedCheckPoint, QuestionFile, AnswerFile
+from checkpointapp.models import PassedCheckPoint
+from checkpointapp.models import QuestionFile
+from checkpointapp.models import AnswerFile
 from checkpointapp.models import CheckPoint
 from checkpointapp.models import Question
 from checkpointapp.models import Answer
@@ -8,6 +10,7 @@ from django.contrib import admin
 
 class QuestionInline(admin.StackedInline):
     model = Question
+
 
 @admin.register(CheckPoint)
 class CheckPointAdmin(admin.ModelAdmin):
@@ -37,8 +40,10 @@ class CheckPointAdmin(admin.ModelAdmin):
 class AnswerInline(admin.StackedInline):
     model = Answer
 
+
 class QuestionFileInline(admin.StackedInline):
     model = QuestionFile
+
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
@@ -47,7 +52,6 @@ class QuestionAdmin(admin.ModelAdmin):
         AnswerInline,
         QuestionFileInline,
     ]
-
     list_display = "id", "question_text", "lesson_name", "course_name", "max_points"
     list_display_links = "id", "question_text"
     search_fields = ("question_text",)
@@ -83,6 +87,7 @@ class PassedCheckPointAdmin(admin.ModelAdmin):
 
 class AnswerFileInLine(admin.StackedInline):
     model = AnswerFile
+
 
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):

@@ -1,10 +1,10 @@
-import re
-
 from userapp.models import StudentProfile
 
 from courseapp.models import Lesson
 
 from django.db import models
+
+import re
 
 
 class CheckPoint(models.Model):
@@ -38,8 +38,6 @@ class Question(models.Model):
         return f"{self.question_text}"
 
 
-
-
 class Answer(models.Model):
 
     id = models.AutoField(primary_key=True)
@@ -60,6 +58,7 @@ def answer_file_directory_path(instance: "AnswerFile", filename: str) -> str:
     )
     return f"answers/{instance.question.checkpoint.title}/{valid_filename}/{filename}"
 
+
 class AnswerFile(models.Model):
 
     id = models.AutoField(primary_key=True)
@@ -68,7 +67,11 @@ class AnswerFile(models.Model):
         on_delete=models.CASCADE,
         related_name="answer_files",
     )
-    answer_file = models.FileField(null=True, upload_to=answer_file_directory_path, blank=True,)
+    answer_file = models.FileField(
+        null=True,
+        upload_to=answer_file_directory_path,
+        blank=True,
+    )
 
 
 def question_file_directory_path(instance: "QuestionFile", filename: str) -> str:
@@ -79,6 +82,7 @@ def question_file_directory_path(instance: "QuestionFile", filename: str) -> str
     )
     return f"questions/{instance.question.checkpoint.title}/{valid_filename}/{filename}"
 
+
 class QuestionFile(models.Model):
 
     id = models.AutoField(primary_key=True)
@@ -87,7 +91,11 @@ class QuestionFile(models.Model):
         on_delete=models.CASCADE,
         related_name="question_images",
     )
-    question_file = models.FileField(null=True, upload_to=question_file_directory_path, blank=True,)
+    question_file = models.FileField(
+        null=True,
+        upload_to=question_file_directory_path,
+        blank=True,
+    )
 
 
 class PassedCheckPoint(models.Model):
