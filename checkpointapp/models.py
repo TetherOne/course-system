@@ -1,3 +1,5 @@
+import re
+
 from userapp.models import StudentProfile
 
 from courseapp.models import Lesson
@@ -20,6 +22,17 @@ class CheckPoint(models.Model):
         return f"{self.title}"
 
 
+def question_file_directory_path(instance: "Question", filename: str) -> str:
+
+    valid_filename = re.sub(
+        r"[\\/*?:\"<>|]",
+        "_",
+        instance.question_text,
+    )
+
+    return f"questions/{instance.checkpoint.title}/{valid_filename}/{filename}"
+
+
 class Question(models.Model):
 
     id = models.AutoField(primary_key=True)
@@ -27,6 +40,11 @@ class Question(models.Model):
         CheckPoint,
         on_delete=models.CASCADE,
         related_name="questions",
+    )
+    question_file = models.FileField(
+        null=True,
+        upload_to=question_file_directory_path,
+        blank=True,
     )
     question_text = models.CharField(max_length=255)
     max_points = models.IntegerField()
