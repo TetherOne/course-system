@@ -10,6 +10,7 @@ from django.db import models
 class CheckPoint(models.Model):
 
     id = models.AutoField(primary_key=True)
+    checkpoint_number = models.IntegerField()
     lesson = models.ForeignKey(
         Lesson,
         on_delete=models.CASCADE,
@@ -53,6 +54,17 @@ class Question(models.Model):
         return f"{self.question_text}"
 
 
+def answer_file_directory_path(instance: "Answer", filename: str) -> str:
+
+    valid_filename = re.sub(
+        r"[\\/*?:\"<>|]",
+        "_",
+        instance.answer_text,
+    )
+
+    return f"answers/{instance.question.checkpoint.title}/{valid_filename}/{filename}"
+
+
 class Answer(models.Model):
 
     id = models.AutoField(primary_key=True)
@@ -61,7 +73,12 @@ class Answer(models.Model):
         on_delete=models.CASCADE,
         related_name="answers",
     )
-    answer_text = models.CharField(max_length=255)
+    answer_file = models.FileField(
+        null=True,
+        upload_to=answer_file_directory_path,
+        blank=True,
+    )
+    answer_text = models.CharField(null=True, max_length=255, blank=True)
     is_correct = models.BooleanField(default=False)
 
 
