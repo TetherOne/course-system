@@ -47,19 +47,21 @@ export default {
                 {{ info.description }}
             </div>
             <div class="spacer"></div>
-            <a href="/student"><button>В профиль</button></a>
+            <div>
+              <a href="/student" class="btn btn-secondary btn-lg">Профиль</a>
+            </div>
         </div>
 
 
         <div id="lessons-wrapper" class="flex-column">
-            <div v-for="lesson in lessons" class="lesson-wrapper flex-column">
-                <div>Лекция {{lesson.number}}. {{ lesson.lesson_name }}</div>
-                <div>{{ lesson.description }}</div>
-                <video width="320" height="240" autoplay controls>
-                    <source :src="lesson.video">
-                </video>
-            </div>
-        </div>
+          <div v-for="lesson in lessons" class="lesson-wrapper flex-column">
+              <div>Лекция {{lesson.number}}. {{ lesson.lesson_name }}</div>
+              <div>{{ lesson.description }}</div>
+              <video width="320" height="240" controls>
+                  <source :src="lesson.video">
+              </video>
+          </div>
+      </div>
     </div>
 </template>
 
