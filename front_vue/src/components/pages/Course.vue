@@ -96,7 +96,7 @@ export default {
 }
 
 #lessons-wrapper {
-    gap: 20px;
+    gap: 10px;
     padding: 10px;
     align-self: center;
     align-items: stretch;
