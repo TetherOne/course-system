@@ -80,7 +80,7 @@ class LessonVideoAdmin(admin.ModelAdmin):
             )
 
     def course_name(self, obj):
-        return obj.lesson.course
+        return obj.module.course
 
 
 @admin.register(Enrollment)

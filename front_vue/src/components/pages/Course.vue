@@ -3,11 +3,9 @@
 </script>
 
 <script>
-
-
-import {getCourseInfo, getTeacherInfo} from "../../requests.js";
+import { getCourseInfo, getTeacherInfo } from "../../requests.js";
 import axios from "axios";
-import {frontURL} from "../../config.js";
+import { frontURL } from "../../config.js";
 
 export default {
     data() {
@@ -15,26 +13,34 @@ export default {
             id: this.$route.params.id,
             info: {},
             teacherInfo: {},
-            lessons: []
+            modules: []
         }
     },
     async created() {
         this.info = await getCourseInfo(this.id);
         this.teacherInfo = await getTeacherInfo(this.info.teacher_profile);
 
-
+        // Получаем модули курса
         axios.get(`${frontURL}/api/courseapp/modules/?course=${this.id}&format=json`).then(
-            response => {
-                this.lessons = response.data;
+            async response => {
+                this.modules = response.data;
                 let i = 1;
-                this.lessons.forEach(lesson => {
-                    lesson.number = i++;
-                })
+                for (const module of this.modules) {
+                    // Для каждого модуля получаем видео
+                    const lessonResponse = await axios.get(`${frontURL}/api/courseapp/lessons/?module=${module.id}`);
+                    module.lessons = lessonResponse.data;
+                    module.lessons.forEach(lesson => {
+                        lesson.number = i++;
+                    });
+                }
             }
-        )
+        ).catch(error => {
+            console.error('Ошибка при загрузке модулей курса:', error);
+        });
     }
 }
 </script>
+
 
 <template>
     <div id="main-wrapper" class="flex-column">
@@ -57,9 +63,8 @@ export default {
         </div>
 
         <div id="lessons-wrapper" class="flex-column">
-            <div v-for="lesson in lessons" :key="lesson.id" class="lesson-wrapper flex-column">
-                <div>Лекция {{ lesson.id }}. {{ lesson.lesson_name }}</div>
-                <div>{{ lesson.description }}</div>
+            <div v-for="module in modules" :key="module.id" class="lesson-wrapper flex-column">
+                <div><b>{{ module.module_name }}</b></div>
             </div>
         </div>
     </div>

@@ -54,7 +54,7 @@ def lesson_video_directory_path(instance: "LessonVideo", filename: str) -> str:
         "_",
         instance.description,
     )
-    return f"lessons/{instance.lesson.course.course_name}/{valid_filename}/{filename}"
+    return f"lessons/{instance.module.course.course_name}/{valid_filename}/{filename}"
 
 
 class LessonVideo(models.Model):
