@@ -5,7 +5,7 @@
 <script>
 
 
-import {getCourseInfo, getTeacherInfo} from "../../requests.js";
+import {getCourseInfo, getModuleVideos, getTeacherInfo} from "../../requests.js";
 import axios from "axios";
 import {frontURL} from "../../config.js";
 
@@ -31,7 +31,15 @@ export default {
                     lesson.number = i++;
                 })
             }
+        ).then(
+            _ => {
+                this.modules.forEach(async module => {
+                    module.videos = await getModuleVideos(module.id);
+                })
+            }
         )
+
+
     }
 }
 </script>
@@ -59,6 +67,9 @@ export default {
         <div id="lessons-wrapper" class="flex-column">
             <div v-for="module in modules" :key="module.id" class="lesson-wrapper flex-column">
                 <div><b>{{ module.module_name }}</b></div>
+                <video width="320" height="240" controls v-for="video in module.videos">
+                    <source :src="video.video">
+                </video>
             </div>
         </div>
     </div>
