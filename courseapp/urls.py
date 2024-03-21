@@ -1,5 +1,6 @@
 from rest_framework.routers import DefaultRouter
 
+from courseapp.views import LessonVideoViewSet
 from courseapp.views import EnrollmentViewSet
 from courseapp.views import CourseViewSet
 from courseapp.views import ModuleViewSet
@@ -23,6 +24,11 @@ routers.register(
     "modules",
     ModuleViewSet,
     basename="modules",
+)
+routers.register(
+    "lessons",
+    LessonVideoViewSet,
+    basename="lessons",
 )
 routers.register(
     "enrollments",

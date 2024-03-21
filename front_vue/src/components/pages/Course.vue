@@ -15,7 +15,7 @@ export default {
             id: this.$route.params.id,
             info: {},
             teacherInfo: {},
-            lessons: []
+            modules: []
         }
     },
     async created() {
@@ -23,11 +23,11 @@ export default {
         this.teacherInfo = await getTeacherInfo(this.info.teacher_profile);
 
 
-        axios.get(`${frontURL}/api/courseapp/lessons/?course=${this.id}&format=json`).then(
+        axios.get(`${frontURL}/api/courseapp/modules/?course=${this.id}&format=json`).then(
             response => {
-                this.lessons = response.data;
+                this.modules = response.data;
                 let i = 1;
-                this.lessons.forEach(lesson => {
+                this.modules.forEach(lesson => {
                     lesson.number = i++;
                 })
             }
@@ -57,13 +57,10 @@ export default {
         </div>
 
         <div id="lessons-wrapper" class="flex-column">
-          <div v-for="lesson in lessons" class="lesson-wrapper flex-column">
-              <div>Лекция {{lesson.number}}. {{ lesson.lesson_name }}</div>
-              <video width="320" height="240" controls>
-                  <source :src="lesson.video">
-              </video>
-          </div>
-      </div>
+            <div v-for="module in modules" :key="module.id" class="lesson-wrapper flex-column">
+                <div><b>{{ module.module_name }}</b></div>
+            </div>
+        </div>
     </div>
 </template>
 
