@@ -55,21 +55,24 @@ export default {
                 {{ info.description }}
             </div>
             <div class="spacer"></div>
-
         </div>
         <div style="margin-left: 40px;">
-          <a href="/student" style="color: black; text-decoration: none; display: inline-block;">
-            <img src="/src/assets/arrow.png" alt="Arrow" style="width: 40px; height: 40px; vertical-align: middle;">
-            <span style="font-size: 20px; vertical-align: middle; margin-left: 10px;">Назад</span>
-          </a>
+            <a href="/student" style="color: black; text-decoration: none; display: inline-block;">
+                <img src="/src/assets/arrow.png" alt="Arrow" style="width: 40px; height: 40px; vertical-align: middle;">
+                <span style="font-size: 20px; vertical-align: middle; margin-left: 10px;">Назад</span>
+            </a>
         </div>
 
         <div id="lessons-wrapper" class="flex-column">
-            <div v-for="module in modules" :key="module.id" class="lesson-wrapper flex-column">
-                <div><b>{{ module.module_name }}</b></div>
-                <video width="320" height="240" controls v-for="video in module.videos">
-                    <source :src="video.video">
-                </video>
+            <div v-for="(module, index) in modules" :key="module.id" class="lesson-wrapper">
+                <div class="module-title">
+                  <b>{{ (index + 1) + ". " + module.module_name}}</b>
+                </div>
+                <div class="video-wrapper flex-row">
+                    <video width="320" height="240" controls v-for="video in module.videos">
+                        <source :src="video.video">
+                    </video>
+                </div>
             </div>
         </div>
     </div>
@@ -98,9 +101,54 @@ export default {
     align-items: stretch;
 }
 
-.lesson-wrapper {
-    border-radius: 10px;
-    padding: 10px;
-    border: 1px solid #a49dc2;
+.flex-column {
+    display: flex;
+    flex-direction: column;
 }
+
+.lesson-wrapper:first-child::before {
+    content: '';
+    position: absolute;
+    top: -2px; /* Переместить полоску над верхней темой */
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #d1d1d1;
+}
+
+.lesson-wrapper {
+    position: relative;
+    margin-top: 10px;
+    padding-top: 20px;
+}
+
+.lesson-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #d1d1d1;
+}
+
+
+.video-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+video {
+    margin-right: 10px;
+    margin-left: 10px;
+    display: block;
+}
+
+.module-title {
+    width: 1000px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 </style>
