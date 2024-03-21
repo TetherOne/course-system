@@ -48,9 +48,9 @@ class ModuleAdmin(admin.ModelAdmin):
         LessonVideoInline,
         CheckpointInline,
     ]
-    list_display = "id", "lesson_name", "created_at", "course_name"
-    list_display_links = "id", "lesson_name"
-    search_fields = ("lesson_name",)
+    list_display = "id", "module_name", "created_at", "course_name"
+    list_display_links = "id", "module_name"
+    search_fields = ("module_name",)
     list_per_page = 10
 
     def course_name(self, obj):
@@ -64,7 +64,7 @@ class LessonVideoAdmin(admin.ModelAdmin):
         "id",
         "description",
         "course_name",
-        "lesson",
+        "module",
         "created_at",
         "display_lesson",
     )

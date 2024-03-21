@@ -23,7 +23,7 @@ export default {
         this.teacherInfo = await getTeacherInfo(this.info.teacher_profile);
 
 
-        axios.get(`${frontURL}/api/courseapp/lessons/?course=${this.id}&format=json`).then(
+        axios.get(`${frontURL}/api/courseapp/modules/?course=${this.id}&format=json`).then(
             response => {
                 this.lessons = response.data;
                 let i = 1;
@@ -57,13 +57,11 @@ export default {
         </div>
 
         <div id="lessons-wrapper" class="flex-column">
-          <div v-for="lesson in lessons" class="lesson-wrapper flex-column">
-              <div>Лекция {{lesson.number}}. {{ lesson.lesson_name }}</div>
-              <video width="320" height="240" controls>
-                  <source :src="lesson.video">
-              </video>
-          </div>
-      </div>
+            <div v-for="lesson in lessons" :key="lesson.id" class="lesson-wrapper flex-column">
+                <div>Лекция {{ lesson.id }}. {{ lesson.lesson_name }}</div>
+                <div>{{ lesson.description }}</div>
+            </div>
+        </div>
     </div>
 </template>
 

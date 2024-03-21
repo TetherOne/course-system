@@ -61,7 +61,7 @@ class LessonVideo(models.Model):
 
     id = models.AutoField(primary_key=True)
     description = models.TextField(max_length=10000, blank=True, null=True)
-    lesson = models.ForeignKey(
+    module = models.ForeignKey(
         "Module",
         on_delete=models.CASCADE,
         related_name="videos",
@@ -77,7 +77,7 @@ class LessonVideo(models.Model):
 class Module(models.Model):
 
     id = models.AutoField(primary_key=True)
-    lesson_name = models.CharField(max_length=100, blank=True, null=True)
+    module_name = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     course = models.ForeignKey(
         "Course",
@@ -86,4 +86,4 @@ class Module(models.Model):
     )
 
     def __str__(self):
-        return f"{self.lesson_name}"
+        return f"{self.module_name}"
