@@ -47,11 +47,14 @@ export default {
                 {{ info.description }}
             </div>
             <div class="spacer"></div>
-            <div>
-              <a href="/student" class="btn btn-secondary btn-lg">Профиль</a>
-            </div>
-        </div>
 
+        </div>
+        <div style="margin-left: 40px;">
+          <a href="/student" style="color: black; text-decoration: none; display: inline-block;">
+            <img src="/src/assets/arrow.png" alt="Arrow" style="width: 40px; height: 40px; vertical-align: middle;">
+            <span style="font-size: 20px; vertical-align: middle; margin-left: 10px;">Назад</span>
+          </a>
+        </div>
 
         <div id="lessons-wrapper" class="flex-column">
           <div v-for="lesson in lessons" class="lesson-wrapper flex-column">
@@ -66,6 +69,7 @@ export default {
 </template>
 
 <style scoped>
+
 #main-wrapper {
     gap: 10px;
 }
