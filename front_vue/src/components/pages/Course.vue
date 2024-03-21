@@ -3,9 +3,11 @@
 </script>
 
 <script>
-import { getCourseInfo, getTeacherInfo } from "../../requests.js";
+
+
+import {getCourseInfo, getTeacherInfo} from "../../requests.js";
 import axios from "axios";
-import { frontURL } from "../../config.js";
+import {frontURL} from "../../config.js";
 
 export default {
     data() {
@@ -20,27 +22,19 @@ export default {
         this.info = await getCourseInfo(this.id);
         this.teacherInfo = await getTeacherInfo(this.info.teacher_profile);
 
-        // Получаем модули курса
+
         axios.get(`${frontURL}/api/courseapp/modules/?course=${this.id}&format=json`).then(
-            async response => {
+            response => {
                 this.modules = response.data;
                 let i = 1;
-                for (const module of this.modules) {
-                    // Для каждого модуля получаем видео
-                    const lessonResponse = await axios.get(`${frontURL}/api/courseapp/lessons/?module=${module.id}`);
-                    module.lessons = lessonResponse.data;
-                    module.lessons.forEach(lesson => {
-                        lesson.number = i++;
-                    });
-                }
+                this.modules.forEach(lesson => {
+                    lesson.number = i++;
+                })
             }
-        ).catch(error => {
-            console.error('Ошибка при загрузке модулей курса:', error);
-        });
+        )
     }
 }
 </script>
-
 
 <template>
     <div id="main-wrapper" class="flex-column">
