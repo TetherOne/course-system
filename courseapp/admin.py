@@ -1,10 +1,10 @@
 from checkpointapp.models import CheckPoint
-
-from django.utils.html import format_html
-
-from courseapp.models import Enrollment, LessonVideo
+from courseapp.models import LessonVideo
+from courseapp.models import Enrollment
 from courseapp.models import Module
 from courseapp.models import Course
+
+from django.utils.html import format_html
 
 from django.contrib import admin
 
@@ -19,7 +19,7 @@ class CourseAdmin(admin.ModelAdmin):
     inlines = [
         CourseInline,
     ]
-    list_display = "id", "course_name", "description", "teacher_profile"
+    list_display = "id", "course_name", "short_description", "teacher_profile"
     list_display_links = "id", "course_name"
     search_fields = ("course_name",)
     list_filter = ("teacher_profile",)
@@ -29,12 +29,15 @@ class CourseAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return Course.objects.select_related("teacher_profile")
 
+    def short_description(self, obj):
+        return f"{obj.description[:50]}..."
 
-class LessonVideoInLine(admin.StackedInline):
+
+class LessonVideoInline(admin.StackedInline):
     model = LessonVideo
 
 
-class CheckPointInline(admin.StackedInline):
+class CheckpointInline(admin.TabularInline):
     model = CheckPoint
 
 
@@ -42,31 +45,40 @@ class CheckPointInline(admin.StackedInline):
 class ModuleAdmin(admin.ModelAdmin):
 
     inlines = [
-        CheckPointInline,
-        LessonVideoInLine,
+        LessonVideoInline,
+        CheckpointInline,
     ]
-    list_display = "id", "lesson_name", "course"
-    list_display_links = "id",
-    search_fields = ("description",)
-    list_filter = "course__course_name", "lesson_name"
-    ordering = ("id",)
+    list_display = "id", "lesson_name", "created_at", "course_name"
+    list_display_links = "id", "lesson_name"
+    search_fields = "lesson_name",
     list_per_page = 10
 
-    def get_queryset(self, request):
-        return Module.objects.select_related("course")
+    def course_name(self, obj):
+        return obj.course.course_name
+
+
+@admin.register(LessonVideo)
+class LessonVideoAdmin(admin.ModelAdmin):
+
+    list_display = "id", "description", "course_name", "lesson", "created_at", "display_lesson"
+    list_display_links = "id", "description"
+    search_fields = "description",
+    ordering = "id",
+    list_per_page = 10
+
+    def display_lesson(self, obj):
+        if obj.video:
+            return format_html(
+                f'<video src="{obj.video.url}" controls width="200px" height="150px"></video>'
+            )
+
+    def course_name(self, obj):
+        return obj.lesson.course
 
 
 @admin.register(Enrollment)
 class EnrollmentAdmin(admin.ModelAdmin):
-
-    list_display = "id", "student_info", "course", "enrollment_date"
-    list_display_links = "id", "student_info"
-    search_fields = ("student__surname", "student__name", "student__father_name")
-    list_filter = "course__course_name", "student"
-    ordering = ("id",)
+    list_display = ("id", "student", "course", "enrollment_date")
+    list_display_links = ("id", "student")
+    search_fields = ("student__user__username", "course__course_name")
     list_per_page = 10
-
-    def student_info(self, obj):
-        return f"{obj.student.surname} {obj.student.name} {obj.student.father_name}"
-
-    student_info.short_description = "Student Info"
