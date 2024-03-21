@@ -2,7 +2,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from courseapp.serializers import EnrollmentSerializer
 from courseapp.serializers import CourseSerializer
-from courseapp.serializers import LessonSerializer
+from courseapp.serializers import ModuleSerializer
 
 from rest_framework.filters import OrderingFilter
 
@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from courseapp.models import Enrollment
 from courseapp.models import Course
-from courseapp.models import Lesson
+from courseapp.models import Module
 
 
 class EnrollmentViewSet(ModelViewSet):
@@ -30,9 +30,9 @@ class CourseViewSet(ModelViewSet):
     ordering_fields = ["created_at"]
 
 
-class LessonViewSet(ModelViewSet):
+class ModuleViewSet(ModelViewSet):
 
-    queryset = Lesson.objects.all()
-    serializer_class = LessonSerializer
+    queryset = Module.objects.all()
+    serializer_class = ModuleSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["course"]

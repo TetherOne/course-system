@@ -1,6 +1,6 @@
 from userapp.models import StudentProfile
 
-from courseapp.models import Lesson
+from courseapp.models import Module
 
 from django.db import models
 
@@ -12,7 +12,7 @@ class CheckPoint(models.Model):
     id = models.AutoField(primary_key=True)
     checkpoint_number = models.IntegerField()
     lesson = models.ForeignKey(
-        Lesson,
+        Module,
         on_delete=models.CASCADE,
         related_name="checkpoint",
     )

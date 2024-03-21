@@ -59,7 +59,6 @@ export default {
         <div id="lessons-wrapper" class="flex-column">
           <div v-for="lesson in lessons" class="lesson-wrapper flex-column">
               <div>Лекция {{lesson.number}}. {{ lesson.lesson_name }}</div>
-              <div>{{ lesson.description }}</div>
               <video width="320" height="240" controls>
                   <source :src="lesson.video">
               </video>

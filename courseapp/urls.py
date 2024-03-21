@@ -2,7 +2,7 @@ from rest_framework.routers import DefaultRouter
 
 from courseapp.views import EnrollmentViewSet
 from courseapp.views import CourseViewSet
-from courseapp.views import LessonViewSet
+from courseapp.views import ModuleViewSet
 
 from django.urls import include
 from django.urls import path
@@ -20,9 +20,9 @@ routers.register(
     basename="courses",
 )
 routers.register(
-    "lessons",
-    LessonViewSet,
-    basename="lessons",
+    "modules",
+    ModuleViewSet,
+    basename="modules",
 )
 routers.register(
     "enrollments",
