@@ -50,7 +50,7 @@ class ModuleAdmin(admin.ModelAdmin):
     ]
     list_display = "id", "lesson_name", "created_at", "course_name"
     list_display_links = "id", "lesson_name"
-    search_fields = "lesson_name",
+    search_fields = ("lesson_name",)
     list_per_page = 10
 
     def course_name(self, obj):
@@ -60,10 +60,17 @@ class ModuleAdmin(admin.ModelAdmin):
 @admin.register(LessonVideo)
 class LessonVideoAdmin(admin.ModelAdmin):
 
-    list_display = "id", "description", "course_name", "lesson", "created_at", "display_lesson"
+    list_display = (
+        "id",
+        "description",
+        "course_name",
+        "lesson",
+        "created_at",
+        "display_lesson",
+    )
     list_display_links = "id", "description"
-    search_fields = "description",
-    ordering = "id",
+    search_fields = ("description",)
+    ordering = ("id",)
     list_per_page = 10
 
     def display_lesson(self, obj):

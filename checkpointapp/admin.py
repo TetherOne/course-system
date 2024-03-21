@@ -18,22 +18,19 @@ class CheckPointAdmin(admin.ModelAdmin):
     inlines = [
         QuestionInline,
     ]
-    list_display = "id", "title", "lesson_name", "course_name"
+    list_display = "id", "title", "course_name", "module_name"
     list_display_links = "id", "title"
     search_fields = ("title",)
-    list_filter = "lesson__lesson_name", "lesson__course__course_name"
+    list_filter = ("module__course__course_name",)
     ordering = ("id",)
-    list_per_page = 10
-    readonly_fields = "lesson_name", "course_name"
 
-    def lesson_name(self, obj):
-        return getattr(obj.lesson, "lesson_name", None)
-
-    lesson_name.short_description = "Lesson"
+    def module_name(self, obj):
+        return getattr(obj.module, "lesson_name", None)
 
     def course_name(self, obj):
-        return getattr(obj.lesson.course, "course_name", None)
+        return getattr(obj.module.course, "course_name", None)
 
+    module_name.short_description = "Module"
     course_name.short_description = "Course"
 
 
@@ -52,26 +49,33 @@ class QuestionAdmin(admin.ModelAdmin):
         AnswerInline,
         QuestionFileInline,
     ]
-    list_display = "id", "question_text", "lesson_name", "course_name", "max_points"
+    list_display = (
+        "id",
+        "question_text",
+        "module_name",
+        "course_name",
+        "max_points",
+        "checkpoint_number",
+    )
     list_display_links = "id", "question_text"
     search_fields = ("question_text",)
-    list_filter = (
-        "checkpoint__lesson__lesson_name",
-        "checkpoint__lesson__course__course_name",
-    )
+    list_filter = ("checkpoint__module__course__course_name",)
     ordering = ("id",)
     list_per_page = 10
-    readonly_fields = "lesson_name", "course_name"
+    readonly_fields = "module_name", "course_name"
 
-    def lesson_name(self, obj):
-        return getattr(obj.checkpoint.lesson, "lesson_name", None)
+    def module_name(self, obj):
+        return getattr(obj.checkpoint.module, "lesson_name", None)
 
-    lesson_name.short_description = "Lesson"
+    module_name.short_description = "Module"
 
     def course_name(self, obj):
-        return getattr(obj.checkpoint.lesson.course, "course_name", None)
+        return getattr(obj.checkpoint.module.course, "course_name", None)
 
     course_name.short_description = "Course"
+
+    def checkpoint_number(self, obj):
+        return obj.checkpoint.checkpoint_number
 
 
 @admin.register(PassedCheckPoint)
@@ -98,9 +102,6 @@ class AnswerAdmin(admin.ModelAdmin):
     list_display = "id", "question", "answer_text", "is_correct"
     list_display_links = "id", "question"
     search_fields = ("question__question_text",)
-    list_filter = (
-        "question__checkpoint__lesson__lesson_name",
-        "question__checkpoint__lesson__course__course_name",
-    )
+    list_filter = ("question__checkpoint__module__course__course_name",)
     ordering = ("id",)
     list_per_page = 10
