@@ -96,7 +96,8 @@ export default {
 }
 
 #lessons-wrapper {
-    gap: 10px;
+    gap: 20px;
+    padding: 10px;
     align-self: center;
     align-items: stretch;
 }
@@ -109,7 +110,7 @@ export default {
 .lesson-wrapper:first-child::before {
     content: '';
     position: absolute;
-    top: -2px; /* Переместить полоску над верхней темой */
+    top: -5px; /* Переместить полоску над верхней темой */
     left: 0;
     width: 100%;
     height: 1px;
