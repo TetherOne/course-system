@@ -38,9 +38,12 @@ export default {
                 })
             }
         )
-
-
-    }
+    },
+    methods: {
+        toggleVideos(index) {
+            this.modules[index].showVideos = !this.modules[index].showVideos;
+        }
+    },
 }
 </script>
 
@@ -65,13 +68,18 @@ export default {
 
         <div id="lessons-wrapper" class="flex-column">
             <div v-for="(module, index) in modules" :key="module.id" class="lesson-wrapper">
-                <div class="module-title">
+                <div class="module-title" @click="toggleVideos(index)">
                   <b>{{ (index + 1) + ". " + module.module_name}}</b>
+                  <span class="arrow" :class="{ 'arrow-expanded': module.showVideos }"></span>
                 </div>
-                <div class="video-wrapper flex-row">
-                    <video width="320" height="240" controls v-for="video in module.videos">
-                        <source :src="video.video">
-                    </video>
+                <div v-if="module.showVideos" class="video-wrapper flex-row">
+                    <div v-for="(video, videoIndex) in module.videos" :key="video.id" class="video-item">
+                        <video width="320" height="240" controls>
+                            <source :src="video.video">
+                        </video>
+                        <a class="lesson-num">{{ `${module.number}.${videoIndex + 1}` }}</a>
+                        <a class="lesson-name">{{ video.lesson_name }}</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -110,7 +118,7 @@ export default {
 .lesson-wrapper:first-child::before {
     content: '';
     position: absolute;
-    top: -5px; /* Переместить полоску над верхней темой */
+    top: -5px;
     left: 0;
     width: 100%;
     height: 1px;
@@ -146,10 +154,43 @@ video {
 }
 
 .module-title {
-    width: 1000px;
+    width: 1020px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
+.module-title {
+    position: relative;
+}
+
+.module-title .arrow {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background-image: url('/src/assets/120890.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.module-title .arrow-expanded {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.lesson-num {
+    font-weight: bold;
+    font-size: 15px;
+    margin-left: 10px;
+    margin-right: 5px;
+    margin-top: 10px;
+}
+
+.lesson-name {
+    font-weight: bold;
+    font-size: 17px;
+}
 </style>

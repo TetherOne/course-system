@@ -60,6 +60,7 @@ def lesson_video_directory_path(instance: "LessonVideo", filename: str) -> str:
 class LessonVideo(models.Model):
 
     id = models.AutoField(primary_key=True)
+    lesson_name = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(max_length=10000, blank=True, null=True)
     module = models.ForeignKey(
         "Module",
