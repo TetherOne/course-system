@@ -182,10 +182,15 @@ video {
 }
 
 .lesson-num {
+    font-weight: bold;
+    font-size: 15px;
+    margin-left: 10px;
     margin-right: 5px;
+    margin-top: 10px;
 }
 
 .lesson-name {
+    font-weight: bold;
     font-size: 17px;
 }
 </style>
