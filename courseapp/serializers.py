@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
-from .models import Enrollment, LessonVideo
+from .models import LessonOtherFile
+from .models import Enrollment
+from .models import Lesson
 from .models import Course
 from .models import Module
 
@@ -23,7 +25,13 @@ class ModuleSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class LessonVideoSerializer(serializers.ModelSerializer):
+class LessonSerializer(serializers.ModelSerializer):
     class Meta:
-        model = LessonVideo
+        model = Lesson
+        fields = "__all__"
+
+
+class LessonOtherFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LessonOtherFile
         fields = "__all__"

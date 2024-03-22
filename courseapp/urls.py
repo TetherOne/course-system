@@ -1,7 +1,8 @@
 from rest_framework.routers import DefaultRouter
 
-from courseapp.views import LessonVideoViewSet
+from courseapp.views import LessonOtherFileViewSet
 from courseapp.views import EnrollmentViewSet
+from courseapp.views import LessonViewSet
 from courseapp.views import CourseViewSet
 from courseapp.views import ModuleViewSet
 
@@ -27,8 +28,13 @@ routers.register(
 )
 routers.register(
     "lessons",
-    LessonVideoViewSet,
+    LessonViewSet,
     basename="lessons",
+)
+routers.register(
+    "lesson-other-files",
+    LessonOtherFileViewSet,
+    basename="lesson-other-files",
 )
 routers.register(
     "enrollments",

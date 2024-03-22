@@ -1,5 +1,5 @@
 from checkpointapp.models import CheckPoint
-from courseapp.models import LessonVideo
+from courseapp.models import Lesson, LessonOtherFile
 from courseapp.models import Enrollment
 from courseapp.models import Module
 from courseapp.models import Course
@@ -33,8 +33,8 @@ class CourseAdmin(admin.ModelAdmin):
         return f"{obj.description[:50]}..."
 
 
-class LessonVideoInline(admin.StackedInline):
-    model = LessonVideo
+class LessonInline(admin.StackedInline):
+    model = Lesson
 
 
 class CheckpointInline(admin.TabularInline):
@@ -45,7 +45,7 @@ class CheckpointInline(admin.TabularInline):
 class ModuleAdmin(admin.ModelAdmin):
 
     inlines = [
-        LessonVideoInline,
+        LessonInline,
         CheckpointInline,
     ]
     list_display = "id", "module_name", "created_at", "course_name"
@@ -57,19 +57,26 @@ class ModuleAdmin(admin.ModelAdmin):
         return obj.course.course_name
 
 
-@admin.register(LessonVideo)
-class LessonVideoAdmin(admin.ModelAdmin):
+class LessonOtherFileInline(admin.StackedInline):
+    model = LessonOtherFile
 
+
+@admin.register(Lesson)
+class LessonAdmin(admin.ModelAdmin):
+
+    inlines = [
+        LessonOtherFileInline,
+    ]
     list_display = (
         "id",
         "lesson_name",
-        "description",
+        # "description",
         "course_name",
         "module",
         "created_at",
         "display_lesson",
     )
-    list_display_links = "id", "description"
+    list_display_links = "id",
     search_fields = ("description",)
     ordering = ("id",)
     list_per_page = 10
@@ -82,6 +89,14 @@ class LessonVideoAdmin(admin.ModelAdmin):
 
     def course_name(self, obj):
         return obj.module.course
+
+
+@admin.register(LessonOtherFile)
+class LessonOtherFileAdmin(admin.ModelAdmin):
+
+    list_display = "id", "lesson", "other_file"
+    list_display_links = "id", "lesson"
+    list_per_page = 10
 
 
 @admin.register(Enrollment)

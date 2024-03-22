@@ -52,12 +52,12 @@ def lesson_video_directory_path(instance: "LessonVideo", filename: str) -> str:
     valid_filename = re.sub(
         r"[\\/*?:\"<>|]",
         "_",
-        instance.description,
+        instance.lesson_name,
     )
     return f"lessons/{instance.module.course.course_name}/{valid_filename}/{filename}"
 
 
-class LessonVideo(models.Model):
+class Lesson(models.Model):
 
     id = models.AutoField(primary_key=True)
     lesson_name = models.CharField(max_length=100, blank=True, null=True)
@@ -73,6 +73,33 @@ class LessonVideo(models.Model):
         blank=True,
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.lesson_name}"
+
+
+def other_file_directory_path(instance: "LessonOtherFile", filename: str) -> str:
+    valid_filename = re.sub(
+        r"[\\/*?:\"<>|]",
+        "_",
+        instance.lesson.lesson_name,
+    )
+    return f"lessons/{instance.lesson.module.course.course_name}/{valid_filename}/{filename}"
+
+
+class LessonOtherFile(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.CASCADE,
+        related_name="other_files",
+    )
+    other_file = models.FileField(
+        null=True,
+        upload_to=other_file_directory_path,
+        blank=True,
+    )
 
 
 class Module(models.Model):
