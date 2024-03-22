@@ -114,5 +114,32 @@ class PassedCheckPoint(models.Model):
         null=True,
     )
     points = models.IntegerField()
-    percent = models.FloatField()
+    percent = models.FloatField(blank=True, null=True)
+    status = models.CharField(max_length=255, blank=True, null=True)
+    grade = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if self.checkpoint:
+            total_max_points = sum(
+                question.max_points for question in self.checkpoint.questions.all()
+            )
+            if total_max_points > 0:
+                self.percent = (self.points / total_max_points) * 100
+            else:
+                self.percent = 0.0
+
+            if self.percent < 41:
+                self.grade = "2"
+                self.status = "Не зачет"
+            elif 41 <= self.percent <= 61:
+                self.grade = "3"
+                self.status = "Зачет"
+            elif 61 < self.percent <= 81:
+                self.grade = "4"
+                self.status = "Зачет"
+            else:
+                self.grade = "5"
+                self.status = "Зачет"
+
+        super().save(*args, **kwargs)

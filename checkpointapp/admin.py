@@ -81,7 +81,7 @@ class QuestionAdmin(admin.ModelAdmin):
 @admin.register(PassedCheckPoint)
 class PassedCheckPointAdmin(admin.ModelAdmin):
 
-    list_display = "id", "student", "checkpoint", "points", "created_at"
+    list_display = "id", "student", "checkpoint", "points", "created_at", 'percent', 'status', 'grade'
     list_display_links = "id", "student"
     search_fields = "student__surname", "student__name", "checkpoint__title"
     list_filter = "student", "checkpoint"
