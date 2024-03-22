@@ -69,17 +69,19 @@ export default {
         <div id="lessons-wrapper" class="flex-column">
             <div v-for="(module, index) in modules" :key="module.id" class="lesson-wrapper">
                 <div class="module-title" @click="module.showVideos = !module.showVideos">
-                    <b>{{ (index + 1) + ". " + module.module_name}}</b>
+                    <b>{{ (index + 1) + ". " + module.module_name }}</b>
                     <span class="arrow" :class="{ 'arrow-expanded': module.showVideos }"></span>
                 </div>
                 <transition name="slide">
                     <div v-if="module.showVideos" class="video-wrapper flex-row">
                         <div v-for="(video, videoIndex) in module.videos" :key="video.id" class="video-item">
-                            <video width="auto" height="220" controls>
-                                <source :src="video.video">
-                            </video>
-                            <a class="lesson-num">{{ `${module.number}.${videoIndex + 1}` }}</a>
-                            <a class="lesson-name">{{ video.lesson_name }}</a>
+                            <a :href="`/course/${module.id}/lesson/${video.id}`">
+                                <video width="auto" height="220" controls>
+                                    <source :src="video.video">
+                                </video>
+                                <a class="lesson-num">{{ `${module.number}.${videoIndex + 1}` }}</a>
+                                <a class="lesson-name">{{ video.lesson_name }}</a>
+                            </a>
                         </div>
                     </div>
                 </transition>
@@ -159,7 +161,7 @@ video {
 }
 
 .module-title {
-    width:1250px;
+    width: 1250px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -216,6 +218,7 @@ video {
         opacity: 0;
     }
 }
+
 .slide-enter-active, .slide-leave-active {
     transition: all 0.15s;
 }

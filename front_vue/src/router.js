@@ -7,6 +7,7 @@ import SignInUp from './components/pages/SignInUp.vue';
 import Student from './components/pages/Student.vue';
 import Teacher from './components/pages/Teacher.vue';
 import Course from './components/pages/Course.vue';
+import Lesson from "./components/pages/Lesson.vue";
 
 
 const routes = [
@@ -25,6 +26,10 @@ const routes = [
     {
         path: '/course/:id',
         component: Course
+    },
+    {
+        path: '/course/:courseId/lesson/:lessonId',
+        component: Lesson
     }
 ];
 
