@@ -28,9 +28,41 @@ export default {
 </script>
 
 <template>
-
+  <div class="video-container">
+    <div class="video-wrapper">
+      <video controls :src="video" class="fullscreen-video"></video>
+      <div class="lesson-name">{{ name }}</div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
+.video-wrapper {
+    position: relative;
+    width: 65%; /* Ширина видео */
+    height: auto; /* Автоматическая высота */
+    display: flex;
+    align-items: flex-start; /* Выравнивание элементов по верхнему краю */
+  }
 
+.lesson-name {
+    font: bold 24px sans-serif;
+    position: absolute;
+    top: -60px;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.7);
+  }
+
+.fullscreen-video {
+    width: 100%;
+    height: auto;
+  }
+
+.video-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 </style>
