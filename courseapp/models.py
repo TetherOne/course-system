@@ -4,6 +4,8 @@ from django.db import models
 
 import uuid
 
+import re
+
 
 class Enrollment(models.Model):
 
@@ -46,26 +48,43 @@ class Course(models.Model):
         super().save(*args, **kwargs)
 
 
-def course_video_directory_path(instance: "Video", filename: str) -> str:
-    return f"videos/{instance.course.course_name}/{filename}"
+def lesson_video_directory_path(instance: "LessonVideo", filename: str) -> str:
+    valid_filename = re.sub(
+        r"[\\/*?:\"<>|]",
+        "_",
+        instance.description,
+    )
+    return f"lessons/{instance.module.course.course_name}/{valid_filename}/{filename}"
 
 
-class Lesson(models.Model):
+class LessonVideo(models.Model):
 
     id = models.AutoField(primary_key=True)
     lesson_name = models.CharField(max_length=100, blank=True, null=True)
+    description = models.TextField(max_length=10000, blank=True, null=True)
+    module = models.ForeignKey(
+        "Module",
+        on_delete=models.CASCADE,
+        related_name="videos",
+    )
     video = models.FileField(
         null=True,
-        upload_to=course_video_directory_path,
+        upload_to=lesson_video_directory_path,
         blank=True,
     )
-    description = models.TextField(max_length=10000, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Module(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    module_name = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     course = models.ForeignKey(
         "Course",
         on_delete=models.CASCADE,
-        related_name="lessons",
+        related_name="modules",
     )
 
     def __str__(self):
-        return f"{self.lesson_name}"
+        return f"{self.module_name}"

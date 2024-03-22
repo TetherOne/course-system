@@ -46,7 +46,7 @@ export default {
     <div id="student-wrapper" class="flex-column">
         <Header userRole="student" :userInfo="info"></Header>
         <div class="flex-row">
-            <div>Моё обучение</div>
+            <div><b>Моё обучение</b></div>
         </div>
         <CoursesList :courses="courses"></CoursesList>
     </div>

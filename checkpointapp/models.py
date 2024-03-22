@@ -1,6 +1,6 @@
 from userapp.models import StudentProfile
 
-from courseapp.models import Lesson
+from courseapp.models import Module
 
 from django.db import models
 
@@ -11,8 +11,8 @@ class CheckPoint(models.Model):
 
     id = models.AutoField(primary_key=True)
     checkpoint_number = models.IntegerField()
-    lesson = models.ForeignKey(
-        Lesson,
+    module = models.ForeignKey(
+        Module,
         on_delete=models.CASCADE,
         related_name="checkpoint",
     )
@@ -46,7 +46,7 @@ class Answer(models.Model):
         on_delete=models.CASCADE,
         related_name="answers",
     )
-    answer_text = models.CharField(null=True, max_length=255, blank=True)
+    answer_text = models.CharField(null=True, max_length=1000, blank=True)
     is_correct = models.BooleanField(default=False)
 
 

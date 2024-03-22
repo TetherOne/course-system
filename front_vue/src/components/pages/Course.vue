@@ -5,7 +5,7 @@
 <script>
 
 
-import {getCourseInfo, getTeacherInfo} from "../../requests.js";
+import {getCourseInfo, getModuleVideos, getTeacherInfo} from "../../requests.js";
 import axios from "axios";
 import {frontURL} from "../../config.js";
 
@@ -15,7 +15,7 @@ export default {
             id: this.$route.params.id,
             info: {},
             teacherInfo: {},
-            lessons: []
+            modules: []
         }
     },
     async created() {
@@ -23,16 +23,27 @@ export default {
         this.teacherInfo = await getTeacherInfo(this.info.teacher_profile);
 
 
-        axios.get(`${frontURL}/api/courseapp/lessons/?course=${this.id}&format=json`).then(
+        axios.get(`${frontURL}/api/courseapp/modules/?course=${this.id}&format=json`).then(
             response => {
-                this.lessons = response.data;
+                this.modules = response.data;
                 let i = 1;
-                this.lessons.forEach(lesson => {
+                this.modules.forEach(lesson => {
                     lesson.number = i++;
                 })
             }
+        ).then(
+            _ => {
+                this.modules.forEach(async module => {
+                    module.videos = await getModuleVideos(module.id);
+                })
+            }
         )
-    }
+    },
+    methods: {
+        toggleVideos(index) {
+            this.modules[index].showVideos = !this.modules[index].showVideos;
+        }
+    },
 }
 </script>
 
@@ -47,23 +58,36 @@ export default {
                 {{ info.description }}
             </div>
             <div class="spacer"></div>
-            <a href="/student"><button>В профиль</button></a>
+        </div>
+        <div style="margin-left: 40px;">
+            <a href="/student" style="color: black; text-decoration: none; display: inline-block;">
+                <img src="/src/assets/arrow.png" alt="Arrow" style="width: 40px; height: 40px; vertical-align: middle;">
+                <span style="font-size: 20px; vertical-align: middle; margin-left: 10px;">Назад</span>
+            </a>
         </div>
 
-
         <div id="lessons-wrapper" class="flex-column">
-            <div v-for="lesson in lessons" class="lesson-wrapper flex-column">
-                <div>Лекция {{lesson.number}}. {{ lesson.lesson_name }}</div>
-                <div>{{ lesson.description }}</div>
-                <video width="320" height="240" autoplay controls>
-                    <source :src="lesson.video">
-                </video>
+            <div v-for="(module, index) in modules" :key="module.id" class="lesson-wrapper">
+                <div class="module-title" @click="toggleVideos(index)">
+                  <b>{{ (index + 1) + ". " + module.module_name}}</b>
+                  <span class="arrow" :class="{ 'arrow-expanded': module.showVideos }"></span>
+                </div>
+                <div v-if="module.showVideos" class="video-wrapper flex-row">
+                    <div v-for="(video, videoIndex) in module.videos" :key="video.id" class="video-item">
+                        <video width="320" height="240" controls>
+                            <source :src="video.video">
+                        </video>
+                        <a class="lesson-num">{{ `${module.number}.${videoIndex + 1}` }}</a>
+                        <a class="lesson-name">{{ video.lesson_name }}</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+
 #main-wrapper {
     gap: 10px;
 }
@@ -81,13 +105,92 @@ export default {
 
 #lessons-wrapper {
     gap: 10px;
+    padding: 10px;
     align-self: center;
     align-items: stretch;
 }
 
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.lesson-wrapper:first-child::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #d1d1d1;
+}
+
 .lesson-wrapper {
-    border-radius: 10px;
-    padding: 10px;
-    border: 1px solid #a49dc2;
+    position: relative;
+    margin-top: 10px;
+    padding-top: 20px;
+}
+
+.lesson-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #d1d1d1;
+}
+
+
+.video-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+video {
+    margin-right: 10px;
+    margin-left: 10px;
+    display: block;
+}
+
+.module-title {
+    width: 1020px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.module-title {
+    position: relative;
+}
+
+.module-title .arrow {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background-image: url('/src/assets/120890.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.module-title .arrow-expanded {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.lesson-num {
+    font-weight: bold;
+    font-size: 15px;
+    margin-left: 10px;
+    margin-right: 5px;
+    margin-top: 10px;
+}
+
+.lesson-name {
+    font-weight: bold;
+    font-size: 17px;
 }
 </style>

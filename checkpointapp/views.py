@@ -17,7 +17,7 @@ class CheckPointViewSet(ModelViewSet):
     queryset = CheckPoint.objects.prefetch_related("questions__answers").all()
     serializer_class = CheckPointSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["lesson"]
+    filterset_fields = ["module"]
 
 
 class QuestionViewSet(ModelViewSet):

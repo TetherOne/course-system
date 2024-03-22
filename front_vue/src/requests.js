@@ -32,3 +32,7 @@ export function getCourseInfo(id) {
         response => response.data
     );
 }
+
+export async function getModuleVideos(id) {
+    return (await axios.get(`${frontURL}/api/courseapp/lessons/?module=${id}&format=json`)).data;
+}
