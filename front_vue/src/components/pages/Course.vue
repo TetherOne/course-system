@@ -74,7 +74,7 @@ export default {
                 </div>
                 <div v-if="module.showVideos" class="video-wrapper flex-row">
                     <div v-for="(video, videoIndex) in module.videos" :key="video.id" class="video-item">
-                        <video width="320" height="240" controls>
+                        <video width="auto" height="220" controls>
                             <source :src="video.video">
                         </video>
                         <a class="lesson-num">{{ `${module.number}.${videoIndex + 1}` }}</a>
@@ -141,20 +141,22 @@ export default {
     background-color: #d1d1d1;
 }
 
-
 .video-wrapper {
     display: flex;
     flex-direction: row;
 }
 
 video {
+    margin-top: 25px;
+    margin-bottom: 20px;
     margin-right: 10px;
     margin-left: 10px;
     display: block;
+    border-radius: 30px;
 }
 
 .module-title {
-    width: 1020px;
+    width:1250px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
