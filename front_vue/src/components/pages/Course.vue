@@ -68,19 +68,21 @@ export default {
 
         <div id="lessons-wrapper" class="flex-column">
             <div v-for="(module, index) in modules" :key="module.id" class="lesson-wrapper">
-                <div class="module-title" @click="toggleVideos(index)">
-                  <b>{{ (index + 1) + ". " + module.module_name}}</b>
-                  <span class="arrow" :class="{ 'arrow-expanded': module.showVideos }"></span>
+                <div class="module-title" @click="module.showVideos = !module.showVideos">
+                    <b>{{ (index + 1) + ". " + module.module_name}}</b>
+                    <span class="arrow" :class="{ 'arrow-expanded': module.showVideos }"></span>
                 </div>
-                <div v-if="module.showVideos" class="video-wrapper flex-row">
-                    <div v-for="(video, videoIndex) in module.videos" :key="video.id" class="video-item">
-                        <video width="auto" height="220" controls>
-                            <source :src="video.video">
-                        </video>
-                        <a class="lesson-num">{{ `${module.number}.${videoIndex + 1}` }}</a>
-                        <a class="lesson-name">{{ video.lesson_name }}</a>
+                <transition name="slide">
+                    <div v-if="module.showVideos" class="video-wrapper flex-row">
+                        <div v-for="(video, videoIndex) in module.videos" :key="video.id" class="video-item">
+                            <video width="auto" height="220" controls>
+                                <source :src="video.video">
+                            </video>
+                            <a class="lesson-num">{{ `${module.number}.${videoIndex + 1}` }}</a>
+                            <a class="lesson-name">{{ video.lesson_name }}</a>
+                        </div>
                     </div>
-                </div>
+                </transition>
             </div>
         </div>
     </div>
@@ -144,6 +146,7 @@ export default {
 .video-wrapper {
     display: flex;
     flex-direction: row;
+    animation: fadeIn 0.15s ease-in-out;
 }
 
 video {
@@ -152,7 +155,7 @@ video {
     margin-right: 10px;
     margin-left: 10px;
     display: block;
-    border-radius: 30px;
+    border-radius: 25px;
 }
 
 .module-title {
@@ -194,5 +197,31 @@ video {
 .lesson-name {
     font-weight: bold;
     font-size: 17px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+.slide-enter-active, .slide-leave-active {
+    transition: all 0.15s;
+}
+
+.slide-enter, .slide-leave-to {
+    transform: translateY(-20px);
+    opacity: 0;
 }
 </style>
