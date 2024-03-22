@@ -62,6 +62,7 @@ class LessonVideoAdmin(admin.ModelAdmin):
 
     list_display = (
         "id",
+        "lesson_name",
         "description",
         "course_name",
         "module",
