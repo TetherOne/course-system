@@ -76,7 +76,7 @@ export default {
                     <div v-if="module.showVideos" class="video-wrapper flex-row">
                         <div v-for="(video, videoIndex) in module.videos" :key="video.id" class="video-item">
                             <a :href="`/course/${module.id}/lesson/${video.id}`">
-                                <video width="auto" height="220" controls>
+                                <video width="auto" height="150" controls>
                                     <source :src="video.video">
                                 </video>
                                 <a class="lesson-num">{{ `${module.number}.${videoIndex + 1}` }}</a>
@@ -161,7 +161,7 @@ video {
 }
 
 .module-title {
-    width: 1250px;
+    width: 900px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -190,7 +190,7 @@ video {
 
 .lesson-num {
     font-weight: bold;
-    font-size: 15px;
+    font-size: 12px;
     margin-left: 10px;
     margin-right: 5px;
     margin-top: 10px;
@@ -198,7 +198,7 @@ video {
 
 .lesson-name {
     font-weight: bold;
-    font-size: 17px;
+    font-size: 14px;
 }
 
 @keyframes fadeIn {
