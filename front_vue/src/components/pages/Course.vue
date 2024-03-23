@@ -75,7 +75,7 @@ export default {
                 <transition name="slide">
                     <div v-if="module.showVideos" class="video-wrapper flex-row">
                         <div v-for="(video, videoIndex) in module.videos" :key="video.id" class="video-item">
-                            <a :href="`/course/${module.id}/lesson/${video.id}`" class="video-href">
+                            <a class="video-href" :href="`/course/${module.id}/lesson/${video.id}`">
                                 <video width="auto" height="150" controls>
                                     <source :src="video.video">
                                 </video>
@@ -118,6 +118,10 @@ export default {
     display: flex;
     flex-direction: column;
 }
+.video-href {
+    text-decoration: none;
+    color: black;
+}
 
 .lesson-wrapper:first-child::before {
     content: '';
@@ -158,11 +162,6 @@ video {
     margin-left: 10px;
     display: block;
     border-radius: 25px;
-}
-
-.video-href {
-    text-decoration: none;
-    color: black;
 }
 
 .module-title {
