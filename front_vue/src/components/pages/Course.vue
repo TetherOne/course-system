@@ -62,7 +62,8 @@ export default {
         <div style="margin-left: 40px;">
             <a href="/student" style="color: black; text-decoration: none; display: inline-block;">
                 <img src="/src/assets/arrow.png" alt="Arrow" style="width: 40px; height: 40px; vertical-align: middle;">
-                <span style="font-size: 20px; vertical-align: middle; margin-left: 10px;">Назад</span>
+                <span style="font-size: 20px; vertical-align: middle; margin-left: 1px; color: #5A5959;">Назад</span>
+
             </a>
         </div>
 
