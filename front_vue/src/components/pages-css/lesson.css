@@ -1,41 +1,28 @@
-.arrow {
-    font-size: 20px;
+.tittle {
+    margin-top: 40px;
+    margin-bottom: 10px;
+}
+.arrow-image {
+    width: 40px;
+    height: 40px;
     vertical-align: middle;
-    margin-left: 1px;
-    margin-top: 110px;
+}
+.arrow-text {
+    font-size: 20px;
     color: #5A5959;
 }
-.video-wrapper {
-    position: relative;
-    width: 65%;
-    height: auto;
-    display: flex;
-    align-items: flex-start;
-}
-
 .lesson-name {
-    font: bold 24px sans-serif;
-    position: absolute;
-    top: -60px;
-    left: 0;
-    background-color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 40px;
 }
-
-.lesson-description {
-   display: flex;
-}
-
-.fullscreen-video {
-    width: 100%;
-    height: auto;
-    border-radius: 30px;
-}
-
-.video-container {
-    width: 100%;
-    height: 100vh;
+.lesson-container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    margin-top: -50px;
+    margin-top: 40px;
+}
+.lesson-video {
+    border-radius: 20px;
+    width: 60%;
+    height: 60%;
 }
