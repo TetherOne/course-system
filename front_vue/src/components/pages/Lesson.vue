@@ -1,10 +1,10 @@
 <template>
     <div style="margin-left: 40px;">
-        <button @click="goBack" style="color: black; text-decoration: none; display: inline-block; border: none; background: none; cursor: pointer;">
+        <a @click="goBack" style="color: black; text-decoration: none; display: inline-block; border: none; background: none; cursor: pointer;">
             <img src="/src/assets/arrow.png" alt="Arrow" style="width: 40px; height: 40px; vertical-align: middle;">
-              <span class="arrow" style="font-size: 20px; vertical-align: middle; margin-left: 1px; color: #5A5959;">Назад</span>
-            </button>
-          </div>
+              <span class="arrow">Назад</span>
+        </a>
+    </div>
 
           <div class="video-container">
             <div class="video-wrapper">
@@ -45,6 +45,13 @@ export default {
 </script>
 
 <style scoped>
+.arrow {
+    font-size: 20px;
+    vertical-align: middle;
+    margin-left: 1px;
+    margin-top: 110px;
+    color: #5A5959;
+}
 .video-wrapper {
     position: relative;
     width: 65%;
