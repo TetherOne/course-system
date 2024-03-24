@@ -14,22 +14,21 @@
       <div class="lesson-container">
           <div>
               <video class="lesson-video" controls :src="video"></video>
-              <span class="lesson-tittle-description">Описание</span>
-              <span class="lesson-description">{{ description }}</span>
-              <span class="lesson-tittle-materials">Материалы</span>
-              <span class="lesson-description">{{  }}</span>
+              <div class="lesson-details">
+                  <div class="lesson-tittle-description">Описание</div>
+                  <div class="lesson-description">{{ description }}</div>
+                  <div class="lesson-tittle-materials">Материалы</div>
+                  <div class="lesson-materials">{{ materials }}</div>
+              </div>
           </div>
-
       </div>
 
 </template>
 
 
 <script src="../pages-scripts/lesson.js">
-
 </script>
 
 
 <style src="../pages-css/lesson.css">
-
 </style>
