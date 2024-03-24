@@ -21,11 +21,27 @@
             </div>
             <br>
             <div class="course-help-container">
-                <div class="course-help-tittle">Тех-поддержка в телеграм!</div>
+                <div class="course-help-tittle">Тех-поддержка теперь в телеграм!</div>
                 <div class="course-help-text">Сообщить о проблеме с курсом можно по ссылке в Telegram</div>
             </div>
         </div>
 
+        <div class="modules-lessons-container">
+            <div class="modules-container">
+                <div class="module-divider"></div> <!-- Добавляем линию над первым модулем -->
+                <div v-for="(module, index) in modules" :key="module.id" class="lesson-wrapper">
+                    <div class="module-title" @click="module.showVideos = !module.showVideos">
+                        <b>{{ (index + 1) + ". " + module.module_name }}</b>
+                        <span class="arrow" :class="{ 'arrow-expanded': module.showVideos }"></span>
+                    </div>
+                    <div class="module-divider"></div> <!-- Добавляем линию после каждого модуля -->
+                </div>
+            </div>
+
+            <div class="lessons-container">
+
+            </div>
+        </div>
     </body>
 </template>
 
