@@ -25,7 +25,3 @@ export default {
       }
     }
   }
-  var videoWidth = document.querySelector('.lesson-video').offsetWidth;
-    document.querySelectorAll('.lesson-description, .lesson-materials').forEach(function(element) {
-        element.style.maxWidth = videoWidth + 'px';
-    });

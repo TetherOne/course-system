@@ -27,10 +27,8 @@
 
 
 <script src="../pages-scripts/lesson.js">
-
 </script>
 
 
 <style src="../pages-css/lesson.css">
-
 </style>
