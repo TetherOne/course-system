@@ -9,23 +9,23 @@
                   <span class="back-text">Назад</span>
                 </a>
             </span>
-            <span class="profile-container">
-                <span class="profile-link">Профиль</span>
-            </span>
         </div>
     </header>
 
     <body>
-        <div class="description-container">
-            <span>Курс</span>
-            <span class="course-name">Название курса</span>
-            <span class="course-description">{{ info.description }}</span>
+        <div class="description-help-container">
+            <div class="description-container">
+                <div>Курс</div>
+                <div class="course-name">Название курса</div>
+                <div class="course-description">{{ info.description }}</div>
+            </div>
+            <br>
+            <div class="course-help-container">
+                <div class="course-help-tittle">Тех-поддержка в телеграм!</div>
+                <div class="course-help-text">Сообщить о проблеме с курсом можно по ссылке в Telegram</div>
+            </div>
         </div>
 
-        <div class="course-help-container">
-            <span class="course-help-tittle">Телеграм помощь</span>
-            <span class="course-help-text">Сообщить о проблеме с курсом можно по ссылке в Telegram</span>
-        </div>
     </body>
 </template>
 
