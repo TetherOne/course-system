@@ -3,11 +3,11 @@ import {
     createWebHistory
 } from 'vue-router';
 
-import SignInUp from './components/pages/SignInUp.vue';
-import Student from './components/pages/Student.vue';
-import Teacher from './components/pages/Teacher.vue';
-import Course from './components/pages/Course.vue';
-import Lesson from "./components/pages/Lesson.vue";
+import SignInUp from './components/pages-vue/SignInUp.vue';
+import Student from './components/pages-vue/Student.vue';
+import Teacher from './components/pages-vue/Teacher.vue';
+import Course from './components/pages-vue/Course.vue';
+import Lesson from "./components/pages-vue/Lesson.vue";
 
 
 const routes = [
