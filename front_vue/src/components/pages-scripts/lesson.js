@@ -1,4 +1,4 @@
-import {getLesson, getLessonOtherFiles} from "../../requests.js";
+import { getLesson, getLessonOtherFiles } from "../../requests.js";
 
 export default {
     data() {
@@ -34,6 +34,9 @@ export default {
     methods: {
         goBack() {
             this.$router.go(-1);
+        },
+        shortenLink(link) {
+            return link.substring(0, 20) + '...';
         }
     }
 }
