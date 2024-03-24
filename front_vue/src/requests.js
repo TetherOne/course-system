@@ -40,3 +40,7 @@ export async function getModuleVideos(id) {
 export async function getLesson(id) {
     return (await axios.get(`${frontURL}/api/courseapp/lessons/${id}?format=json`)).data;
 }
+
+export async function getLessonOtherFiles(id) {
+    return (await axios.get(`${frontURL}/api/courseapp/lesson-other-files?lesson=${id}&format=json`)).data;
+}
