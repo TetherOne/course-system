@@ -1,38 +1,23 @@
-<script setup>
-
-</script>
-
-<script>
-import {
-    getTeacherCourses,
-    getTeacherInfo
-} from '../../requests.js';
-
-
-export default {
-    data() {
-        return {
-            surname: '__surname__',
-            name: '__name__',
-            fatherName: '__fatherName__',
-            courses: []
-        }
-    },
-    async created() {
-        const teacherInfo = await getTeacherInfo(this.$root.$data.id);
-        this.surname = teacherInfo.surname;
-        this.name = teacherInfo.name;
-        this.fatherName = teacherInfo.father_name;
-
-        this.courses = await getTeacherCourses(this.$root.$data.id);
-    }
-}
-</script>
-
 <template>
+    <header>
+        <div class="tittle">
+            <span class="surname">{{ surname }}</span>
+            <span class="name">{{ name }}</span>
+            <span class="father-name">{{ fatherName }}</span>
+        </div>
+    </header>
 
+  <body>
+
+  </body>
 </template>
 
-<style scoped>
+
+<script src="../pages-scripts/teacher.js">
+
+</script>
+
+
+<style src="../pages-css/teacher.css">
 
 </style>
