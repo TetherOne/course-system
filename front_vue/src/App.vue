@@ -7,7 +7,7 @@ export default {
     data() {
         return {
             userId: 1,
-            userRole: 'student'
+            userRole: 'teacher'
         }
     }
 }

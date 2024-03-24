@@ -29,7 +29,7 @@
                 <transition name="slide">
                     <div v-if="module.showVideos" class="video-wrapper flex-row">
                         <div v-for="(video, videoIndex) in module.videos" :key="video.id" class="video-item">
-                            <a class="video-href" :href="`/course/${module.id}/lesson/${video.id}`">
+                            <a class="video-href" :href="`/course/${module.id}/lesson/${video.id}?num=${module.number}_${videoIndex + 1}`">
                                 <video width="auto" height="150" controls>
                                     <source :src="video.video">
                                 </video>

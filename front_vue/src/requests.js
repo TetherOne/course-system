@@ -27,6 +27,10 @@ export function getStudentCourses(id) {
     );
 }
 
+export async function getTeacherCourses(id) {
+    return (await axios.get(`${frontURL}/api/courseapp/courses?teacher_profile=${id}&format=json`)).data;
+}
+
 export function getCourseInfo(id) {
     return axios.get(`${frontURL}/api/courseapp/courses/${id}/?format=json`).then(
         response => response.data

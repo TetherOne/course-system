@@ -35,7 +35,10 @@ export default {
             return this.$route.params.lessonId;
         },
         lessonNumber() {
-            return `${this.courseId}. ${this.id}.`;
+            const path = window.location.href;
+            const begin = path.indexOf('?') + 1;
+            const num = path.slice(begin).split('_');
+            return `${num[0]}. ${num[1]}.`;
         }
     },
     async created() {
