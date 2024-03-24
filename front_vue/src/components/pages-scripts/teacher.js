@@ -7,6 +7,7 @@ import {
 export default {    data() {
         return {
             id: this.$route.params.id,
+            avatar: '__avatar__',
             surname: '__surname__',
             name: '__name__',
             fatherName: '__fatherName__',
