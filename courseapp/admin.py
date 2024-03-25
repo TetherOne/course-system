@@ -19,7 +19,7 @@ class CourseAdmin(admin.ModelAdmin):
     inlines = [
         CourseInline,
     ]
-    list_display = "id", "course_name", "short_description", "teacher_profile"
+    list_display = "id", "course_name", "short_description", "teacher_profile", "status"
     list_display_links = "id", "course_name"
     search_fields = ("course_name",)
     list_filter = ("teacher_profile",)
