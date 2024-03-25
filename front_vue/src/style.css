@@ -21,3 +21,7 @@ body {
 .spacer {
     flex-grow: 1;
 }
+
+.page-wrapper {
+    align-items: center;
+}

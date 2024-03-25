@@ -1,50 +1,55 @@
 <script setup>
 import Header from '../elements/Header.vue';
-import CoursesList from "../elements/CoursesList.vue";
+import CoursesList from '../elements/CoursesList.vue';
+
+import {useUserStore} from '../../stores/user.js';
+
+
+const user = useUserStore();
 </script>
 
+
 <script>
+import {mapStores} from 'pinia';
+
 import {
     getStudentInfo,
-    getStudentCourses, getCourseInfo, getTeacherInfo
+    getStudentCourses,
+    getTeacherInfo
 } from './../../requests.js';
-import axios from "axios";
-import {frontURL} from "../../config.js";
+import {useUserStore} from '../../stores/user.js';
+import {shortenNameElem} from '../../functions.js';
 
 
 export default {
     data() {
         return {
-            info: {},
             courses: []
         }
     },
-    created() {
-        getStudentInfo(this.$root.$data.userId).then(
-            info => {
-                this.info = info;
-            }
-        );
+    computed: {
+        ...mapStores(useUserStore)
+    },
+    async created() {
+        this.userStore.info = await getStudentInfo(this.userStore.id);
+        this.courses = await getStudentCourses(this.userStore.id);
+        for (const course of this.courses) {
+            const teacherId = course.teacher_profile;
+            course.teacherInfo = await getTeacherInfo(teacherId);
 
-
-        axios.get(`${frontURL}/api/courseapp/enrollments/?student=${this.$root.$data.userId}&format=json`).then(
-            response => {
-                const enrollments = response.data;
-                enrollments.forEach(async enrollment => {
-                    const courseId = enrollment.course;
-                    const course = await getCourseInfo(courseId);
-                    course.teacherInfo = await getTeacherInfo(course.teacher_profile);
-                    this.courses.push(course);
-                })
-            }
-        )
+            const surname = course.teacherInfo.surname;
+            const nameInitial = shortenNameElem(course.teacherInfo.name);
+            const fatherNameInitial = shortenNameElem(course.teacherInfo.father_name);
+            course.teacherInfo.nameWithInitials = `${surname} ${nameInitial} ${fatherNameInitial}`;
+        }
     }
 }
 </script>
 
+
 <template>
-    <div id="student-wrapper" class="flex-column">
-        <Header userRole="student" :userInfo="info"></Header>
+    <div class="flex-column page-wrapper">
+        <Header userRole="student" :userInfo="user.info"></Header>
         <div class="flex-row">
             <div><b>Моё обучение</b></div>
         </div>
@@ -52,8 +57,7 @@ export default {
     </div>
 </template>
 
+
 <style scoped>
-#student-wrapper {
-    align-items: center;
-}
+
 </style>

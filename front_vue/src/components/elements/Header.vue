@@ -3,7 +3,13 @@
 </script>
 
 <script>
+import {mapStores} from 'pinia';
+
+
 export default {
+    computed: {
+        ...mapStores()
+    },
     props: {
         userRole: {
             type: String,

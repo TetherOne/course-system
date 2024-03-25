@@ -1,9 +1,7 @@
-Ка<script setup>
-import { useUserStore } from '../../stores/user.js';
+<script setup>
 
-
-const user = useUserStore();
 </script>
+
 
 <template>
     <header>
