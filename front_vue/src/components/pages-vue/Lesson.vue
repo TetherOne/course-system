@@ -3,7 +3,7 @@
 <template>
     <header>
         <div class="tittle-container">
-            <a @click="goBack" class="arrow-text">
+            <a @click="goBack" class="arrow-container">
                 <img src="/src/assets/arrow.png" alt="Arrow" class="arrow-image">
                 <span class="back-text">Назад</span>
             </a>

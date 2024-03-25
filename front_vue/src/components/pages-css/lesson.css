@@ -1,27 +1,27 @@
 .tittle-container {
     display: flex;
     justify-content: center;
-    margin-right: 1200px;
+    margin-right: 1100px;
     margin-top: 40px;
-    margin-bottom: 10px;
+    margin-bottom: 40px;
+}
+.arrow-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 300px;
 }
 .arrow-image {
-    margin-bottom: -13px;
     width: 40px;
     height: 40px;
     cursor: pointer;
     margin-left: 130px;
 }
-
 .back-text {
     font-size: 20px;
+    margin-bottom: 3px;
     cursor: pointer;
     color: #5A5959;
-}
-.lesson-name {
-    font-size: 30px;
-    font-weight: bold;
-    margin-left: 250px;
 }
 .lesson-tittle-description,
 .lesson-tittle-materials {
@@ -30,11 +30,21 @@
     font-weight: bold;
 }
 .lesson-container {
+    margin-bottom: 10px;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
 }
-
+.lesson-name {
+    display: flex;
+    justify-content: center;
+    margin-left: 200px;
+    font-size: 30px;
+    font-weight: bold;
+}
+.lesson-video {
+    border-radius: 21px;
+}
 .lesson-details {
     margin-left: 20px;
 }
@@ -55,6 +65,9 @@
     font-size: 16px;
     color: black;
     text-decoration: none;
+}
+.lesson-description {
+    max-width: 1240px;
 }
 .lesson-material:hover {
     text-decoration: none;
