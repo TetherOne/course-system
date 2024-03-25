@@ -15,7 +15,6 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    margin-left: 70px;
 }
 .back-text {
     font-size: 20px;
@@ -35,7 +34,6 @@
     justify-content: center;
     flex-wrap: wrap;
 }
-
 .lesson-name {
     display: flex;
     justify-content: center;
