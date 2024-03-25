@@ -26,13 +26,15 @@
     background-color: #F7F7F7;
     border-radius: 12px;
 }
-
 .course-help-container {
     border: 1px solid #CDCDCD;
     padding: 18px;
     margin: 0 auto;
     max-width: 400px;
     border-radius: 12px;
+}
+.course-help-tittle {
+    font-weight: bold;
 }
 .course-name {
     font-size: 24px;
@@ -51,7 +53,6 @@
     margin-top: 20px;
     width: 500%;
 }
-
 .module-divider:first-child {
     margin-top: 30px;
 }

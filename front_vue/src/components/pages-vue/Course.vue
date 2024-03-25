@@ -28,13 +28,13 @@
 
         <div class="modules-lessons-container">
             <div class="modules-container">
-                <div class="module-divider"></div> <!-- Добавляем линию над первым модулем -->
+                <div class="module-divider"></div>
                 <div v-for="(module, index) in modules" :key="module.id" class="lesson-wrapper">
                     <div class="module-title" @click="module.showVideos = !module.showVideos">
                         <b>{{ (index + 1) + ". " + module.module_name }}</b>
                         <span class="arrow" :class="{ 'arrow-expanded': module.showVideos }"></span>
                     </div>
-                    <div class="module-divider"></div> <!-- Добавляем линию после каждого модуля -->
+                    <div class="module-divider"></div>
                 </div>
             </div>
 
