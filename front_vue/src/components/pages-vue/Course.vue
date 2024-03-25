@@ -39,7 +39,21 @@
             </div>
 
             <div class="lessons-container">
-
+                <div v-for="(module, index) in modules" :key="module.id">
+                    <transition name="slide">
+                        <div v-if="module.showVideos" class="video-wrapper flex-row">
+                            <div v-for="(video, videoIndex) in module.videos" :key="video.id" class="video-item">
+                                <a class="video-href" :href="`/course/${module.id}/lesson/${video.id}?num=${module.number}_${videoIndex + 1}`">
+                                    <video width="auto" height="150" controls>
+                                        <source :src="video.video">
+                                    </video>
+                                    <a class="lesson-num">{{ `${module.number}.${videoIndex + 1}` }}</a>
+                                    <a class="lesson-name">{{ video.lesson_name }}</a>
+                                </a>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
             </div>
         </div>
     </body>

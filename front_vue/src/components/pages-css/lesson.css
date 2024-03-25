@@ -1,15 +1,8 @@
 .tittle-container {
     display: flex;
     justify-content: center;
-    margin-right: 1100px;
     margin-top: 40px;
     margin-bottom: 40px;
-}
-.arrow-container {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    margin-left: 300px;
 }
 .arrow-image {
     width: 40px;
@@ -17,9 +10,16 @@
     cursor: pointer;
     margin-left: 130px;
 }
+.arrow-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 70px;
+}
 .back-text {
     font-size: 20px;
-    margin-bottom: 3px;
+    margin-bottom: -8px;
     cursor: pointer;
     color: #5A5959;
 }
@@ -35,12 +35,15 @@
     justify-content: center;
     flex-wrap: wrap;
 }
+
 .lesson-name {
     display: flex;
     justify-content: center;
-    margin-left: 200px;
     font-size: 30px;
+    margin-right: 800px; /* Оставляем отступ справа для lesson-name */
+    margin-left: 200px; /* Допустим, вы хотите добавить отступ и слева */
     font-weight: bold;
+    white-space: nowrap;
 }
 .lesson-video {
     border-radius: 21px;
@@ -73,6 +76,5 @@
     text-decoration: none;
     color: black;
 }
-
 
 
