@@ -64,7 +64,7 @@ export default {
         <div class="description-help-container">
             <div class="description-container">
                 <div>Курс</div>
-                <div class="course-name">Название курса</div>
+                <div class="course-name">{{ info.course_name }}</div>
                 <div class="course-description">{{ info.description }}</div>
             </div>
             <br>
