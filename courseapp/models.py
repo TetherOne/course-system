@@ -30,6 +30,7 @@ class Course(models.Model):
     id = models.AutoField(primary_key=True)
     course_name = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(max_length=10000, blank=True, null=True)
+    status = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     teacher_profile = models.ForeignKey(
         TeacherProfile,
