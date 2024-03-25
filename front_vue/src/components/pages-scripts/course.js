@@ -35,6 +35,9 @@ export default {
     methods: {
         toggleVideos(index) {
             this.modules[index].showVideos = !this.modules[index].showVideos;
-        }
+        },
+        goBack() {
+            this.$router.go(-1);
+        },
     },
 }
