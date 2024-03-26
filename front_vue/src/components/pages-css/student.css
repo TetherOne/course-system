@@ -1,0 +1,33 @@
+.title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    padding-left: 200px;
+    padding-right: 200px;
+}
+.project-name-container {
+    margin-right: auto;
+}
+.project-name {
+    font-size: 30px;
+}
+.info-page-container {
+    display: flex;
+    align-items: center;
+}
+.main-text {
+    padding: 10px 20px;
+    font-size: 15px;
+    border-radius: 30px;
+    background-color: #E6E5E5;
+}
+.settings {
+    font-size: 15px;
+    margin-left: 25px;
+}
+.student-avatar {
+    width: 40px;
+    height: 40px;
+    margin-left: 25px;
+}
