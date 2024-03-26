@@ -48,16 +48,21 @@ export default {
 
 
 <template>
-    <div class="flex-column page-wrapper">
-        <Header userRole="student" :userInfo="user.info"></Header>
-        <div class="flex-row">
-            <div><b>Моё обучение</b></div>
+    <header>
+        <div class="tittle-container">
+            <span class="tittle-text">Главная</span>
+            <span class="settings">Настройки</span>
+            <img class="student-avatar" :src="user.info.avatar" alt="avatar">
         </div>
-        <CoursesList :courses="courses"></CoursesList>
-    </div>
+    </header>
+
+    <body>
+
+    </body>
+
 </template>
 
 
-<style scoped>
+<style src="../pages-css/student.css">
 
 </style>

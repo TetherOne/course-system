@@ -1,0 +1,21 @@
+.tittle-container {
+    margin-top: 40px;
+}
+.student-avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: -1700px; /* Используем отрицательное значение для отступа справа */
+}
+.tittle-text {
+    padding: 10px 20px;
+    background-color: #E6E5E5;
+    font-size: 15px;
+    border-radius: 30px;
+    margin-right: 30px;
+}
+.settings {
+    padding: 10px 20px;
+    font-size: 15px;
+    border-radius: 30px;
+    margin-right: 30px;
+}
