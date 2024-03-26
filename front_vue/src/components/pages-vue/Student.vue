@@ -46,23 +46,26 @@ export default {
 }
 </script>
 
-
 <template>
     <header>
-        <div class="tittle-container">
-            <span class="tittle-text">Главная</span>
-            <span class="settings">Настройки</span>
-            <img class="student-avatar" :src="user.info.avatar" alt="avatar">
+        <div class="title-container">
+            <span class="project-name-container">
+                <span class="project-name">SystemName</span>
+            </span>
+            <div class="info-page-container">
+                <span class="main-text">Главная</span>
+                <span class="settings">Настройки</span>
+                <img class="student-avatar" :src="user.info.avatar" alt="avatar">
+            </div>
         </div>
     </header>
 
     <body>
 
     </body>
-
 </template>
 
-
-<style src="../pages-css/student.css">
+<style src="./../pages-css/student.css">
 
 </style>
+
