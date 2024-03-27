@@ -39,12 +39,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "courseapp.apps.CourseappConfig",
-    "userapp.apps.AuthappConfig",
-    "checkpointapp.apps.CheckpointappConfig",
+
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
+    'cachalot',
+
+    "courseapp.apps.CourseappConfig",
+    "userapp.apps.AuthappConfig",
+    "checkpointapp.apps.CheckpointappConfig",
 ]
 
 MIDDLEWARE = [
