@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from userapp.serializers import StudentSerializer
 from .models import LessonOtherFile
 from .models import Enrollment
 from .models import Lesson
@@ -8,6 +9,9 @@ from .models import Module
 
 
 class EnrollmentSerializer(serializers.ModelSerializer):
+
+    student = StudentSerializer()
+
     class Meta:
         model = Enrollment
         fields = "__all__"
