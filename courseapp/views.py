@@ -19,7 +19,7 @@ from courseapp.models import Module
 
 class EnrollmentViewSet(ModelViewSet):
 
-    queryset = Enrollment.objects.all()
+    queryset = Enrollment.objects.prefetch_related("student", "course")
     serializer_class = EnrollmentSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["student", "course"]
