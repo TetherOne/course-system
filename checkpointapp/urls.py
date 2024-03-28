@@ -1,7 +1,5 @@
 from checkpointapp.views import PassedCheckPointViewSet
 from checkpointapp.views import CheckPointViewSet
-from checkpointapp.views import QuestionViewSet
-from checkpointapp.views import AnswerViewSet
 
 from rest_framework.routers import DefaultRouter
 
@@ -19,16 +17,6 @@ routers.register(
     "checkpoints",
     CheckPointViewSet,
     basename="checkpoints",
-)
-routers.register(
-    "questions",
-    QuestionViewSet,
-    basename="questions",
-)
-routers.register(
-    "answers",
-    AnswerViewSet,
-    basename="answers",
 )
 routers.register(
     "passed-checkpoints",
