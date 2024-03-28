@@ -22,7 +22,7 @@ class CheckPointViewSet(ModelViewSet):
 
 class QuestionViewSet(ModelViewSet):
 
-    queryset = Question.objects.all()
+    queryset = Question.objects.prefetch_related("answers")
     serializer_class = QuestionSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["checkpoint"]
