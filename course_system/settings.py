@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "courseapp.apps.CourseappConfig",
     "userapp.apps.AuthappConfig",
     "checkpointapp.apps.CheckpointappConfig",
+    "questionapp.apps.QuestionappConfig",
 ]
 
 MIDDLEWARE = [
@@ -207,20 +208,20 @@ CACHES = {
 CACHALOT_TIMEOUT = 600
 
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django.db.backends': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-    },
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#             'propagate': False,
+#         },
+#     },
+# }

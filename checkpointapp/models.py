@@ -2,9 +2,9 @@ from userapp.models import StudentProfile
 
 from courseapp.models import Module
 
-from django.db import models
+from django.db.models import Sum
 
-import re
+from django.db import models
 
 
 class CheckPoint(models.Model):
@@ -21,81 +21,6 @@ class CheckPoint(models.Model):
 
     def __str__(self):
         return f"{self.title}"
-
-
-class Question(models.Model):
-
-    id = models.AutoField(primary_key=True)
-    checkpoint = models.ForeignKey(
-        CheckPoint,
-        on_delete=models.CASCADE,
-        related_name="questions",
-    )
-    question_text = models.CharField(max_length=255)
-    max_points = models.IntegerField()
-
-    def __str__(self):
-        return f"{self.question_text}"
-
-
-class Answer(models.Model):
-
-    id = models.AutoField(primary_key=True)
-    question = models.ForeignKey(
-        Question,
-        on_delete=models.CASCADE,
-        related_name="answers",
-    )
-    answer_text = models.CharField(null=True, max_length=1000, blank=True)
-    is_correct = models.BooleanField(default=False)
-
-
-def answer_file_directory_path(instance: "AnswerFile", filename: str) -> str:
-    valid_filename = re.sub(
-        r"[\\/*?:\"<>|]",
-        "_",
-        instance.answer_text,
-    )
-    return f"answers/{instance.question.checkpoint.title}/{valid_filename}/{filename}"
-
-
-class AnswerFile(models.Model):
-
-    id = models.AutoField(primary_key=True)
-    answer = models.ForeignKey(
-        Answer,
-        on_delete=models.CASCADE,
-        related_name="answer_files",
-    )
-    answer_file = models.FileField(
-        null=True,
-        upload_to=answer_file_directory_path,
-        blank=True,
-    )
-
-
-def question_file_directory_path(instance: "QuestionFile", filename: str) -> str:
-    valid_filename = re.sub(
-        r"[\\/*?:\"<>|]",
-        "_",
-        instance.question.question_text,
-    )
-    return f"questions/{instance.question.checkpoint.title}/{valid_filename}/{filename}"
-
-
-class QuestionFile(models.Model):
-
-    id = models.AutoField(primary_key=True)
-    question = models.ForeignKey(
-        Question,
-        on_delete=models.CASCADE,
-        related_name="question_images",
-    )
-    question_file = models.FileField(
-        null=True,
-        upload_to=question_file_directory_path,
-        blank=True,
-    )
 
 
 class PassedCheckPoint(models.Model):
@@ -142,4 +67,51 @@ class PassedCheckPoint(models.Model):
                 self.grade = "5"
                 self.status = "Зачет"
 
+        super().save(*args, **kwargs)
+        summary = self.student.summaries.filter(course=self.checkpoint.module.course).first()
+
+        if summary:
+            summary.calculate_current_points()
+            summary.save()
+
+
+class Summary(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    student = models.ForeignKey(
+        StudentProfile,
+        on_delete=models.SET_NULL,
+        related_name="summaries",
+        null=True,
+    )
+    course = models.ForeignKey(
+        "courseapp.Course",
+        on_delete=models.SET_NULL,
+        related_name="summaries",
+        null=True,
+    )
+    current_points = models.IntegerField(default=0, editable=False)
+    total = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def calculate_summary_points(self):
+        if self.course:
+
+            self.current_points = PassedCheckPoint.objects.filter(
+                student=self.student, checkpoint__module__course=self.course
+            ).aggregate(Sum("points"))["points__sum"] or 0
+
+            self.total = CheckPoint.objects.filter(
+                module__course=self.course
+            ).aggregate(Sum("questions__max_points"))["questions__max_points__sum"] or 0
+
+    def calculate_current_points(self):
+        if self.course:
+            self.current_points = PassedCheckPoint.objects.filter(
+                student=self.student, checkpoint__module__course=self.course
+            ).aggregate(Sum("points"))["points__sum"] or 0
+
+
+    def save(self, *args, **kwargs):
+        self.calculate_summary_points()
         super().save(*args, **kwargs)

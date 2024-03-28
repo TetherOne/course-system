@@ -29,6 +29,7 @@ urlpatterns = [
     path("api/checkpointapp/", include("checkpointapp.urls")),
     path("api/courseapp/", include("courseapp.urls")),
     path("api/userapp/", include("userapp.urls")),
+    path("api/questionapp/", include("questionapp.urls")),
 ]
 
 
