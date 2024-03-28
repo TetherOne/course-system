@@ -1,5 +1,5 @@
-from checkpointapp.models import CheckPoint, Summary
-
+from checkpointapp.models import CheckPoint
+from checkpointapp.models import Summary
 from django.db import models
 
 import re
