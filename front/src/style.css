@@ -1,5 +1,6 @@
 :root {
     --font: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    --gap: 1rem;
 }
 
 body {
@@ -11,17 +12,36 @@ body {
 
 .flex-row {
     display: flex;
+    gap: var(--gap);
 }
 
 .flex-column {
     display: flex;
     flex-direction: column;
+    gap: var(--gap);
 }
 
 .spacer {
     flex-grow: 1;
 }
 
+.sub {
+    margin-left: 1rem;
+}
+
 .page-wrapper {
     align-items: center;
+    gap: var(--gap);
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+}
+
+.area {
+    background-color: #ebebed;
+    border: 1px solid black;
+    border-radius: 7px;
+    padding: var(--gap);
 }
