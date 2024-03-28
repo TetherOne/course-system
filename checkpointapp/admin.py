@@ -56,4 +56,4 @@ class PassedCheckPointAdmin(admin.ModelAdmin):
 @admin.register(Summary)
 class SummaryAdmin(admin.ModelAdmin):
 
-    list_display = "id", "student", "course", "total"
+    list_display = "id", "student", "course", "total", "current_points"

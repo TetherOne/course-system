@@ -2,9 +2,9 @@ from userapp.models import StudentProfile
 
 from courseapp.models import Module
 
-from django.db import models
-
 from django.db.models import Sum
+
+from django.db import models
 
 
 class CheckPoint(models.Model):
@@ -68,6 +68,11 @@ class PassedCheckPoint(models.Model):
                 self.status = "Зачет"
 
         super().save(*args, **kwargs)
+        summary = self.student.summaries.filter(course=self.checkpoint.module.course).first()
+
+        if summary:
+            summary.calculate_current_points()
+            summary.save()
 
 
 class Summary(models.Model):
@@ -85,6 +90,7 @@ class Summary(models.Model):
         related_name="summaries",
         null=True,
     )
+    current_points = models.IntegerField(default=0, editable=False)
     total = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -98,6 +104,13 @@ class Summary(models.Model):
             self.total = CheckPoint.objects.filter(
                 module__course=self.course
             ).aggregate(Sum("questions__max_points"))["questions__max_points__sum"] or 0
+
+    def calculate_current_points(self):
+        if self.course:
+            self.current_points = PassedCheckPoint.objects.filter(
+                student=self.student, checkpoint__module__course=self.course
+            ).aggregate(Sum("points"))["points__sum"] or 0
+
 
     def save(self, *args, **kwargs):
         self.calculate_summary_points()
