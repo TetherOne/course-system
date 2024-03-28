@@ -39,12 +39,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "courseapp.apps.CourseappConfig",
-    "userapp.apps.AuthappConfig",
-    "checkpointapp.apps.CheckpointappConfig",
+
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
+    "cachalot",
+
+    "courseapp.apps.CourseappConfig",
+    "userapp.apps.AuthappConfig",
+    "checkpointapp.apps.CheckpointappConfig",
 ]
 
 MIDDLEWARE = [
@@ -193,9 +196,31 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379",
     }
+}
+
+CACHALOT_TIMEOUT = 600
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
 }
