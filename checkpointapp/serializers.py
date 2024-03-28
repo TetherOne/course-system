@@ -1,9 +1,10 @@
+from questionapp.serializers import QuestionSerializer
+
 from checkpointapp.models import PassedCheckPoint
 from checkpointapp.models import CheckPoint
+from checkpointapp.models import Summary
 
 from rest_framework import serializers
-
-from questionapp.serializers import QuestionSerializer
 
 
 class CheckPointSerializer(serializers.ModelSerializer):
@@ -18,4 +19,10 @@ class CheckPointSerializer(serializers.ModelSerializer):
 class PassedCheckPointSerializer(serializers.ModelSerializer):
     class Meta:
         model = PassedCheckPoint
+        fields = "__all__"
+
+
+class SummarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Summary
         fields = "__all__"

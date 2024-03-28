@@ -1,11 +1,13 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
 
-from questionapp.models import Question, Answer
-from questionapp.serializers import QuestionSerializer, AnswerSerializer
+from questionapp.serializers import QuestionSerializer
+from questionapp.serializers import AnswerSerializer
+
+from questionapp.models import Question
+from questionapp.models import Answer
 
 
-# Create your views here.
 class QuestionViewSet(ModelViewSet):
 
     queryset = Question.objects.prefetch_related("answers")

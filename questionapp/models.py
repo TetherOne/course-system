@@ -1,8 +1,8 @@
-import re
+from checkpointapp.models import CheckPoint
 
 from django.db import models
 
-from checkpointapp.models import CheckPoint
+import re
 
 
 class Question(models.Model):

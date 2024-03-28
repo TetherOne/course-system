@@ -4,7 +4,7 @@ from courseapp.models import Module
 
 from django.db import models
 
-import re
+from django.db.models import Sum
 
 
 class CheckPoint(models.Model):
@@ -21,7 +21,6 @@ class CheckPoint(models.Model):
 
     def __str__(self):
         return f"{self.title}"
-
 
 
 class PassedCheckPoint(models.Model):
@@ -68,4 +67,38 @@ class PassedCheckPoint(models.Model):
                 self.grade = "5"
                 self.status = "Зачет"
 
+        super().save(*args, **kwargs)
+
+
+class Summary(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    student = models.ForeignKey(
+        StudentProfile,
+        on_delete=models.SET_NULL,
+        related_name="summaries",
+        null=True,
+    )
+    course = models.ForeignKey(
+        "courseapp.Course",
+        on_delete=models.SET_NULL,
+        related_name="summaries",
+        null=True,
+    )
+    total = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def calculate_summary_points(self):
+        if self.course:
+
+            self.current_points = PassedCheckPoint.objects.filter(
+                student=self.student, checkpoint__module__course=self.course
+            ).aggregate(Sum("points"))["points__sum"] or 0
+
+            self.total = CheckPoint.objects.filter(
+                module__course=self.course
+            ).aggregate(Sum("questions__max_points"))["questions__max_points__sum"] or 0
+
+    def save(self, *args, **kwargs):
+        self.calculate_summary_points()
         super().save(*args, **kwargs)
