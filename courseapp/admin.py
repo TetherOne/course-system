@@ -1,8 +1,10 @@
-from checkpointapp.models import CheckPoint
-from courseapp.models import Lesson, LessonOtherFile
+from courseapp.models import LessonOtherFile
 from courseapp.models import Enrollment
+from courseapp.models import Lesson
 from courseapp.models import Module
 from courseapp.models import Course
+
+from checkpointapp.models import CheckPoint
 
 from django.utils.html import format_html
 
@@ -76,7 +78,7 @@ class LessonAdmin(admin.ModelAdmin):
         "created_at",
         "display_lesson",
     )
-    list_display_links = "id",
+    list_display_links = ("id",)
     search_fields = ("description",)
     ordering = ("id",)
     list_per_page = 10

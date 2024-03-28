@@ -6,19 +6,20 @@ from courseapp.serializers import LessonSerializer
 from courseapp.serializers import CourseSerializer
 from courseapp.serializers import ModuleSerializer
 
-
 from rest_framework.filters import OrderingFilter
 
 from rest_framework.viewsets import ModelViewSet
 
-from courseapp.models import Enrollment, Lesson, LessonOtherFile
+from courseapp.models import LessonOtherFile
+from courseapp.models import Enrollment
+from courseapp.models import Lesson
 from courseapp.models import Course
 from courseapp.models import Module
 
 
 class EnrollmentViewSet(ModelViewSet):
 
-    queryset = Enrollment.objects.all()
+    queryset = Enrollment.objects.prefetch_related("student")
     serializer_class = EnrollmentSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["student", "course"]
