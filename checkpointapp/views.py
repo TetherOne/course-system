@@ -14,7 +14,7 @@ from checkpointapp.models import Answer
 
 class CheckPointViewSet(ModelViewSet):
 
-    queryset = CheckPoint.objects.prefetch_related("questions__answers").all()
+    queryset = CheckPoint.objects.prefetch_related("questions")
     serializer_class = CheckPointSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["module"]
