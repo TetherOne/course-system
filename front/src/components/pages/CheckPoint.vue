@@ -3,18 +3,29 @@
 </script>
 
 <script>
+import axios from 'axios';
+import {mapStores} from 'pinia';
+
 import {getCheckPoint} from '../../requests.js';
+import {checkPointAppAPI} from '../../requests.js';
+import {useUserStore} from '../../stores/user.js';
 
 
 export default {
     data() {
         return {
-            id: this.$route.params.id,
+            id: parseInt(this.$route.params.id),
             title: '',
             questions: [],
             finished: false,
-            score: 0
+            score: 0,
+            maxScore: 0,
+            grade: 0,
+            percent: 0
         }
+    },
+    computed: {
+        ...mapStores(useUserStore)
     },
     async created() {
         const info = await getCheckPoint(this.id);
@@ -22,6 +33,8 @@ export default {
         this.questions = info.questions;
 
         for (const question of this.questions) {
+            this.maxScore += question.max_points;
+
             for (const answer of question.answers) {
                 answer.chosen = false;
             }
@@ -41,6 +54,32 @@ export default {
 
             this.score = score;
             this.finished = true;
+
+            this.percent = this.score / this.maxScore;
+            this.grade = this.calcGrade();
+            this.uploadGrade();
+        },
+        calcGrade() {
+            if (this.percent >= 0.8) {
+                return 5;
+            } else if (this.percent >= 0.6) {
+                return 4;
+            } else if (this.percent >= 0.4) {
+                return 3;
+            } else {
+                return 2;
+            }
+        },
+        async uploadGrade() {
+            const data = {
+                points: this.score,
+                percent: this.percent,
+                status: this.grade >= 3 ? 'Зачёт' : "Незачёт",
+                grade: this.grade,
+                student: this.userStore.id,
+                checkpoint: this.id
+            };
+            await axios.post(`${checkPointAppAPI}/passed-checkpoints/`, data);
         }
     }
 }
@@ -57,7 +96,7 @@ export default {
             </div>
         </div>
         <input type="submit" name="" id="" @click="check">
-        <div v-if="finished">Ваша оценка: {{ score }}</div>
+        <div v-if="finished">Ваша оценка: {{ grade }}</div>
     </div>
 </template>
 

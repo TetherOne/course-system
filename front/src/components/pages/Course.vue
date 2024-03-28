@@ -1,10 +1,14 @@
 <script setup>
-
 import {getPathLastElement} from "../../functions.js";
+import {useUserStore} from '../../stores/user.js';
+
+
+const user = useUserStore();
 </script>
 
 
 <script>
+import axios from 'axios';
 import {mapStores} from 'pinia';
 
 import {useUserStore} from '../../stores/user.js';
@@ -15,6 +19,7 @@ import {
     getLessonOtherFiles,
     getModuleCheckPoint
 } from '../../requests.js';
+import {checkPointAppAPI} from '../../requests.js';
 
 
 export default {
@@ -48,6 +53,9 @@ export default {
 
             module.checkPoint = await getModuleCheckPoint(module.id);
         }
+    },
+    methods: {
+
     }
 }
 </script>
@@ -55,6 +63,7 @@ export default {
 <template>
     <div class="area flex-column">
         <div id="course-name">{{ name }}</div>
+
         <div class="module-wrapper flex-column" v-for="(module, moduleIndex) in modules">
             <div>Модуль {{ moduleIndex + 1 }}. {{ module.module_name }}</div>
             <div class="flex-column sub lessons-wrapper">

@@ -7,19 +7,45 @@ const user = useUserStore();
 
 
 <script>
+import axios from 'axios';
+import {mapStores} from 'pinia';
+
+import {courseAppAPI} from '../../requests.js';
+import {useUserStore} from '../../stores/user.js';
+
+
 export default {
     data() {
         return {
             addCourseFormVisible: false,
-            courseToBeCreatedName: ''
+            courseToBeCreatedName: '',
+            newCourseDescription: '',
+            newCoursePassword: ''
         }
+    },
+    computed: {
+        ...mapStores(useUserStore)
     },
     async created() {
 
     },
     methods: {
-        addCourse() {
-            
+        async addCourse() {
+            if (!this.courseToBeCreatedName || !this.newCourseDescription || !this.newCoursePassword) {
+                alert('Заполнены не все поля');
+                return;
+            }
+
+            const data = {
+                course_name: this.courseToBeCreatedName,
+                description: this.newCourseDescription,
+                status: true,
+                course_password: this.newCoursePassword,
+                teacher_profile: this.userStore.id
+            };
+
+            const request = await axios.post(`${courseAppAPI}/courses/`, data);
+            this.addCourseFormVisible = false;
         }
     }
 }
@@ -38,6 +64,14 @@ export default {
         <div class="flex-row">
             <label for="">Название:</label>
             <input v-model="courseToBeCreatedName">
+        </div>
+        <div class="flex-column">
+            <label for="">Описание:</label>
+            <textarea name="" id="" cols="30" rows="10" v-model="newCourseDescription"></textarea>
+        </div>
+        <div class="flex-row">
+            <label for="">Пароль</label>
+            <input v-model="newCoursePassword" type="text">
         </div>
         <button @click="addCourse">Добавить</button>
     </div>

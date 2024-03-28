@@ -2,9 +2,9 @@ import axios from 'axios';
 import { frontURL } from './config.js';
 
 
-const userAppAPI = `${frontURL}/api/userapp`;
-const courseAppAPI = `${frontURL}/api/courseapp`;
-const checkPointAppAPI = `${frontURL}/api/checkpointapp`;
+export const userAppAPI = `${frontURL}/api/userapp`;
+export const courseAppAPI = `${frontURL}/api/courseapp`;
+export const checkPointAppAPI = `${frontURL}/api/checkpointapp`;
 
 
 export async function getStudent(id) {
