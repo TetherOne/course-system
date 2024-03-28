@@ -19,7 +19,7 @@ import {
     getLessonOtherFiles,
     getModuleCheckPoint
 } from '../../requests.js';
-import {checkPointAppAPI} from '../../requests.js';
+import {courseAppAPI} from '../../requests.js';
 
 
 export default {
@@ -30,7 +30,8 @@ export default {
             description: '',
             modules: [],
             teacherId: 0,
-            teacherName: ''
+            teacherName: '',
+            students: []
         };
     },
     computed: {
@@ -53,9 +54,20 @@ export default {
 
             module.checkPoint = await getModuleCheckPoint(module.id);
         }
+
+        this.getCourseStudents();
     },
     methods: {
-
+        async getCourseStudents() {
+            const enrollments = (await axios.get(`${courseAppAPI}/enrollments/?course=${this.id}&format=json`)).data;
+            for (const enrollment of enrollments) {
+                this.students.push({
+                    fullName: `${enrollment.student.surname} ${enrollment.student.name}, ${enrollment.student.father_name}`,
+                    faculty: enrollment.student.faculty,
+                    group: enrollment.student.group
+                });
+            }
+        }
     }
 }
 </script>
@@ -63,7 +75,21 @@ export default {
 <template>
     <div class="area flex-column">
         <div id="course-name">{{ name }}</div>
-
+        <div v-if="user.role === 'teacher'" class="flex-column">
+            <div>Обучающиеся:</div>
+            <table id="students-in-course">
+                <tr>
+                    <th>ФИО</th>
+                    <th>Факультет</th>
+                    <th>Группа</th>
+                </tr>
+                <tr v-for="student in students">
+                    <td>{{ student.fullName }}</td>
+                    <td>{{ student.faculty }}</td>
+                    <td>{{ student.group }}</td>
+                </tr>
+            </table>
+        </div>
         <div class="module-wrapper flex-column" v-for="(module, moduleIndex) in modules">
             <div>Модуль {{ moduleIndex + 1 }}. {{ module.module_name }}</div>
             <div class="flex-column sub lessons-wrapper">
@@ -101,4 +127,10 @@ export default {
 .area {
     max-width: 80vw;
 }
+
+#students-in-course {
+    align-self: flex-start;
+}
+
+
 </style>
