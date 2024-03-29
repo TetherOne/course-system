@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "userapp.apps.AuthappConfig",
     "checkpointapp.apps.CheckpointappConfig",
     "questionapp.apps.QuestionappConfig",
+    "authapp.apps.AuthappConfig",
 ]
 
 MIDDLEWARE = [

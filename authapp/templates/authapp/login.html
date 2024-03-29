@@ -1,0 +1,20 @@
+{% block title %}
+	
+{% endblock %}
+
+{% block body %}
+	<form method="post">
+        {% csrf_token %}
+
+        <p>
+            {{ form.username }}
+        </p>
+
+        <p>
+            {{ form.password }}
+        </p>
+
+
+        <button type="submit">Войти</button>
+    </form>
+{% endblock %}

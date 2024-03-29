@@ -1,0 +1,12 @@
+{% block title %}
+
+{% endblock %}
+
+
+{% block body %}
+	{% if user.is_authenticated %}
+        <p>username: {{ user.username }} </p>
+	{% else %}
+        <p>user is anonymous</p>
+    {% endif %}
+{% endblock %}
