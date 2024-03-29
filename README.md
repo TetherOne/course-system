@@ -50,8 +50,13 @@
         но доступны по коду, который может передать перподаватель группе студентов. Также
         преподаватель сможет удалять лишних участников с курсов.
 
-# Технологии
+## Технологии
 
   - Vue.js
   - Django + DRF
   - Redis
+
+## Источники
+        https://django.fun/docs/
+        https://www.django-rest-framework.org/
+        https://www.youtube.com/@SeniorPomidorDeveloper
