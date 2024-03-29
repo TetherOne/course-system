@@ -1,5 +1,5 @@
-[![Python 3.6](https://img.shields.io/badge/python-3.11-green.svg)](https://www.python.org/downloads/release/python-360/)
-![Django 3.0](https://img.shields.io/badge/Django-4.2.7-green.svg)
+[![Python 3.11](https://img.shields.io/badge/python-3.11-green.svg)](https://www.python.org/downloads/release/python-360/)
+![Django 4.0](https://img.shields.io/badge/Django-4.2.7-green.svg)
 
 
 
@@ -46,9 +46,10 @@
         
 #### Регистрация и аутентификация
         При регистрации будет использоваться username, password и роль пользователя:
-        преподаватель или студент. Вход в систему будет осуществляться при помощи логина и пароля,
-        если пользователь забыл пароль, то его можно будет сбросить через почту (на нее придет
-        сообщение со ссылкой для сброса пароля).
+        преподаватель или студент, дополнительно при регистрации используется recaptcha от google.
+        Вход в систему будет осуществляться при помощи логина и пароля, если пользователь
+        забыл пароль, то его можно будет сбросить через почту (на нее придет сообщение со ссылкой
+        для сброса пароля).
 
 ## 2. Технологии
 
@@ -57,6 +58,7 @@
   - Redis
 
 ## 3. Источники
+  - https://pypi.org/
   - https://django.fun/docs/
   - https://docs.djangoproject.com/en/5.0/
   - https://www.django-rest-framework.org/
