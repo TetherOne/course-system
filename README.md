@@ -59,4 +59,4 @@
 ## Источники
   - https://django.fun/docs/
   - https://www.django-rest-framework.org/
-  - https://www.youtube.com/@SeniorPomidorDeveloper
+  - https://www.youtube.com/playlist?list=PLyaCd9XYVI9DQhzpYCNI9PAvf3U1EunVm
