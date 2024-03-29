@@ -97,8 +97,8 @@ class Summary(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def calculate_summary_points(self):
+        # функция для подсчета максимального балла за все КТ этого курса
         if self.course:
-
             self.current_points = (
                 PassedCheckPoint.objects.filter(
                     student=self.student, checkpoint__module__course=self.course
@@ -114,6 +114,7 @@ class Summary(models.Model):
             )
 
     def calculate_current_points(self):
+        # функция для подсчета текущего балла у студента за все КТ этого курса
         if self.course:
             self.current_points = (
                 PassedCheckPoint.objects.filter(
