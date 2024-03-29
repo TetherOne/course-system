@@ -57,6 +57,6 @@
   - Redis
 
 ## Источники
-        https://django.fun/docs/
-        https://www.django-rest-framework.org/
-        https://www.youtube.com/@SeniorPomidorDeveloper
+  - https://django.fun/docs/
+  - https://www.django-rest-framework.org/
+  - https://www.youtube.com/@SeniorPomidorDeveloper
