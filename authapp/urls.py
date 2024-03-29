@@ -24,7 +24,11 @@ urlpatterns = [
         ),
         name="login",
     ),
-    path("logout/", logout_view, name="logout"),
+    path(
+        "logout/",
+        logout_view,
+        name="logout",
+    ),
     path(
         "about_me/",
         AboutMeView.as_view(template_name="authapp/about_me.html"),

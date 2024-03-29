@@ -26,6 +26,7 @@ from django.urls import path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("captcha/", include("captcha.urls")),
     path("api/authapp/", include("authapp.urls")),
     path("api/userapp/", include("userapp.urls")),
     path("api/courseapp/", include("courseapp.urls")),

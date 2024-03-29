@@ -1,11 +1,14 @@
 from django.contrib.auth.forms import UserCreationForm
 
+from django_recaptcha.fields import ReCaptchaField
+
 from django import forms
 
 
 class CustomUserCreationForm(UserCreationForm):
 
     is_teacher = forms.BooleanField(required=False)
+    captcha = ReCaptchaField()
 
     class Meta(UserCreationForm.Meta):
 

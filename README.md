@@ -58,5 +58,8 @@
 
 ## 3. Источники
   - https://django.fun/docs/
+  - https://docs.djangoproject.com/en/5.0/
   - https://www.django-rest-framework.org/
   - https://www.youtube.com/playlist?list=PLyaCd9XYVI9DQhzpYCNI9PAvf3U1EunVm
+  - https://www.youtube.com/playlist?list=PLA0M1Bcd0w8xO_39zZll2u1lz_Q-Mwn1F
+  - https://www.youtube.com/playlist?list=PLA0M1Bcd0w8yU5h2vwZ4LO7h1xt8COUXl

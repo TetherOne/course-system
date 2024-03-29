@@ -14,7 +14,10 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+from config import RECAPTCHA_PRIVATE_KEY
+from config import RECAPTCHA_PUBLIC_KEY
 from config import EMAIL_HOST_PASSWORD
+from config import DJANGO_SECRET_KEY
 from config import EMAIL_HOST_USER
 from config import EMAIL_USE_SSL
 from config import EMAIL_PORT
@@ -28,7 +31,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-2rt@#x2ir51r+*&slz80p((vw-7imi@t5aoh8k6z#+e*p65vh5"
+SECRET_KEY = DJANGO_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -45,10 +48,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
     "cachalot",
+    "captcha",
+    "django_recaptcha",
+
     "courseapp.apps.CourseappConfig",
     "userapp.apps.AuthappConfig",
     "checkpointapp.apps.CheckpointappConfig",
@@ -191,3 +198,7 @@ EMAIL_USE_SSL = EMAIL_USE_SSL
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = EMAIL_HOST_USER
+
+
+RECAPTCHA_PUBLIC_KEY = RECAPTCHA_PUBLIC_KEY
+RECAPTCHA_PRIVATE_KEY = RECAPTCHA_PRIVATE_KEY
