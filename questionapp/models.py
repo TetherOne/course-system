@@ -1,5 +1,6 @@
 from checkpointapp.models import CheckPoint
 from checkpointapp.models import Summary
+
 from django.db import models
 
 import re
@@ -20,15 +21,19 @@ class Question(models.Model):
         return f"{self.question_text}"
 
     def save(self, *args, **kwargs):
+        # функция для пересчета баллов за КТ в моделях Summary и PassedCheckPoint,
+        # при добавлении нового вопроса или изменении его баллов
         super().save(*args, **kwargs)
-
         passed_checkpoints = self.checkpoint.passed_checkpoints.all()
+
         for passed_checkpoint in passed_checkpoints:
+
             passed_checkpoint.save()
             summary = Summary.objects.filter(
                 student=passed_checkpoint.student,
                 course=passed_checkpoint.checkpoint.module.course,
             ).first()
+
             if summary:
                 summary.calculate_summary_points()
                 summary.save()
@@ -47,6 +52,7 @@ class Answer(models.Model):
 
 
 def answer_file_directory_path(instance: "AnswerFile", filename: str) -> str:
+    # функция для сохранения файлов, которые студент прикрепил к ответу на вопрос
     valid_filename = re.sub(
         r"[\\/*?:\"<>|]",
         "_",
@@ -71,6 +77,7 @@ class AnswerFile(models.Model):
 
 
 def question_file_directory_path(instance: "QuestionFile", filename: str) -> str:
+    # функция для сохранения файлов, которые преподаватель прикрепил к вопросу
     valid_filename = re.sub(
         r"[\\/*?:\"<>|]",
         "_",

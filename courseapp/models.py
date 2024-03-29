@@ -44,12 +44,14 @@ class Course(models.Model):
         return f"{self.course_name}"
 
     def save(self, *args, **kwargs):
+        # функция для генерации пароля курса
         if not self.course_password:
             self.course_password = str(uuid.uuid4())[:8].replace("-", "")
         super().save(*args, **kwargs)
 
 
 def lesson_video_directory_path(instance: "LessonVideo", filename: str) -> str:
+    # функция для сохранения видео курса
     valid_filename = re.sub(
         r"[\\/*?:\"<>|]",
         "_",
@@ -80,6 +82,7 @@ class Lesson(models.Model):
 
 
 def other_file_directory_path(instance: "LessonOtherFile", filename: str) -> str:
+    # функция для сохранения дополнительных файлов курса
     valid_filename = re.sub(
         r"[\\/*?:\"<>|]",
         "_",

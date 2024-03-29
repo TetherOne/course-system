@@ -45,6 +45,7 @@ class PassedCheckPoint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
+        # функция для подсчета процента и статуса (зачет/не зачет) за КТ
         if self.checkpoint:
             total_max_points = sum(
                 question.max_points for question in self.checkpoint.questions.all()

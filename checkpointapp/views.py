@@ -3,6 +3,7 @@ from checkpointapp.serializers import CheckPointSerializer
 from checkpointapp.serializers import SummarySerializer
 
 from django_filters.rest_framework import DjangoFilterBackend
+
 from rest_framework.viewsets import ModelViewSet
 
 from checkpointapp.models import PassedCheckPoint
