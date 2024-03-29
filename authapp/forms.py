@@ -9,4 +9,12 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
 
-        fields = UserCreationForm.Meta.fields + ('is_teacher',)
+        fields = UserCreationForm.Meta.fields + ("is_teacher",)
+        widgets = {
+            "password2": forms.HiddenInput(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        # убирает повторный ввод пароля при регистрации
+        super().__init__(*args, **kwargs)
+        self.fields.pop("password2")

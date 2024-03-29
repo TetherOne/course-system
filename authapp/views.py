@@ -1,13 +1,24 @@
-from django.contrib.auth import logout, authenticate, login
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect
-from django.urls import reverse, reverse_lazy
-from django.views.generic import TemplateView, FormView
-
 from authapp.forms import CustomUserCreationForm
-from userapp.models import TeacherProfile, StudentProfile
+
+from django.views.generic import TemplateView
+from django.views.generic import FormView
+
+from django.contrib.auth.models import User
+
+from django.contrib.auth import authenticate
+from django.contrib.auth import logout
+from django.contrib.auth import login
+
+from userapp.models import StudentProfile
+from userapp.models import TeacherProfile
+
+from django.shortcuts import redirect
+
+from django.http import HttpResponse
+from django.http import HttpRequest
+
+from django.urls import reverse_lazy
+from django.urls import reverse
 
 
 class AboutMeView(TemplateView):
@@ -23,15 +34,15 @@ def logout_view(request: HttpRequest) -> HttpResponse:
 
 class RegisterView(FormView):
 
-    template_name = 'authapp/register.html'
+    template_name = "authapp/register.html"
     form_class = CustomUserCreationForm
     success_url = reverse_lazy("authapp:about_me")
 
     def form_valid(self, form):
 
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password1']
-        is_teacher = form.cleaned_data['is_teacher']
+        username = form.cleaned_data["username"]
+        password = form.cleaned_data["password1"]
+        is_teacher = form.cleaned_data["is_teacher"]
 
         user = User.objects.create_user(username=username, password=password)
 
