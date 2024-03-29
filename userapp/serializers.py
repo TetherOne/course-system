@@ -11,12 +11,13 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     is_teacher = serializers.BooleanField(default=False)
 
     class Meta:
+
         model = User
         fields = "id", "email", "username", "password", "is_teacher"
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
-        # функция для создания профиля учителя либо студента
+
         is_teacher = validated_data.pop("is_teacher", False)
         user = User.objects.create_user(**validated_data)
 
