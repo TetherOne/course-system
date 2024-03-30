@@ -13,7 +13,10 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
 
-        fields = UserCreationForm.Meta.fields + ("email", "is_teacher",)
+        fields = UserCreationForm.Meta.fields + (
+            "email",
+            "is_teacher",
+        )
         widgets = {
             "password2": forms.HiddenInput(),
         }

@@ -31,6 +31,7 @@ def logout_view(request: HttpRequest) -> HttpResponse:
 
     return redirect(reverse("authapp:login"))
 
+
 class RegisterView(FormView):
 
     template_name = "authapp/register.html"
@@ -44,7 +45,11 @@ class RegisterView(FormView):
         email = form.cleaned_data["email"]
         is_teacher = form.cleaned_data["is_teacher"]
 
-        user = User.objects.create_user(username=username, password=password, email=email)
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            email=email,
+        )
 
         if is_teacher:
             TeacherProfile.objects.create(user=user)
