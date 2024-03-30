@@ -25,3 +25,9 @@ idea/
 .pytest_cache/
 /.pytest_cache/
 .pytest_cache
+
+.env
+.env/
+/.env/
+/.env
+

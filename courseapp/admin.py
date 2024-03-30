@@ -72,7 +72,6 @@ class LessonAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "lesson_name",
-        # "description",
         "course_name",
         "module",
         "created_at",
@@ -103,6 +102,7 @@ class LessonOtherFileAdmin(admin.ModelAdmin):
 
 @admin.register(Enrollment)
 class EnrollmentAdmin(admin.ModelAdmin):
+
     list_display = ("id", "student", "course", "enrollment_date")
     list_display_links = ("id", "student")
     search_fields = ("student__user__username", "course__course_name")

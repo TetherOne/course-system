@@ -11,6 +11,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     is_teacher = serializers.BooleanField(default=False)
 
     class Meta:
+
         model = User
         fields = "id", "email", "username", "password", "is_teacher"
         extra_kwargs = {"password": {"write_only": True}}
@@ -22,7 +23,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
         if is_teacher:
             TeacherProfile.objects.create(user=user)
-
         else:
             StudentProfile.objects.create(user=user)
 
@@ -34,7 +34,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
         if hasattr(instance, "teacher_profile"):
             data["is_teacher"] = True
-
         else:
             data["is_teacher"] = False
 

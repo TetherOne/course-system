@@ -1,10 +1,10 @@
-from rest_framework.routers import DefaultRouter
-
 from courseapp.views import LessonOtherFileViewSet
 from courseapp.views import EnrollmentViewSet
 from courseapp.views import LessonViewSet
 from courseapp.views import CourseViewSet
 from courseapp.views import ModuleViewSet
+
+from rest_framework.routers import DefaultRouter
 
 from django.urls import include
 from django.urls import path

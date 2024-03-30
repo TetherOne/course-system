@@ -45,6 +45,7 @@ class PassedCheckPoint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
+        # функция для подсчета процента и статуса (зачет/не зачет) за КТ
         if self.checkpoint:
             total_max_points = sum(
                 question.max_points for question in self.checkpoint.questions.all()
@@ -68,7 +69,9 @@ class PassedCheckPoint(models.Model):
                 self.status = "Зачет"
 
         super().save(*args, **kwargs)
-        summary = self.student.summaries.filter(course=self.checkpoint.module.course).first()
+        summary = self.student.summaries.filter(
+            course=self.checkpoint.module.course
+        ).first()
 
         if summary:
             summary.calculate_current_points()
@@ -95,22 +98,31 @@ class Summary(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def calculate_summary_points(self):
+        # функция для подсчета максимального балла за все КТ этого курса
         if self.course:
+            self.current_points = (
+                PassedCheckPoint.objects.filter(
+                    student=self.student, checkpoint__module__course=self.course
+                ).aggregate(Sum("points"))["points__sum"]
+                or 0
+            )
 
-            self.current_points = PassedCheckPoint.objects.filter(
-                student=self.student, checkpoint__module__course=self.course
-            ).aggregate(Sum("points"))["points__sum"] or 0
-
-            self.total = CheckPoint.objects.filter(
-                module__course=self.course
-            ).aggregate(Sum("questions__max_points"))["questions__max_points__sum"] or 0
+            self.total = (
+                CheckPoint.objects.filter(module__course=self.course).aggregate(
+                    Sum("questions__max_points")
+                )["questions__max_points__sum"]
+                or 0
+            )
 
     def calculate_current_points(self):
+        # функция для подсчета текущего балла у студента за все КТ этого курса
         if self.course:
-            self.current_points = PassedCheckPoint.objects.filter(
-                student=self.student, checkpoint__module__course=self.course
-            ).aggregate(Sum("points"))["points__sum"] or 0
-
+            self.current_points = (
+                PassedCheckPoint.objects.filter(
+                    student=self.student, checkpoint__module__course=self.course
+                ).aggregate(Sum("points"))["points__sum"]
+                or 0
+            )
 
     def save(self, *args, **kwargs):
         self.calculate_summary_points()

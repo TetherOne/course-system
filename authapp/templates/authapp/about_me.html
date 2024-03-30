@@ -1,0 +1,13 @@
+{% block title %}
+
+{% endblock %}
+
+
+{% block body %}
+	{% if user.is_authenticated %}
+        <p>username: {{ user.username }} </p>
+        <p>is_teacher: {{ user.is_teacher }}</p>
+	{% else %}
+        <p>user is anonymous</p>
+    {% endif %}
+{% endblock %}
