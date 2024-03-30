@@ -8,11 +8,12 @@ from django import forms
 class CustomUserCreationForm(UserCreationForm):
 
     is_teacher = forms.BooleanField(required=False)
+    email = forms.EmailField()
     captcha = ReCaptchaField()
 
     class Meta(UserCreationForm.Meta):
 
-        fields = UserCreationForm.Meta.fields + ("is_teacher",)
+        fields = UserCreationForm.Meta.fields + ("email", "is_teacher",)
         widgets = {
             "password2": forms.HiddenInput(),
         }
