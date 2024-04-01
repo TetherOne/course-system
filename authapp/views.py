@@ -19,6 +19,8 @@ from django.http import HttpRequest
 
 from django.urls import reverse_lazy
 from django.urls import reverse
+from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, \
+    PasswordResetCompleteView, LogoutView
 
 
 class AboutMeView(TemplateView):
@@ -30,6 +32,11 @@ def logout_view(request: HttpRequest) -> HttpResponse:
     logout(request)
 
     return redirect(reverse("authapp:login"))
+
+
+class MyLogoutView(LogoutView):
+
+    next_page = reverse_lazy("authapp:login")
 
 
 class RegisterView(FormView):
@@ -60,3 +67,32 @@ class RegisterView(FormView):
         login(self.request, user)
 
         return super(RegisterView, self).form_valid(form)
+
+
+class MyLoginView(LoginView):
+
+    template_name = "authapp/login.html"
+    redirect_authenticated_user = True
+
+
+class MyPasswordResetView(PasswordResetView):
+
+    template_name = "authapp/password_reset_form.html"
+    email_template_name = "authapp/password_reset_email.html"
+    success_url = reverse_lazy("authapp:password_reset_done")
+
+
+class MyPasswordResetDoneView(PasswordResetDoneView):
+
+    template_name = "authapp/password_reset_done.html"
+
+
+class MyPasswordResetConfirmView(PasswordResetConfirmView):
+
+    template_name = "authapp/password_reset_confirm.html"
+    success_url = reverse_lazy("authapp:password_reset_complete")
+
+
+class MyPasswordResetCompleteView(PasswordResetCompleteView):
+
+    template_name = "authapp/password_reset_complete.html"

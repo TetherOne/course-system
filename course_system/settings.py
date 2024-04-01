@@ -178,7 +178,7 @@ REST_FRAMEWORK = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/0",
+        "LOCATION": "redis://127.0.0.1:6379",
     }
 }
 
@@ -205,4 +205,3 @@ RECAPTCHA_PUBLIC_KEY = RECAPTCHA_PUBLIC_KEY
 RECAPTCHA_PRIVATE_KEY = RECAPTCHA_PRIVATE_KEY
 
 
-CELERY_BROKER_URL = "redis://127.0.0.1:6379/1"
