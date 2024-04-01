@@ -2,10 +2,10 @@ from authapp.views import MyPasswordResetCompleteView
 from authapp.views import MyPasswordResetConfirmView
 from authapp.views import MyPasswordResetDoneView
 from authapp.views import MyPasswordResetView
-from authapp.views import MyLogoutView
 from authapp.views import RegisterView
 from authapp.views import MyLoginView
 from authapp.views import AboutMeView
+from authapp.views import logout_view
 
 from django.urls import path
 
@@ -21,7 +21,7 @@ urlpatterns = [
     ),
     path(
         "logout/",
-        MyLogoutView.as_view(),
+        logout_view,
         name="logout",
     ),
     path(

@@ -48,14 +48,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
     "cachalot",
     "captcha",
     "django_recaptcha",
-
     "courseapp.apps.CourseappConfig",
     "userapp.apps.AuthappConfig",
     "checkpointapp.apps.CheckpointappConfig",
@@ -203,5 +201,3 @@ EMAIL_ADMIN = EMAIL_HOST_USER
 
 RECAPTCHA_PUBLIC_KEY = RECAPTCHA_PUBLIC_KEY
 RECAPTCHA_PRIVATE_KEY = RECAPTCHA_PRIVATE_KEY
-
-
