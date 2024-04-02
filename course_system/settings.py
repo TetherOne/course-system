@@ -48,14 +48,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
     "cachalot",
     "captcha",
     "django_recaptcha",
-
     "courseapp.apps.CourseappConfig",
     "userapp.apps.AuthappConfig",
     "checkpointapp.apps.CheckpointappConfig",
@@ -178,7 +176,7 @@ REST_FRAMEWORK = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/0",
+        "LOCATION": "redis://127.0.0.1:6379",
     }
 }
 
@@ -203,6 +201,3 @@ EMAIL_ADMIN = EMAIL_HOST_USER
 
 RECAPTCHA_PUBLIC_KEY = RECAPTCHA_PUBLIC_KEY
 RECAPTCHA_PRIVATE_KEY = RECAPTCHA_PRIVATE_KEY
-
-
-CELERY_BROKER_URL = "redis://127.0.0.1:6379/1"
