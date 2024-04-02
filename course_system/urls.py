@@ -23,6 +23,10 @@ from django.contrib import admin
 from django.urls import include
 from django.urls import path
 
+import debug_toolbar
+
+import mimetypes
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -33,10 +37,16 @@ urlpatterns = [
     path("api/checkpointapp/", include("checkpointapp.urls")),
 ]
 
-
 urlpatterns.extend(
     static(
         settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT,
     )
 )
+
+
+mimetypes.add_type("application/javascript", ".js", True)
+
+urlpatterns = [
+    path('__debug__/', include(debug_toolbar.urls)),
+] + urlpatterns

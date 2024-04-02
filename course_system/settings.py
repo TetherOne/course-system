@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "cachalot",
     "captcha",
     "django_recaptcha",
+    "debug_toolbar",
     "courseapp.apps.CourseappConfig",
     "userapp.apps.AuthappConfig",
     "checkpointapp.apps.CheckpointappConfig",
@@ -69,6 +70,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "course_system.urls"
@@ -201,3 +203,6 @@ EMAIL_ADMIN = EMAIL_HOST_USER
 
 RECAPTCHA_PUBLIC_KEY = RECAPTCHA_PUBLIC_KEY
 RECAPTCHA_PRIVATE_KEY = RECAPTCHA_PRIVATE_KEY
+
+
+INTERNAL_IPS = ["127.0.0.1"]
