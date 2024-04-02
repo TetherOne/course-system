@@ -70,3 +70,30 @@ body {
     width: var(--ico-width);
     height: var(--ico-width);
 }
+
+.submit-btn {
+    align-self: center;
+}
+
+.container {
+    padding: var(--std-padding);
+    border-radius: var(--std-corner-radius);
+    background-color: white;
+}
+
+button {
+    align-self: center;
+}
+
+input[type="submit"] {
+    align-self: center;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: var(--std-padding);
+}

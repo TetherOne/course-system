@@ -1,16 +1,28 @@
 <script>
 import {
-    getLesson
+    getLesson,
+    getLessonOtherFiles
 } from '../../requests.js';
+
+import {
+    Path
+} from '../../Path.js';
 
 
 export default {
+    setup() {
+        return {
+            Path
+        }
+    },
+
     data() {
         return {
             id: this.$route.params.id,
             name: '',
             description: '',
-            video: ''
+            video: '',
+            otherFiles: []
         }
     },
 
@@ -24,6 +36,7 @@ export default {
             this.name = lesson.name;
             this.description = lesson.description;
             this.video = lesson.video;
+            this.otherFiles = await getLessonOtherFiles(this.id);
         }
     },
 
@@ -45,6 +58,10 @@ export default {
         <video width="320" height="240" v-if="hasVideo">
             <source :src="video">
         </video>
+        <div class="flex-column" v-if="otherFiles.length">
+            <h3>Дополнительно:</h3>
+            <a class="sub" :href="file.other_file" v-for="file in otherFiles">{{ decodeURIComponent(Path.getLastElement(file.other_file)) }}</a>
+        </div>
     </div>
 </template>
 

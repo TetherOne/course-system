@@ -1,4 +1,6 @@
 <script>
+import axios from 'axios';
+
 import {
     useUserStore
 } from '../../stores/user.js';
@@ -14,10 +16,14 @@ import {
     teacherRole
 } from '../../stores/user.js';
 
+import {
+    courseAPI
+} from '../../requests.js';
+
 import Module from '../elements/Module.vue';
 
-const studentBySelf = 1;
-const teacherBySelf = 2;
+export const studentBySelf = 1;
+export const teacherBySelf = 2;
 
 
 export default {
@@ -43,7 +49,10 @@ export default {
             teacherId: 0,
             teacherFullName: '',
             modules: [],
-            view: this.user.role === studentRole ? studentBySelf : teacherBySelf
+            view: this.user.role === studentRole ? studentBySelf : teacherBySelf,
+            
+            addingModuleFormVisible: false,
+            newModuleName: ''
         }
     },
 
@@ -73,6 +82,22 @@ export default {
 
         async loadModules() {
             this.modules = await getCourseModules(this.id);
+        },
+
+        async addModule() {
+            if (!this.validateNewModuleData()) {
+                alert('Введите имя модуля');
+            }
+
+            await axios.post(`${courseAPI}/modules/`, {
+                module_name: this.newModuleName,
+                course: this.id
+            });
+            window.location.reload();
+        },
+
+        validateNewModuleData() {
+            return this.newModuleName.length;
         }
     }
 }
@@ -82,13 +107,26 @@ export default {
 <template>
     <div id="annotation" class="flex-column">
         <h2 id="title">{{ name }}</h2>
-        <div id="teacher-info">Курс ведёт: <a :href="`/teacher/${teacherId}`">{{ teacherFullName }}</a></div>
+        <div id="teacher-info" v-if="view === studentBySelf">Курс ведёт: <a :href="`/teacher/${teacherId}`">{{ teacherFullName }}</a></div>
 
-        <div class="label">
+        <div class="label" v-if="view === teacherBySelf">
             {{ description }}
         </div>
 
-        <Module v-for="(module, i) in modules" :index="i + 1" :id="module.id" :name="module.name"/>
+        <a :href="`/participants/${this.id}`" class="label">Участники</a>
+
+        <Module v-for="(module, i) in modules" :index="i + 1" :id="module.id" :name="module.name" :view="view"/>
+
+        <div class="flex-column" v-if="view === teacherBySelf">
+            <button @click="addingModuleFormVisible = true">Добавить модуль</button>
+            <div class="flex-column" v-if="addingModuleFormVisible">
+                <div class="flex-row">
+                    <label>Название:</label>
+                    <input type="text" v-model="newModuleName">
+                </div>
+                <input type="submit" value="Добавить" @click="addModule">
+            </div>
+        </div>
     </div>
 </template>
 

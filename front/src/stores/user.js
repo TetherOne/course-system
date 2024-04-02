@@ -20,7 +20,7 @@ export const useUserStore = defineStore(userStoreName, {
     state: () => {
         return {
             id: standardUserId,
-            role: studentRole,
+            role: teacherRole,
             surname: '',
             name: '',
             fatherName: '',

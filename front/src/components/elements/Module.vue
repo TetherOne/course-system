@@ -4,8 +4,20 @@ import {
     getModuleCheckPoint
 } from '../../requests.js';
 
+import {
+    studentBySelf,
+    teacherBySelf
+} from '../pages/Course.vue';
+
 
 export default {
+    setup() {
+        return {
+            studentBySelf,
+            teacherBySelf
+        }
+    },
+
     props: {
         index: {
             type: Number
@@ -15,6 +27,9 @@ export default {
         },
         name: {
             type: String
+        },
+        view: {
+            type: Number
         }
     },
 

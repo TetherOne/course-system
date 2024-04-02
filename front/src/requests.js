@@ -158,8 +158,20 @@ export async function getModuleCheckPoint(moduleId) {
     return {
         id: rawCheckPoint.id,
         title: rawCheckPoint.title,
-        questions: rawCheckPoint.questions
+        questions: rawCheckPoint.questions,
+        number: rawCheckPoint.checkpoint_number
     }
+}
+
+export async function getCourseCheckPoints(courseId) {
+    const modules = await getCourseModules(courseId);
+
+    const checkPoints = [];
+    for (const module of modules) {
+        checkPoints.push(await getModuleCheckPoint(module.id));
+    }
+
+    return checkPoints;
 }
 
 export async function getStudentPassedCheckPoints(studentId) {
@@ -172,4 +184,25 @@ export async function getCheckPointResults(studentId, checkPointId) {
     const result = (await axios.get(`${checkPointAPI}/passed-checkpoints/?student=${studentId}&checkpoint=${checkPointId}&format=json`)).data[0];
 
     return result;
+}
+
+export async function getLessonOtherFiles(lessonId) {
+    const otherFiles = (await axios.get(`${courseAPI}/lesson-other-files/?lesson=${lessonId}&format=json`)).data;
+
+    return otherFiles;
+}
+
+export async function getCourseStudents(courseId) {
+    const enrollments = (await axios.get(`${courseAPI}/enrollments/?course=${courseId}&format=json`)).data;
+    const students = enrollments.map(enrollment => {
+        return {
+            id: enrollment.student.id,
+            surname: enrollment.student.surname,
+            name: enrollment.student.name,
+            fatherName: enrollment.student.father_name,
+            faculty: enrollment.student.faculty,
+            group: enrollment.student.group
+        }
+    });
+    return students;
 }
