@@ -1,111 +1,95 @@
-<script setup>
-
-</script>
-
 <script>
-import axios from 'axios';
-import {mapStores} from 'pinia';
+import {
+    getCheckPoint,
+    getStudentPassedCheckPoints
+} from '../../requests.js';
 
-import {getCheckPoint} from '../../requests.js';
-import {checkPointAppAPI} from '../../requests.js';
-import {useUserStore} from '../../stores/user.js';
+import {
+    useUserStore
+} from '../../stores/user.js';
+
+import {
+    studentRole
+} from '../../stores/user.js';
 
 
 export default {
+    setup() {
+        const user = useUserStore();
+
+        return {
+            user
+        }
+    },
+
     data() {
         return {
-            id: parseInt(this.$route.params.id),
+            id: this.$route.params.id,
             title: '',
             questions: [],
-            finished: false,
-            score: 0,
-            maxScore: 0,
-            grade: 0,
-            percent: 0
+            isPassedByStudent: false
         }
     },
-    computed: {
-        ...mapStores(useUserStore)
-    },
-    async created() {
-        const info = await getCheckPoint(this.id);
-        this.title = info.title;
-        this.questions = info.questions;
 
-        for (const question of this.questions) {
-            this.maxScore += question.max_points;
+    created() {
+        this.loadData();
 
-            for (const answer of question.answers) {
-                answer.chosen = false;
-            }
-        }
+        this.isPassedByStudent = this.user.role === studentRole && this.F_isPassedByStudent();
+
+
     },
+
     methods: {
-        check() {
-            let score = 0;
-            for (const question of this.questions) {
-                for (const answer of question.answers) {
-                    if (answer.is_correct && answer.chosen) {
-                        score += question.max_points;
-                        break;
-                    }
-                }
+        async F_isPassedByStudent() {
+            let passedCheckPoints = await getStudentPassedCheckPoints(this.user.id);
+            if (passedCheckPoints.length === 0) {
+                return false;
             }
 
-            this.score = score;
-            this.finished = true;
+            passedCheckPoints = passedCheckPoints.filter(cp => {
+                return cp.checkpoint === this.id;
+            });
 
-            this.percent = this.score / this.maxScore;
-            this.grade = this.calcGrade();
-            this.uploadGrade();
+            return passedCheckPoints.length !== 0;
         },
-        calcGrade() {
-            if (this.percent >= 0.8) {
-                return 5;
-            } else if (this.percent >= 0.6) {
-                return 4;
-            } else if (this.percent >= 0.4) {
-                return 3;
-            } else {
-                return 2;
-            }
-        },
-        async uploadGrade() {
-            const data = {
-                points: this.score,
-                percent: this.percent,
-                status: this.grade >= 3 ? 'Зачёт' : "Незачёт",
-                grade: this.grade,
-                student: this.userStore.id,
-                checkpoint: this.id
-            };
-            await axios.post(`${checkPointAppAPI}/passed-checkpoints/`, data);
+
+        async loadData() {
+            const checkPoint = await getCheckPoint(this.id);
+            this.title = checkPoint.title;
+            this.questions = checkPoint.questions;
         }
     }
 }
 </script>
 
+
 <template>
-    <div class="flex-column">
-        <div id="title">КТ "{{ title }}"</div>
-        <div class="area flex-column" v-for="(question, i) in questions">
-            <div>{{ i + 1 }}. {{ question.question_text }}</div>
-            <div class="flex-row answer-wrapper" v-for="answer in question.answers">
-                <input type="radio" :name="question.id" v-model="answer.chosen">
-                <label for="">{{ answer.answer_text }}</label>
+    <div id="check-point-wrapper" class="flex-column">
+        <h2>КТ "{{ title }}"</h2>
+        <div v-if="isPassedByStudent">Вы уже прошли данную КТ</div>
+        <div class="flex-column">
+            <div class="flex-column question" v-for="question in questions">
+                <div>{{ question.question_text }}</div>
+                <div class="flex-row sub" v-for="answer in question.answers">
+                    <input type="radio" :name="question.id" :id="answer.id">
+                    <label :for="answer.id">{{ answer.answer_text }}</label>
+                </div>
             </div>
         </div>
-        <input type="submit" name="" id="" @click="check">
-        <div v-if="finished">Ваша оценка: {{ grade }}</div>
     </div>
 </template>
 
+
 <style scoped>
-#title {
-    align-self: center;
+#check-point-wrapper {
+    padding: var(--std-padding);
+    border-radius: var(--std-corner-radius);
+    background-color: #e6e6e6;
 }
 
-input[type="submit"] {
-    align-self: center;
+.question {
+    padding: var(--std-padding);
+    border-radius: var(--std-corner-radius);
+    background-color: white;
 }
 </style>

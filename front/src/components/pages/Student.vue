@@ -1,47 +1,54 @@
-<script setup>
-import {useUserStore} from '../../stores/user.js';
-
-
-const user = useUserStore();
-</script>
-
 <script>
-import {mapStores} from 'pinia';
+import CoursesList from '../elements/CoursesList.vue';
 
-import {useUserStore} from '../../stores/user.js';
+import {
+    useUserStore
+} from '../../stores/user.js';
+
+import {
+    studentBySelf
+} from '../elements/CoursesList.vue';
 
 
 export default {
-    data() {
-        return {}
+    components: {
+        CoursesList
     },
+
+    setup() {
+        const user = useUserStore();
+
+        return {
+            user,
+            studentBySelf
+        }
+    },
+
+    data() {
+        return {
+            noCoursesWarn: 'У вас пока нет курсов...'
+        }
+    },
+
+    created() {
+
+    },
+
     computed: {
-        ...mapStores(useUserStore)
+        noCourses() {
+            return !this.user.courses.length;
+        }
     }
 }
 </script>
 
+
 <template>
-    <div>Моё обучение</div>
-    <div id="courses" class="area flex-column">
-        <div class="flex-row course-info" v-for="course in user.courses">
-            <a :href="`/course/${course.id}`">{{ course.course_name }}</a>
-            <a :href="`/teacher/${course.teacher_profile}`">{{ course.teacherNameWithInitials }}</a>
-        </div>
-    </div>
-    <div v-if="!user.courses.length">У вас пока нет курсов...</div>
+    <CoursesList :courses="user.courses" :view="studentBySelf"></CoursesList>
+    <div v-if="noCourses">{{ noCoursesWarn }}</div>
 </template>
 
+
 <style scoped>
-header {
-    align-self: stretch;
-}
 
-#courses {
-    gap: var(--gap);
-}
-
-.course-info {
-    gap: var(--gap);
-}
 </style>

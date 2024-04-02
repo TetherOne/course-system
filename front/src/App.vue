@@ -1,46 +1,83 @@
-<script setup>
-import Header from './components/elements/Header.vue';
-</script>
-
-
 <script>
-import { mapStores } from 'pinia';
+import Header from './components/elements/Header.vue';
+import {
+    useUserStore
+} from './stores/user.js';
 
-import { useUserStore } from './stores/user.js';
 import {
     getStudent,
     getStudentCourses,
     getTeacher,
     getTeacherCourses
 } from './requests.js';
-import {shortenName} from './functions.js';
+
+import {
+    studentRole,
+    teacherRole
+} from './stores/user.js';
+
+
+const stdAvatar = './src/assets/avatar.png';
 
 
 export default {
-    data() {
-        return {
+    components: {
+        Header
+    },
 
+    setup() {
+        const user = useUserStore();
+
+        return {
+            user
         }
     },
-    computed: {
-        ...mapStores(useUserStore)
-    },
-    async created() {
-        const userId = this.userStore.id;
-        switch (this.userStore.role) {
-            case 'student':
-                this.userStore.info = await getStudent(userId);
-                this.userStore.courses = await getStudentCourses(userId);
-                for (const course of this.userStore.courses) {
-                    course.teacher = await getTeacher(course.teacher_profile);
 
-                    course.teacherNameWithInitials = shortenName(course.teacher.surname, course.teacher.name, course.teacher.father_name);
-                }
-                break;
-            case 'teacher':
-                this.userStore.info = await getTeacher(userId);
-                this.userStore.courses = await getTeacherCourses(userId);
-                break;
+    created() {
+        this.loadAllData();
+    },
+
+    methods: {
+        loadAllData() {
+            this.loadUserInfo();
+            this.loadCourses();
+        },
+
+        async loadUserInfo() {
+            let info;
+            const id = this.user.id;
+
+            switch (this.user.role) {
+                case studentRole:
+                    info = await getStudent(id);
+                    this.user.group = info.group;
+
+                    break;
+                case teacherRole:
+                    info = await getTeacher(id);
+
+                    break;
+            }
+
+            this.user.surname = info.surname;
+            this.user.name = info.name;
+            this.user.fatherName = info.fatherName;
+            this.user.faculty = info.faculty;
+            this.user.avatar = info.avatar === null ? stdAvatar : info.avatar;
+        },
+
+        async loadCourses() {
+            const id = this.user.id;
+            switch (this.user.role) {
+                case studentRole:
+                    this.user.courses = await getStudentCourses(id);
+
+                    break;
+                case teacherRole:
+                    this.user.courses = await getTeacherCourses(id);
+
+                    break;
+            }
         }
     }
 }
@@ -48,9 +85,9 @@ export default {
 
 
 <template>
-    <div class="page-wrapper flex-column">
+    <div id="page-wrapper" class="flex-column">
         <Header/>
-        <router-view></router-view>
+        <router-view/>
     </div>
 </template>
 
