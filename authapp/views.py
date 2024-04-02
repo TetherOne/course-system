@@ -15,12 +15,12 @@ from django.contrib.auth import login
 
 from django.shortcuts import redirect
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.http import HttpRequest
 
 from django.urls import reverse_lazy
 from django.urls import reverse
-from .tasks import send_email_to_reset_password
+
 
 class AboutMeView(TemplateView):
 
