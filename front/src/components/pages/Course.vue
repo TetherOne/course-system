@@ -1,95 +1,149 @@
-<script setup>
-
-import {getPathLastElement} from "../../functions.js";
-</script>
-
-
 <script>
-import {mapStores} from 'pinia';
+import axios from 'axios';
 
-import {useUserStore} from '../../stores/user.js';
+import {
+    useUserStore
+} from '../../stores/user.js';
+
 import {
     getCourse,
     getCourseModules,
-    getModuleLessons,
-    getLessonOtherFiles,
-    getModuleCheckPoint
+    getTeacher
 } from '../../requests.js';
+
+import {
+    studentRole,
+    teacherRole
+} from '../../stores/user.js';
+
+import {
+    courseAPI
+} from '../../requests.js';
+
+import Module from '../elements/Module.vue';
+
+export const studentBySelf = 1;
+export const teacherBySelf = 2;
 
 
 export default {
+    setup() {
+        const user = useUserStore();
+
+        return {
+            user,
+            studentBySelf,
+            teacherBySelf
+        }
+    },
+
+    components: {
+        Module
+    },
+
     data() {
         return {
-            id: 0,
+            id: this.$route.params.id,
             name: '',
             description: '',
-            modules: [],
             teacherId: 0,
-            teacherName: ''
-        };
+            teacherFullName: '',
+            modules: [],
+            view: this.user.role === studentRole ? studentBySelf : teacherBySelf,
+            
+            addingModuleFormVisible: false,
+            newModuleName: ''
+        }
     },
-    computed: {
-        ...mapStores(useUserStore)
+
+    created() {
+        this.loadAllData();
     },
-    async created() {
-        this.id = this.$route.params.id;
 
-        const course = await getCourse(this.id);
-        this.name = course.course_name;
-        this.description = course.description;
-        this.modules = await getCourseModules(this.id);
+    methods: {
+        loadAllData() {
+            this.loadCourse();
+            this.loadModules();
+        },
 
-        for (const module of this.modules) {
-            module.lessons = await getModuleLessons(module.id);
+        async loadCourse() {
+            const course = await getCourse(this.id);
+            this.name = course.name;
+            this.description = course.description;
+            this.password = course.password;
 
-            for (const lesson of module.lessons) {
-                lesson.otherFiles = await getLessonOtherFiles(lesson.id);
+            if (this.view === studentBySelf) {
+                this.teacherId = course.teacherId;
+                const teacher = await getTeacher(this.teacherId);
+
+                this.teacherFullName = `${teacher.surname} ${teacher.name} ${teacher.fatherName}`;
+            }
+        },
+
+        async loadModules() {
+            this.modules = await getCourseModules(this.id);
+        },
+
+        async addModule() {
+            if (!this.validateNewModuleData()) {
+                alert('Введите имя модуля');
             }
 
-            module.checkPoint = await getModuleCheckPoint(module.id);
+            await axios.post(`${courseAPI}/modules/`, {
+                module_name: this.newModuleName,
+                course: this.id
+            });
+            window.location.reload();
+        },
+
+        validateNewModuleData() {
+            return this.newModuleName.length;
         }
     }
 }
 </script>
 
+
 <template>
-    <div class="area flex-column">
-        <div id="course-name">{{ name }}</div>
-        <div class="module-wrapper flex-column" v-for="(module, moduleIndex) in modules">
-            <div>Модуль {{ moduleIndex + 1 }}. {{ module.module_name }}</div>
-            <div class="flex-column sub lessons-wrapper">
-                <div v-for="(lesson, lessonIndex) in module.lessons">
-                    <div>Тема {{ lessonIndex + 1 }}. {{ lesson.lesson_name }}</div>
-                    <div class="sub flex-column">
-                        <div>{{ lesson.description }}</div>
-                        <video width="320" height="240" controls>
-                            <source :src="lesson.video">
-                        </video>
-                        <a v-for="file in lesson.otherFiles" :href="file.other_file">{{ getPathLastElement(file.other_file) }}</a>
-                    </div>
+    <div id="annotation" class="flex-column">
+        <h2 id="title">{{ name }}</h2>
+        <div id="teacher-info" v-if="view === studentBySelf">Курс ведёт: <a :href="`/teacher/${teacherId}`">{{ teacherFullName }}</a></div>
+
+        <div class="label" v-if="view === teacherBySelf">
+            {{ description }}
+        </div>
+
+        <a :href="`/participants/${this.id}`" class="label">Участники</a>
+
+        <Module v-for="(module, i) in modules" :index="i + 1" :id="module.id" :name="module.name" :view="view"/>
+
+        <div class="flex-column" v-if="view === teacherBySelf">
+            <button @click="addingModuleFormVisible = true">Добавить модуль</button>
+            <div class="flex-column" v-if="addingModuleFormVisible">
+                <div class="flex-row">
+                    <label>Название:</label>
+                    <input type="text" v-model="newModuleName">
                 </div>
+                <input type="submit" value="Добавить" @click="addModule">
             </div>
-            <a v-if="module.checkPoint" :href="`/checkPoint/${module.checkPoint.id}`">КТ "{{ module.checkPoint.title }}"</a>
         </div>
     </div>
 </template>
 
+
 <style scoped>
-#course-name {
-    align-self: center;
+#annotation {
+    background-color: #e6e6e6;
+    padding: calc(var(--std-padding) + 1em);
+    border-radius: var(--std-corner-radius);
+    max-width: 60vw;
 }
 
-.module-wrapper {
-    background-color: white;
-    padding: var(--gap);
-    border-radius: 7px;
+#title {
+    text-align: center;
 }
 
-.sub {
-    margin-left: 2rem;
-}
-
-.area {
-    max-width: 80vw;
+#teacher-info a {
+    color: black;
 }
 </style>

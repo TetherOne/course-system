@@ -1,21 +1,41 @@
-import { defineStore } from 'pinia';
+import {
+    defineStore
+} from 'pinia';
+
+import {
+    studentLink,
+    teacherLink
+} from '../router.js';
 
 
-export const useUserStore = defineStore('user', {
+const userStoreName = 'user';
+
+const standardUserId = 1;
+
+export const guestRole = 0;
+export const studentRole = 1;
+export const teacherRole = 2;
+
+export const useUserStore = defineStore(userStoreName, {
     state: () => {
         return {
-            id: 2,
-            role: 'teacher',
-            info: {},
+            id: standardUserId,
+            role: teacherRole,
+            surname: '',
+            name: '',
+            fatherName: '',
+            group: '',
+            faculty: '',
+            avatar: '',
             courses: []
         }
     },
     getters: {
         fullName: (state) => {
-            return `${state.info.surname} ${state.info.name} ${state.info.father_name}`;
+            return `${state.surname} ${state.name} ${state.fatherName}`;
         },
         profileLink: (state) => {
-            return state.role === 'student' ? '/student' : `/teacher/${state.id}`;
+            return state.role === studentRole ? studentLink : `${teacherLink}/${state.id}`;
         }
     }
 });

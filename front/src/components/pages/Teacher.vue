@@ -1,25 +1,37 @@
-<script setup>
-import {useUserStore} from '../../stores/user.js';
-
-
-const user = useUserStore();
-</script>
-
-
 <script>
+import {
+    useUserStore
+} from '../../stores/user.js';
+import CoursesList from "../elements/CoursesList.vue";
+
+import {
+    teacherByStudent,
+    teacherBySelf
+} from '../elements/CoursesList.vue';
+
+
 export default {
-    data() {
+    components: {
+        CoursesList
+    },
+
+    setup() {
+        const user = useUserStore();
+
         return {
-            addCourseFormVisible: false,
-            courseToBeCreatedName: ''
+            user,
+            teacherByStudent,
+            teacherBySelf
         }
     },
-    async created() {
 
-    },
-    methods: {
-        addCourse() {
-            
+    computed: {
+        view() {
+            if (this.user.id == this.$route.params.id) {
+                return teacherBySelf;
+            } else {
+                return teacherByStudent;
+            }
         }
     }
 }
@@ -27,22 +39,9 @@ export default {
 
 
 <template>
-    <div>Мои курсы</div>
-    <div id="courses" class="area flex-column">
-        <div class="flex-row course-info" v-for="course in user.courses">
-            <a :href="`/course/${course.id}`">{{ course.course_name }}</a>
-        </div>
-    </div>
-    <button v-if="user.role === 'teacher'" @click="addCourseFormVisible = true">Добавить курс</button>
-    <div class="flex-column area" v-if="addCourseFormVisible">
-        <div class="flex-row">
-            <label for="">Название:</label>
-            <input v-model="courseToBeCreatedName">
-        </div>
-        <button @click="addCourse">Добавить</button>
-    </div>
-    <div v-if="!user.courses.length">У вас пока нет курсов...</div>
+    <CoursesList :courses="user.courses" :view="view"></CoursesList>
 </template>
+
 
 <style scoped>
 

@@ -3,50 +3,49 @@ import {
     createWebHistory
 } from 'vue-router';
 
-// import SignInUp from './components/pages/SignInUp.vue';
 import Student from './components/pages/Student.vue';
 import Teacher from './components/pages/Teacher.vue';
 import Course from './components/pages/Course.vue';
-// import Lesson from './components/pages/Lesson.vue';
-import CheckPoint from './components/pages/CheckPoint.vue';
-import Error from './components/pages/Error.vue';
+import Lesson from './components/pages/Lesson.vue';
+import CheckPoint from './components/pages/CheckPoint.vue'
+import Participants from './components/pages/Participants.vue';
 
+
+export const studentLink = '/student';
+export const teacherLink = '/teacher';
+const courseLink = '/course';
+const lessonLink = '/lesson';
+const checkPointLink = '/checkPoint';
+const participantsLink = '/participants';
 
 const routes = [
-    // {
-    //     path: '/',
-    //     component: SignInUp
-    // },
     {
-        path: '/student',
+        path: studentLink,
         component: Student
     },
     {
-        path: '/teacher/:id',
+        path: `${teacherLink}/:id`,
         component: Teacher
     },
     {
-        path: '/course/:id',
+        path: `${courseLink}/:id`,
         component: Course
     },
-    // {
-    //     path: '/course/:courseId/lesson/:lessonId',
-    //     component: Lesson
-    // },
     {
-        path: '/checkPoint/:id',
+        path: `${lessonLink}/:id`,
+        component: Lesson
+    },
+    {
+        path: `${checkPointLink}/:id`,
         component: CheckPoint
     },
     {
-        path: '/error',
-        component: Error
+        path: `${participantsLink}/:id`,
+        component: Participants
     }
 ];
 
-const router = createRouter({
+export const router = createRouter({
     history: createWebHistory(),
     routes
 });
-
-
-export default router;

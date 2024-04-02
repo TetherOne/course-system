@@ -1,41 +1,53 @@
-<script setup>
-import { useUserStore } from '../../stores/user.js';
-
-
-const user = useUserStore();
-</script>
-
 <script>
-export default {
+import {
+    useUserStore
+} from '../../stores/user.js';
 
+
+export default {
+    setup() {
+        const user = useUserStore();
+
+        return {
+            user
+        }
+    }
 }
 </script>
 
+
 <template>
-    <div class="flex-row header">
-        <img :src="user.info.avatar" alt="Ваш аватар" class="avatar">
-        <div id="user-info" class="flex-column">
-            <a :href="user.profileLink">{{ user.fullName }}</a>
-            <div>{{ user.info.faculty }}</div>
-            <div>{{ user.info.group }}</div>
-        </div>
+    <div id="header" class="flex-row">
+        <a :href="user.profileLink" class="flex-row label">
+            <img id="avatar" :src="user.avatar" alt="Ваш аватар">
+            <div>{{ user.fullName }}</div>
+        </a>
+        <div class="spacer"></div>
+        <a href="/settings">
+            <img class="ico" src="/src/assets/settings.svg" alt="Настройки" title="Настройки">
+        </a>
+        <a href="/exit">
+            <img src="/src/assets/logOut.svg" alt="Выход" class="ico" title="Выход">
+        </a>
     </div>
 </template>
 
+
 <style scoped>
-.header {
+#header {
+    background-color: var(--header-background-color);
     align-self: stretch;
-    background-color: #2b2d30;
-    color: white;
-    padding: var(--gap);
+    padding: var(--std-padding);
     align-items: center;
 }
 
-.header a {
-    color: white;
+#avatar {
+    width: var(--avatar-width);
+    height: var(--avatar-width);
 }
 
-#user-info {
-    gap: 0;
+#header a {
+    color: black;
+    text-decoration: none;
 }
 </style>
