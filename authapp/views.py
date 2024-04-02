@@ -15,11 +15,11 @@ from django.contrib.auth import login
 
 from django.shortcuts import redirect
 
-from django.urls import reverse_lazy
-from django.urls import reverse
-
 from django.http import HttpResponse
 from django.http import HttpRequest
+
+from django.urls import reverse_lazy
+from django.urls import reverse
 
 
 class AboutMeView(TemplateView):
