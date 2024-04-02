@@ -56,9 +56,9 @@ def answer_file_directory_path(instance: "AnswerFile", filename: str) -> str:
     valid_filename = re.sub(
         r"[\\/*?:\"<>|]",
         "_",
-        instance.answer_text,
+        instance.answer.question.checkpoint.title,  # используем информацию из связанного вопроса
     )
-    return f"answers/{instance.question.checkpoint.title}/{valid_filename}/{filename}"
+    return f"answers/{valid_filename}/{filename}"
 
 
 class AnswerFile(models.Model):
