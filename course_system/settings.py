@@ -182,6 +182,8 @@ CACHES = {
     }
 }
 
+AUTH_USER_MODEL = "authapp.CustomUser"
+
 
 CACHALOT_TIMEOUT = 600
 

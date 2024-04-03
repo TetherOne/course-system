@@ -1,11 +1,11 @@
 from django_filters.rest_framework import DjangoFilterBackend
 
+from authapp.models import CustomUser
 from userapp.serializers import UserRegistrationSerializer
 from userapp.serializers import TeacherSerializer
 from userapp.serializers import StudentSerializer
 
 from rest_framework.viewsets import ModelViewSet
-from django.contrib.auth.models import User
 
 from userapp.models import TeacherProfile
 from userapp.models import StudentProfile
@@ -13,7 +13,7 @@ from userapp.models import StudentProfile
 
 class UserViewSet(ModelViewSet):
 
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()
     serializer_class = UserRegistrationSerializer
 
     def perform_create(self, serializer):
