@@ -1,3 +1,4 @@
+
 from django.contrib.auth.views import PasswordResetCompleteView
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.contrib.auth.views import PasswordResetDoneView
@@ -20,7 +21,7 @@ from django.http import HttpRequest
 
 from django.urls import reverse_lazy
 from django.urls import reverse
-# from .tasks import send_email_to_reset_password
+
 
 class AboutMeView(TemplateView):
 
@@ -63,31 +64,6 @@ class MyPasswordResetView(PasswordResetView):
     template_name = "authapp/password_reset_form.html"
     email_template_name = "authapp/password_reset_email.html"
     success_url = reverse_lazy("authapp:password_reset_done")
-
-    # def form_valid(self, form):
-    #     opts = {
-    #         "use_https": self.request.is_secure(),
-    #         "token_generator": self.token_generator,
-    #         "from_email": self.from_email,
-    #         "email_template_name": self.email_template_name,
-    #         "subject_template_name": self.subject_template_name,
-    #         "request": self.request,
-    #         "html_email_template_name": self.html_email_template_name,
-    #         "extra_email_context": self.extra_email_context,
-    #     }
-    #
-    #     # Вместо сохранения формы, вызываем задачу Celery
-    #     send_email_to_reset_password.apply_async(
-    #         args=(
-    #             opts["subject_template_name"],
-    #             opts["email_template_name"],
-    #             opts["from_email"],
-    #             [form.cleaned_data["email"]],
-    #         ),
-    #         countdown=1,
-    #     )
-    #
-    #     return super().form_valid(form)
 
 
 class MyPasswordResetDoneView(PasswordResetDoneView):

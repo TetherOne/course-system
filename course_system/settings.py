@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "checkpointapp.apps.CheckpointappConfig",
     "questionapp.apps.QuestionappConfig",
     "authapp.apps.AuthappConfig",
+    "emailtask.apps.EmailtaskConfig",
 ]
 
 MIDDLEWARE = [
