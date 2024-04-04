@@ -17,6 +17,8 @@ from django.utils.encoding import force_bytes
 from userapp.models import StudentProfile
 from userapp.models import TeacherProfile
 
+from .models import CustomUser
+
 from django import forms
 
 
@@ -29,15 +31,15 @@ class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField()
     captcha = ReCaptchaField()
 
-    class Meta(UserCreationForm.Meta):
+    class Meta:
 
-        fields = UserCreationForm.Meta.fields + (
+        model = CustomUser
+        fields = [
+            "username",
             "email",
+            "password1",
             "is_teacher",
-        )
-        widgets = {
-            "password2": forms.HiddenInput(),
-        }
+        ]
 
     def __init__(self, *args, **kwargs):
         # убирает повторный ввод пароля при регистрации

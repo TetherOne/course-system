@@ -4,7 +4,8 @@ from django.contrib.auth.views import PasswordResetDoneView
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.auth.views import LoginView
 
-from authapp.forms import CustomUserCreationForm, CustomPasswordResetForm
+from authapp.forms import CustomPasswordResetForm
+from authapp.forms import CustomUserCreationForm
 
 from django.views.generic import TemplateView
 from django.views.generic import FormView
@@ -41,14 +42,19 @@ class RegisterView(FormView):
     success_url = reverse_lazy("authapp:about_me")
 
     def form_valid(self, form):
-
         user = form.save()
-        user = authenticate(
-            username=user.username,
-            password=form.cleaned_data["password1"],
-        )
-        login(self.request, user)
 
+        if user:
+
+            authenticated_user = authenticate(
+                username=user.email,
+                password=form.cleaned_data["password1"],
+            )
+            if authenticated_user:
+                login(
+                    self.request,
+                    authenticated_user,
+                )
         return super(RegisterView, self).form_valid(form)
 
 
