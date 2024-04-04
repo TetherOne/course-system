@@ -1,11 +1,10 @@
-
 from django.contrib.auth.views import PasswordResetCompleteView
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.contrib.auth.views import PasswordResetDoneView
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.auth.views import LoginView
 
-from authapp.forms import CustomUserCreationForm
+from authapp.forms import CustomUserCreationForm, PasswordResetForm
 
 from django.views.generic import TemplateView
 from django.views.generic import FormView
@@ -64,6 +63,7 @@ class MyPasswordResetView(PasswordResetView):
     template_name = "authapp/password_reset_form.html"
     email_template_name = "authapp/password_reset_email.html"
     success_url = reverse_lazy("authapp:password_reset_done")
+    form_class = PasswordResetForm
 
 
 class MyPasswordResetDoneView(PasswordResetDoneView):
