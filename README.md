@@ -1,5 +1,5 @@
 [![Python 3.11](https://img.shields.io/badge/python-3.11-green.svg)](https://www.python.org/downloads/release/python-360/)
-![Django 4.0](https://img.shields.io/badge/Django-4.2.7-green.svg)
+![Django 4.0](https://img.shields.io/badge/Django-5.0.2-green.svg)
 
 
 
@@ -54,8 +54,7 @@
 ## 2. Технологии
 
   - Django + DRF
-  - Celery
-  - RabbitMQ
+  - Celery + RabbitMQ
   - Redis
   - Vue.js
 
@@ -67,3 +66,4 @@
   - https://www.youtube.com/playlist?list=PLyaCd9XYVI9DQhzpYCNI9PAvf3U1EunVm
   - https://www.youtube.com/playlist?list=PLA0M1Bcd0w8xO_39zZll2u1lz_Q-Mwn1F
   - https://www.youtube.com/playlist?list=PLA0M1Bcd0w8yU5h2vwZ4LO7h1xt8COUXl
+  - https://www.youtube.com/playlist?list=PLOLrQ9Pn6caz-6WpcBYxV84g9gwptoN20
