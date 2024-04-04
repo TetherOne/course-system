@@ -1,17 +1,44 @@
-# import time
-#
-# from celery import Celery
-# from django.core.mail import send_mail
-#
-# app = Celery('authapp', broker='redis://127.0.0.1:6379/1')
-#
-#
-# @app.task
-# def send_email_to_reset_password(subject, message, from_email, recipient_list):
-#     send_mail(
-#         subject,
-#         message,
-#         from_email,
-#         recipient_list,
-#         fail_silently=False,
-#     )
+from django.core.mail import EmailMultiAlternatives
+
+from django.template import loader
+
+from celery import shared_task
+
+
+@shared_task()
+def send_password_reset_email_task(
+    subject_template_name,
+    email_template_name,
+    context,
+    from_email,
+    to_email,
+    html_email_template_name,
+):
+
+    subject = loader.render_to_string(
+        subject_template_name,
+        context,
+    )
+    subject = "".join(subject.splitlines())
+    body = loader.render_to_string(
+        email_template_name,
+        context,
+    )
+    email_message = EmailMultiAlternatives(
+        subject,
+        body,
+        from_email,
+        [to_email],
+    )
+
+    if html_email_template_name is not None:
+        html_email = loader.render_to_string(
+            html_email_template_name,
+            context,
+        )
+        email_message.attach_alternative(
+            html_email,
+            "text/html",
+        )
+
+    email_message.send()
