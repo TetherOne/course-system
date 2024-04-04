@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "checkpointapp.apps.CheckpointappConfig",
     "questionapp.apps.QuestionappConfig",
     "authapp.apps.AuthappConfig",
+    "emailtask.apps.EmailtaskConfig",
 ]
 
 MIDDLEWARE = [
@@ -181,6 +182,8 @@ CACHES = {
         "LOCATION": "redis://127.0.0.1:6379",
     }
 }
+
+AUTH_USER_MODEL = "authapp.CustomUser"
 
 
 CACHALOT_TIMEOUT = 600

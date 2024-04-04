@@ -1,5 +1,4 @@
-from django.contrib.auth.models import User
-
+from authapp.models import CustomUser
 from userapp.models import TeacherProfile
 from userapp.models import StudentProfile
 
@@ -12,14 +11,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
 
-        model = User
+        model = CustomUser
         fields = "id", "email", "username", "password", "is_teacher"
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
 
         is_teacher = validated_data.pop("is_teacher", False)
-        user = User.objects.create_user(**validated_data)
+        user = CustomUser.objects.create_user(**validated_data)
 
         if is_teacher:
             TeacherProfile.objects.create(user=user)

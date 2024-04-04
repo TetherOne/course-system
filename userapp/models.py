@@ -1,6 +1,6 @@
-from django.contrib.auth.models import User
-
 from django.db import models
+
+from authapp.models import CustomUser
 
 
 class TeacherProfile(models.Model):
@@ -13,7 +13,7 @@ class TeacherProfile(models.Model):
     avatar = models.ImageField(null=True, upload_to="teacher-avatars/", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.OneToOneField(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         related_name="teacher_profile",
     )
@@ -33,7 +33,7 @@ class StudentProfile(models.Model):
     avatar = models.ImageField(null=True, upload_to="student-avatars/", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.OneToOneField(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
         related_name="student_profile",
     )
