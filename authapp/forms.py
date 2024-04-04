@@ -60,7 +60,7 @@ class CustomUserCreationForm(UserCreationForm):
                 StudentProfile.objects.create(user=user)
         return user
 
-class PasswordResetForm(forms.Form):
+class MyPasswordResetForm(forms.Form):
     email = forms.EmailField(
         label=_("Email"),
         max_length=254,
