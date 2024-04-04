@@ -1,28 +1,25 @@
-from django.contrib.auth.forms import UserCreationForm, _unicode_ci_compare, PasswordResetForm
-import unicodedata
-
-from django import forms
-from django.contrib.auth import authenticate, get_user_model, password_validation
-from django.contrib.auth.hashers import UNUSABLE_PASSWORD_PREFIX, identify_hasher
-from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.exceptions import ValidationError
-from django.core.mail import EmailMultiAlternatives
-from django.template import loader
-from django.utils.encoding import force_bytes
+
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.forms import UserCreationForm
+
 from django.utils.http import urlsafe_base64_encode
-from django.utils.text import capfirst
-from django.utils.translation import gettext
-from django.utils.translation import gettext_lazy as _
+
+from django_recaptcha.fields import ReCaptchaField
 
 from .tasks import send_password_reset_email_task
-from django_recaptcha.fields import ReCaptchaField
-from .tasks import send_password_reset_email_task
+
+from django.contrib.auth import get_user_model
+
+from django.utils.encoding import force_bytes
+
 from userapp.models import StudentProfile
 from userapp.models import TeacherProfile
 
 from django import forms
+
+
 UserModel = get_user_model()
 
 
@@ -64,21 +61,22 @@ class CustomUserCreationForm(UserCreationForm):
 class CustomPasswordResetForm(PasswordResetForm):
     # форма для восстановления пароля через почту
     def send_mail(
-            self,
-            subject_template_name,
-            email_template_name,
-            context,
-            from_email,
-            to_email,
-            html_email_template_name=None,
+        self,
+        subject_template_name,
+        email_template_name,
+        context,
+        from_email,
+        to_email,
+        html_email_template_name=None,
     ):
+
         context_dict = {
-            'user_email': context['user'].email,
-            'domain': context['domain'],
-            'site_name': context['site_name'],
-            'uid': context['uid'],
-            'token': context['token'],
-            'protocol': context['protocol'],
+            "user_email": context["user"].email,
+            "domain": context["domain"],
+            "site_name": context["site_name"],
+            "uid": context["uid"],
+            "token": context["token"],
+            "protocol": context["protocol"],
         }
         send_password_reset_email_task.delay(
             subject_template_name,
@@ -86,9 +84,8 @@ class CustomPasswordResetForm(PasswordResetForm):
             context_dict,
             from_email,
             to_email,
-            html_email_template_name
+            html_email_template_name,
         )
-
 
     def save(
         self,

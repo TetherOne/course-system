@@ -7,7 +7,7 @@ from django.http import HttpResponse
 
 
 class ReviewEmailView(FormView):
-    template_name = 'review.html'
+    template_name = "review.html"
     form_class = ReviewForm
 
     def form_valid(self, form):

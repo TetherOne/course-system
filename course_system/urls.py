@@ -31,7 +31,7 @@ from emailtask.views import ReviewEmailView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("reviews/", ReviewEmailView.as_view(), name='reviews'),
+    path("reviews/", ReviewEmailView.as_view(), name="reviews"),
     path("api/authapp/", include("authapp.urls")),
     path("api/userapp/", include("userapp.urls")),
     path("api/courseapp/", include("courseapp.urls")),
@@ -50,5 +50,5 @@ urlpatterns.extend(
 mimetypes.add_type("application/javascript", ".js", True)
 
 urlpatterns = [
-    path('__debug__/', include(debug_toolbar.urls)),
+    path("__debug__/", include(debug_toolbar.urls)),
 ] + urlpatterns
