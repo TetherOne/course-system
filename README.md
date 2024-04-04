@@ -53,9 +53,11 @@
 
 ## 2. Технологии
 
-  - Vue.js
   - Django + DRF
+  - Celery
+  - RabbitMQ
   - Redis
+  - Vue.js
 
 ## 3. Источники
   - https://pypi.org/
