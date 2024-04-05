@@ -22,7 +22,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
-
+        """
+        Функция для создания профиля пользователя
+        """
         is_teacher = validated_data.pop("is_teacher", False)
         user = CustomUser.objects.create_user(**validated_data)
 
@@ -34,14 +36,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
     def to_representation(self, instance):
-
         data = super().to_representation(instance)
 
         if hasattr(instance, "teacher_profile"):
             data["is_teacher"] = True
         else:
             data["is_teacher"] = False
-
         return data
 
 
