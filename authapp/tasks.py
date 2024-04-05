@@ -54,7 +54,9 @@ def send_email_to_reset_password_task(
 def send_email_after_registration_task(email):
 
     subject = "Вас приветствует scart сервис!"
-    html_message = render_to_string("authapp/after_registration.html")
+    html_message = render_to_string(
+        "authapp/after_registration.html",
+    )
     plain_message = strip_tags(html_message)
     from_email = settings.EMAIL_HOST_USER
     to_email = [email]
