@@ -4,11 +4,12 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.forms import UserCreationForm
 
+from .tasks import send_email_after_registration_task
+from .tasks import send_email_to_reset_password_task
+
 from django.utils.http import urlsafe_base64_encode
 
 from django_recaptcha.fields import ReCaptchaField
-
-from .tasks import send_email_to_reset_password_task
 
 from django.contrib.auth import get_user_model
 
@@ -20,7 +21,6 @@ from userapp.models import TeacherProfile
 from .models import CustomUser
 
 from django import forms
-from .tasks import send_email_after_registration_task
 
 
 UserModel = get_user_model()
