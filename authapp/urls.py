@@ -55,7 +55,5 @@ urlpatterns = [
         MyPasswordResetCompleteView.as_view(),
         name="password_reset_complete",
     ),
-    path(
-        "current-user/", CurrentUserView.as_view(), name="currentuser"
-    )
+    path("current-user/", CurrentUserView.as_view(), name="currentuser"),
 ]
