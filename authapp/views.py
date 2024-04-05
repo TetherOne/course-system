@@ -36,9 +36,7 @@ class AboutMeView(TemplateView):
 
 
 def logout_view(request: HttpRequest) -> HttpResponse:
-
     logout(request)
-
     return redirect(reverse("authapp:login"))
 
 
@@ -49,10 +47,10 @@ class RegisterView(FormView):
     success_url = reverse_lazy("authapp:about_me")
 
     def form_valid(self, form):
+
         user = form.save()
 
         if user:
-
             authenticated_user = authenticate(
                 username=user.email,
                 password=form.cleaned_data["password1"],

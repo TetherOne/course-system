@@ -77,7 +77,6 @@ class CustomPasswordResetForm(PasswordResetForm):
     """
     Форма для восстановления пароля через почту
     """
-
     def send_mail(
         self,
         subject_template_name,

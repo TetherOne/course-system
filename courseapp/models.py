@@ -22,7 +22,10 @@ class Enrollment(models.Model):
     enrollment_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ("student", "course")
+        unique_together = (
+            "student",
+            "course",
+        )
 
 
 class Course(models.Model):
