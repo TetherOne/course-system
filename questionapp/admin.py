@@ -37,7 +37,10 @@ class QuestionAdmin(admin.ModelAdmin):
     list_filter = ("checkpoint__module__course__course_name",)
     ordering = ("id",)
     list_per_page = 10
-    readonly_fields = "module_name", "course_name"
+    readonly_fields = (
+        "module_name",
+        "course_name",
+    )
 
     def module_name(self, obj):
         return getattr(
