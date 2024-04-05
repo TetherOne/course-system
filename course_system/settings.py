@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     "checkpointapp.apps.CheckpointappConfig",
     "questionapp.apps.QuestionappConfig",
     "authapp.apps.AuthappConfig",
-    "emailtask.apps.EmailtaskConfig",
 ]
 
 MIDDLEWARE = [
@@ -157,8 +156,8 @@ STATIC_URL = "static/"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "uploads"
 
-
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -168,12 +167,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        # Другие классы аутентификации, если есть
     ),
     "DEFAULT_FILTER_BACKEND": {
         "django_filters.rest_framework.DjangoFilterBackend",
     },
 }
+AUTH_USER_MODEL = "authapp.CustomUser"
 
 
 CACHES = {
@@ -182,10 +183,6 @@ CACHES = {
         "LOCATION": "redis://127.0.0.1:6379",
     }
 }
-
-AUTH_USER_MODEL = "authapp.CustomUser"
-
-
 CACHALOT_TIMEOUT = 600
 
 

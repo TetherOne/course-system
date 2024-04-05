@@ -4,11 +4,12 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.forms import UserCreationForm
 
+from .tasks import send_email_after_registration_task
+from .tasks import send_email_to_reset_password_task
+
 from django.utils.http import urlsafe_base64_encode
 
 from django_recaptcha.fields import ReCaptchaField
-
-from .tasks import send_password_reset_email_task
 
 from django.contrib.auth import get_user_model
 
@@ -47,7 +48,7 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields.pop("password2")
 
     def save(self, commit=True):
-        # регистрирует пользователя
+
         user = super(CustomUserCreationForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
 
@@ -57,6 +58,7 @@ class CustomUserCreationForm(UserCreationForm):
                 TeacherProfile.objects.create(user=user)
             else:
                 StudentProfile.objects.create(user=user)
+            send_email_after_registration_task.apply_async((user.email,), countdown=2)
         return user
 
 
@@ -80,7 +82,7 @@ class CustomPasswordResetForm(PasswordResetForm):
             "token": context["token"],
             "protocol": context["protocol"],
         }
-        send_password_reset_email_task.delay(
+        send_email_to_reset_password_task.delay(
             subject_template_name,
             email_template_name,
             context_dict,

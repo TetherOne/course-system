@@ -1,4 +1,5 @@
-from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives, send_mail
 
 from django.template import loader
 
@@ -6,7 +7,7 @@ from celery import shared_task
 
 
 @shared_task()
-def send_password_reset_email_task(
+def send_email_to_reset_password_task(
     subject_template_name,
     email_template_name,
     context,
@@ -42,3 +43,15 @@ def send_password_reset_email_task(
         )
 
     email_message.send()
+
+
+@shared_task
+def send_email_after_registration_task(email):
+
+    send_mail(
+        'Спасибо за регистрацию!',
+        'Добро пожаловать! Благодарим вас за регистрацию на нашем сайте.',
+        f"{settings.EMAIL_HOST_USER}",
+        [email],
+        fail_silently=False,
+    )
