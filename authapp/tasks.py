@@ -46,7 +46,6 @@ def send_email_to_reset_password_task(
             html_email,
             "text/html",
         )
-
     email_message.send()
 
 
