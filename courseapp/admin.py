@@ -21,8 +21,17 @@ class CourseAdmin(admin.ModelAdmin):
     inlines = [
         CourseInline,
     ]
-    list_display = "id", "course_name", "short_description", "teacher_profile", "status"
-    list_display_links = "id", "course_name"
+    list_display = (
+        "id",
+        "course_name",
+        "short_description",
+        "teacher_profile",
+        "status",
+    )
+    list_display_links = (
+        "id",
+        "course_name",
+    )
     search_fields = ("course_name",)
     list_filter = ("teacher_profile",)
     ordering = ("id",)
@@ -50,8 +59,16 @@ class ModuleAdmin(admin.ModelAdmin):
         LessonInline,
         CheckpointInline,
     ]
-    list_display = "id", "module_name", "created_at", "course_name"
-    list_display_links = "id", "module_name"
+    list_display = (
+        "id",
+        "module_name",
+        "created_at",
+        "course_name",
+    )
+    list_display_links = (
+        "id",
+        "module_name",
+    )
     search_fields = ("module_name",)
     list_per_page = 10
 
@@ -85,7 +102,8 @@ class LessonAdmin(admin.ModelAdmin):
     def display_lesson(self, obj):
         if obj.video:
             return format_html(
-                f'<video src="{obj.video.url}" controls width="200px" height="150px"></video>'
+                f'<video src="{obj.video.url}" controls'
+                f' width="200px" height="150px"></video>'
             )
 
     def course_name(self, obj):
@@ -95,15 +113,33 @@ class LessonAdmin(admin.ModelAdmin):
 @admin.register(LessonOtherFile)
 class LessonOtherFileAdmin(admin.ModelAdmin):
 
-    list_display = "id", "lesson", "other_file"
-    list_display_links = "id", "lesson"
+    list_display = (
+        "id",
+        "lesson",
+        "other_file",
+    )
+    list_display_links = (
+        "id",
+        "lesson",
+    )
     list_per_page = 10
 
 
 @admin.register(Enrollment)
 class EnrollmentAdmin(admin.ModelAdmin):
 
-    list_display = ("id", "student", "course", "enrollment_date")
-    list_display_links = ("id", "student")
-    search_fields = ("student__user__username", "course__course_name")
+    list_display = (
+        "id",
+        "student",
+        "course",
+        "enrollment_date",
+    )
+    list_display_links = (
+        "id",
+        "student",
+    )
+    search_fields = (
+        "student__user__username",
+        "course__course_name",
+    )
     list_per_page = 10
