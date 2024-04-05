@@ -6,7 +6,7 @@ from celery import shared_task
 
 
 @shared_task()
-def send_password_reset_email_task(
+def send_email_to_reset_password_task(
     subject_template_name,
     email_template_name,
     context,

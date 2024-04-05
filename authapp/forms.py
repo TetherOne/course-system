@@ -8,7 +8,7 @@ from django.utils.http import urlsafe_base64_encode
 
 from django_recaptcha.fields import ReCaptchaField
 
-from .tasks import send_password_reset_email_task
+from .tasks import send_email_to_reset_password_task
 
 from django.contrib.auth import get_user_model
 
@@ -80,7 +80,7 @@ class CustomPasswordResetForm(PasswordResetForm):
             "token": context["token"],
             "protocol": context["protocol"],
         }
-        send_password_reset_email_task.delay(
+        send_email_to_reset_password_task.delay(
             subject_template_name,
             email_template_name,
             context_dict,
