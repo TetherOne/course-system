@@ -102,24 +102,29 @@ class Summary(models.Model):
         if self.course:
             self.current_points = (
                 PassedCheckPoint.objects.filter(
-                    student=self.student, checkpoint__module__course=self.course
+                    student=self.student,
+                    checkpoint__module__course=self.course,
                 ).aggregate(Sum("points"))["points__sum"]
                 or 0
             )
 
             self.total = (
-                CheckPoint.objects.filter(module__course=self.course).aggregate(
+                CheckPoint.objects.filter(
+                    module__course=self.course,
+                ).aggregate(
                     Sum("questions__max_points")
                 )["questions__max_points__sum"]
                 or 0
             )
 
     def calculate_current_points(self):
-        # функция для подсчета текущего балла у студента за все КТ этого курса
+        # функция для подсчета текущего балла у студента
+        # за все КТ этого курса
         if self.course:
             self.current_points = (
                 PassedCheckPoint.objects.filter(
-                    student=self.student, checkpoint__module__course=self.course
+                    student=self.student,
+                    checkpoint__module__course=self.course,
                 ).aggregate(Sum("points"))["points__sum"]
                 or 0
             )

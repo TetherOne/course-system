@@ -1,6 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
 
-from authapp.models import CustomUser
 from userapp.serializers import UserRegistrationSerializer
 from userapp.serializers import TeacherSerializer
 from userapp.serializers import StudentSerializer
@@ -9,6 +8,8 @@ from rest_framework.viewsets import ModelViewSet
 
 from userapp.models import TeacherProfile
 from userapp.models import StudentProfile
+
+from authapp.models import CustomUser
 
 
 class UserViewSet(ModelViewSet):

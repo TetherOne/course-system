@@ -21,8 +21,11 @@ class Question(models.Model):
         return f"{self.question_text}"
 
     def save(self, *args, **kwargs):
-        # функция для пересчета баллов за КТ в моделях Summary и PassedCheckPoint,
-        # при добавлении нового вопроса или изменении его баллов
+        """
+        Функция для пересчета баллов за КТ в моделях Summary
+        и PassedCheckPoint, при добавлении нового вопроса
+        или изменении его баллов
+        """
         super().save(*args, **kwargs)
         passed_checkpoints = self.checkpoint.passed_checkpoints.all()
 
@@ -47,16 +50,26 @@ class Answer(models.Model):
         on_delete=models.CASCADE,
         related_name="answers",
     )
-    answer_text = models.CharField(null=True, max_length=1000, blank=True)
+    answer_text = models.CharField(
+        null=True,
+        max_length=1000,
+        blank=True,
+    )
     is_correct = models.BooleanField(default=False)
 
 
-def answer_file_directory_path(instance: "AnswerFile", filename: str) -> str:
-    # функция для сохранения файлов, которые студент прикрепил к ответу на вопрос
+def answer_file_directory_path(
+    instance: "AnswerFile",
+    filename: str,
+) -> str:
+    """
+    Функция для сохранения файлов, которые студент
+    прикрепил к ответу на вопрос
+    """
     valid_filename = re.sub(
         r"[\\/*?:\"<>|]",
         "_",
-        instance.answer.question.checkpoint.title,  # используем информацию из связанного вопроса
+        instance.answer.question.checkpoint.title,
     )
     return f"answers/{valid_filename}/{filename}"
 
@@ -76,8 +89,14 @@ class AnswerFile(models.Model):
     )
 
 
-def question_file_directory_path(instance: "QuestionFile", filename: str) -> str:
-    # функция для сохранения файлов, которые преподаватель прикрепил к вопросу
+def question_file_directory_path(
+    instance: "QuestionFile",
+    filename: str,
+) -> str:
+    """
+    Функция для сохранения файлов, которые преподаватель
+    прикрепил к вопросу
+    """
     valid_filename = re.sub(
         r"[\\/*?:\"<>|]",
         "_",

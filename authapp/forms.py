@@ -43,21 +43,30 @@ class CustomUserCreationForm(UserCreationForm):
         ]
 
     def __init__(self, *args, **kwargs):
-        # убирает повторный ввод пароля при регистрации
+        """
+        Убирает повторный ввод пароля при регистрации
+        """
         super().__init__(*args, **kwargs)
         self.fields.pop("password2")
 
     def save(self, commit=True):
 
-        user = super(CustomUserCreationForm, self).save(commit=False)
+        user = super(
+            CustomUserCreationForm,
+            self,
+        ).save(commit=False)
         user.email = self.cleaned_data["email"]
 
         if commit:
             user.save()
             if self.cleaned_data["is_teacher"]:
-                TeacherProfile.objects.create(user=user)
+                TeacherProfile.objects.create(
+                    user=user,
+                )
             else:
-                StudentProfile.objects.create(user=user)
+                StudentProfile.objects.create(
+                    user=user,
+                )
             send_email_after_registration_task.delay(
                 user.email,
             )
@@ -65,7 +74,10 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class CustomPasswordResetForm(PasswordResetForm):
-    # форма для восстановления пароля через почту
+    """
+    Форма для восстановления пароля через почту
+    """
+
     def send_mail(
         self,
         subject_template_name,
