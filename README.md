@@ -57,6 +57,7 @@
   - RabbitMQ
   - Celery
   - Redis
+  - Black
   - Vue.js
 
 ## 3. Источники
