@@ -58,7 +58,7 @@ class CustomUserCreationForm(UserCreationForm):
                 TeacherProfile.objects.create(user=user)
             else:
                 StudentProfile.objects.create(user=user)
-            send_email_after_registration_task.delay(user.email)
+            send_email_after_registration_task.apply_async((user.email,), countdown=2)
         return user
 
 
