@@ -22,14 +22,20 @@ class EnrollmentViewSet(ModelViewSet):
     queryset = Enrollment.objects.prefetch_related("student")
     serializer_class = EnrollmentSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["student", "course"]
+    filterset_fields = [
+        "student",
+        "course",
+    ]
 
 
 class CourseViewSet(ModelViewSet):
 
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filter_backends = [
+        DjangoFilterBackend,
+        OrderingFilter,
+    ]
     filterset_fields = ["teacher_profile"]
     ordering_fields = ["created_at"]
 
@@ -39,7 +45,10 @@ class ModuleViewSet(ModelViewSet):
     queryset = Module.objects.all()
     serializer_class = ModuleSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["course", "module_name"]
+    filterset_fields = [
+        "course",
+        "module_name",
+    ]
 
 
 class LessonViewSet(ModelViewSet):

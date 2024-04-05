@@ -1,7 +1,12 @@
-from django.conf import settings
-from django.core.mail import EmailMultiAlternatives, send_mail
+from django.core.mail import EmailMultiAlternatives
+
+from django.template.loader import render_to_string
+
+from django.utils.html import strip_tags
 
 from django.template import loader
+
+from django.conf import settings
 
 from celery import shared_task
 
@@ -41,17 +46,28 @@ def send_email_to_reset_password_task(
             html_email,
             "text/html",
         )
-
     email_message.send()
 
 
 @shared_task
 def send_email_after_registration_task(email):
 
-    send_mail(
-        'Спасибо за регистрацию!',
-        'Добро пожаловать! Благодарим вас за регистрацию на нашем сайте.',
-        f"{settings.EMAIL_HOST_USER}",
-        [email],
-        fail_silently=False,
+    subject = "Вас приветствует scart сервис!"
+    html_message = render_to_string(
+        "authapp/after_registration.html",
     )
+    plain_message = strip_tags(html_message)
+    from_email = settings.EMAIL_HOST_USER
+    to_email = [email]
+
+    email = EmailMultiAlternatives(
+        subject,
+        plain_message,
+        from_email,
+        to_email,
+    )
+    email.attach_alternative(
+        html_message,
+        "text/html",
+    )
+    email.send(fail_silently=False)

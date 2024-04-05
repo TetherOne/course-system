@@ -50,8 +50,13 @@ class Course(models.Model):
         super().save(*args, **kwargs)
 
 
-def lesson_video_directory_path(instance: "LessonVideo", filename: str) -> str:
-    # функция для сохранения видео курса
+def lesson_video_directory_path(
+    instance: "LessonVideo",
+    filename: str,
+) -> str:
+    """
+    Функция для сохранения видео курса
+    """
     valid_filename = re.sub(
         r"[\\/*?:\"<>|]",
         "_",
@@ -81,8 +86,13 @@ class Lesson(models.Model):
         return f"{self.lesson_name}"
 
 
-def other_file_directory_path(instance: "LessonOtherFile", filename: str) -> str:
-    # функция для сохранения дополнительных файлов курса
+def other_file_directory_path(
+    instance: "LessonOtherFile",
+    filename: str,
+) -> str:
+    """
+    Функция для сохранения дополнительных файлов курса
+    """
     valid_filename = re.sub(
         r"[\\/*?:\"<>|]",
         "_",
