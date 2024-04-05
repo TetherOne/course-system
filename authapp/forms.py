@@ -20,6 +20,7 @@ from userapp.models import TeacherProfile
 from .models import CustomUser
 
 from django import forms
+from .tasks import send_email_after_registration_task
 
 
 UserModel = get_user_model()
@@ -47,7 +48,7 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields.pop("password2")
 
     def save(self, commit=True):
-        # регистрирует пользователя
+
         user = super(CustomUserCreationForm, self).save(commit=False)
         user.email = self.cleaned_data["email"]
 
@@ -57,6 +58,7 @@ class CustomUserCreationForm(UserCreationForm):
                 TeacherProfile.objects.create(user=user)
             else:
                 StudentProfile.objects.create(user=user)
+            send_email_after_registration_task.delay(user.email)
         return user
 
 
