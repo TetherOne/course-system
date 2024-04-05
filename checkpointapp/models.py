@@ -45,7 +45,9 @@ class PassedCheckPoint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        # функция для подсчета процента и статуса (зачет/не зачет) за КТ
+        """
+        Функция для подсчета процента и статуса (зачет/не зачет) за КТ
+        """
         if self.checkpoint:
             total_max_points = sum(
                 question.max_points for question in self.checkpoint.questions.all()
@@ -98,7 +100,9 @@ class Summary(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def calculate_summary_points(self):
-        # функция для подсчета максимального балла за все КТ этого курса
+        """
+        Функция для подсчета максимального балла за все КТ этого курса
+        """
         if self.course:
             self.current_points = (
                 PassedCheckPoint.objects.filter(
@@ -118,8 +122,10 @@ class Summary(models.Model):
             )
 
     def calculate_current_points(self):
-        # функция для подсчета текущего балла у студента
-        # за все КТ этого курса
+        """
+        Функция для подсчета текущего балла у студента
+        за все КТ этого курса
+        """
         if self.course:
             self.current_points = (
                 PassedCheckPoint.objects.filter(
