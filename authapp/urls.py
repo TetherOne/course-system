@@ -1,4 +1,5 @@
-from authapp.views import MyPasswordResetCompleteView
+from authapp.serializers import CurrentUserSerializer
+from authapp.views import MyPasswordResetCompleteView, CurrentUserView
 from authapp.views import MyPasswordResetConfirmView
 from authapp.views import MyPasswordResetDoneView
 from authapp.views import MyPasswordResetView
@@ -54,4 +55,7 @@ urlpatterns = [
         MyPasswordResetCompleteView.as_view(),
         name="password_reset_complete",
     ),
+    path(
+        "current-user/", CurrentUserView.as_view(), name="currentuser"
+    )
 ]

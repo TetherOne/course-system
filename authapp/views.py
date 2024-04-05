@@ -4,6 +4,11 @@ from django.contrib.auth.views import PasswordResetDoneView
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.auth.views import LoginView
 
+from authapp.serializers import CurrentUserSerializer
+
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from authapp.forms import CustomPasswordResetForm
 from authapp.forms import CustomUserCreationForm
 
@@ -21,6 +26,8 @@ from django.http import HttpRequest
 
 from django.urls import reverse_lazy
 from django.urls import reverse
+
+from rest_framework import status
 
 
 class AboutMeView(TemplateView):
@@ -86,3 +93,10 @@ class MyPasswordResetConfirmView(PasswordResetConfirmView):
 class MyPasswordResetCompleteView(PasswordResetCompleteView):
 
     template_name = "authapp/password_reset_complete.html"
+
+
+class CurrentUserView(APIView):
+
+    def get(self, request):
+        serializer = CurrentUserSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
