@@ -46,7 +46,8 @@ class PassedCheckPoint(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Функция для подсчета процента и статуса (зачет/не зачет) за КТ
+        For calculating the percentage and status
+        (pass/fail) for a checkpoint
         """
         if self.checkpoint:
             total_max_points = sum(
@@ -101,7 +102,8 @@ class Summary(models.Model):
 
     def calculate_summary_points(self):
         """
-        Функция для подсчета максимального балла за все КТ этого курса
+        To calculate the maximum score
+        for all checkpoints of this course
         """
         if self.course:
             self.current_points = (
@@ -123,8 +125,8 @@ class Summary(models.Model):
 
     def calculate_current_points(self):
         """
-        Функция для подсчета текущего балла у студента
-        за все КТ этого курса
+        To calculate the student's current score
+        for all checkpoints of this course
         """
         if self.course:
             self.current_points = (

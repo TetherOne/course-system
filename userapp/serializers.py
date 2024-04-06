@@ -23,7 +23,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """
-        Функция для создания профиля пользователя
+        For creating a user profile
         """
         is_teacher = validated_data.pop("is_teacher", False)
         user = CustomUser.objects.create_user(**validated_data)

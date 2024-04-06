@@ -75,7 +75,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 class CustomPasswordResetForm(PasswordResetForm):
     """
-    Форма для восстановления пароля через почту
+    Form for recovery password via mail
     """
     def send_mail(
         self,

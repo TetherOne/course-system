@@ -22,9 +22,9 @@ class Question(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Функция для пересчета баллов за КТ в моделях Summary
-        и PassedCheckPoint, при добавлении нового вопроса
-        или изменении его баллов
+        For recalculating points for control points in Summary
+        models and PassedCheckPoint, when adding a new question
+        or changing his points
         """
         super().save(*args, **kwargs)
         passed_checkpoints = self.checkpoint.passed_checkpoints.all()
@@ -63,8 +63,8 @@ def answer_file_directory_path(
     filename: str,
 ) -> str:
     """
-    Функция для сохранения файлов, которые студент
-    прикрепил к ответу на вопрос
+    For saving files that the student
+    attached to the answer to the question
     """
     valid_filename = re.sub(
         r"[\\/*?:\"<>|]",
@@ -94,8 +94,8 @@ def question_file_directory_path(
     filename: str,
 ) -> str:
     """
-    Функция для сохранения файлов, которые преподаватель
-    прикрепил к вопросу
+    For saving files that the teacher
+    attached to the question
     """
     valid_filename = re.sub(
         r"[\\/*?:\"<>|]",
