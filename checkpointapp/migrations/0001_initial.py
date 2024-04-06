@@ -37,8 +37,22 @@ class Migration(migrations.Migration):
                 ("id", models.AutoField(primary_key=True, serialize=False)),
                 ("points", models.IntegerField()),
                 ("percent", models.FloatField(blank=True, null=True)),
-                ("status", models.CharField(blank=True, max_length=255, null=True)),
-                ("grade", models.CharField(blank=True, max_length=255, null=True)),
+                (
+                    "status",
+                    models.CharField(
+                        blank=True,
+                        max_length=255,
+                        null=True,
+                    ),
+                ),
+                (
+                    "grade",
+                    models.CharField(
+                        blank=True,
+                        max_length=255,
+                        null=True,
+                    ),
+                ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 (
                     "checkpoint",
@@ -64,7 +78,13 @@ class Migration(migrations.Migration):
             name="Summary",
             fields=[
                 ("id", models.AutoField(primary_key=True, serialize=False)),
-                ("current_points", models.IntegerField(default=0, editable=False)),
+                (
+                    "current_points",
+                    models.IntegerField(
+                        default=0,
+                        editable=False,
+                    ),
+                ),
                 ("total", models.IntegerField(default=0)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 (

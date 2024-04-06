@@ -52,13 +52,24 @@
 
 ## 2. Технологии
 
-  - Django + DRF
-  - SQLite (временно)
-  - RabbitMQ
-  - Celery
-  - Redis
-  - Black
-  - Vue.js
+#### Frameworks
+    - Django + DRF
+    - Vue.js
+
+#### Databases
+    - SQLite (temporarily)
+    - Redis
+
+#### Message Broker
+    - RabbitMQ
+
+#### Task Queues
+    - Celery
+
+#### Linters
+    - Flake8
+    - Black
+
 
 ## 3. Источники
   - https://pypi.org/

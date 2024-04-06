@@ -6,18 +6,19 @@ from django.contrib.auth.views import LoginView
 
 from authapp.serializers import CurrentUserSerializer
 
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
 from authapp.forms import CustomPasswordResetForm
 from authapp.forms import CustomUserCreationForm
 
 from django.views.generic import TemplateView
 from django.views.generic import FormView
 
+from rest_framework.response import Response
+
 from django.contrib.auth import authenticate
 from django.contrib.auth import logout
 from django.contrib.auth import login
+
+from rest_framework.views import APIView
 
 from django.shortcuts import redirect
 
