@@ -101,7 +101,10 @@ def other_file_directory_path(
         "_",
         instance.lesson.lesson_name,
     )
-    return f"lessons/{instance.lesson.module.course.course_name}/{valid_filename}/{filename}"
+    return (
+        f"lessons/{instance.lesson.module.course.course_name}/"
+        f"{valid_filename}/{filename}"
+    )
 
 
 class LessonOtherFile(models.Model):

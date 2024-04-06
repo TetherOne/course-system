@@ -18,14 +18,42 @@ class Migration(migrations.Migration):
             name="StudentProfile",
             fields=[
                 ("id", models.AutoField(primary_key=True, serialize=False)),
-                ("name", models.CharField(blank=True, max_length=100, null=True)),
-                ("surname", models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "name",
+                    models.CharField(
+                        blank=True,
+                        max_length=100,
+                        null=True,
+                    ),
+                ),
+                (
+                    "surname",
+                    models.CharField(
+                        blank=True,
+                        max_length=100,
+                        null=True,
+                    ),
+                ),
                 (
                     "father_name",
                     models.CharField(blank=True, max_length=100, null=True),
                 ),
-                ("faculty", models.CharField(blank=True, max_length=100, null=True)),
-                ("group", models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "faculty",
+                    models.CharField(
+                        blank=True,
+                        max_length=100,
+                        null=True,
+                    ),
+                ),
+                (
+                    "group",
+                    models.CharField(
+                        blank=True,
+                        max_length=100,
+                        null=True,
+                    ),
+                ),
                 (
                     "avatar",
                     models.ImageField(
@@ -47,13 +75,34 @@ class Migration(migrations.Migration):
             name="TeacherProfile",
             fields=[
                 ("id", models.AutoField(primary_key=True, serialize=False)),
-                ("name", models.CharField(blank=True, max_length=100, null=True)),
-                ("surname", models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "name",
+                    models.CharField(
+                        blank=True,
+                        max_length=100,
+                        null=True,
+                    ),
+                ),
+                (
+                    "surname",
+                    models.CharField(
+                        blank=True,
+                        max_length=100,
+                        null=True,
+                    ),
+                ),
                 (
                     "father_name",
                     models.CharField(blank=True, max_length=100, null=True),
                 ),
-                ("faculty", models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "faculty",
+                    models.CharField(
+                        blank=True,
+                        max_length=100,
+                        null=True,
+                    ),
+                ),
                 (
                     "avatar",
                     models.ImageField(

@@ -102,7 +102,10 @@ def question_file_directory_path(
         "_",
         instance.question.question_text,
     )
-    return f"questions/{instance.question.checkpoint.title}/{valid_filename}/{filename}"
+    return (
+        f"questions/{instance.question.checkpoint.title}/"
+        f"{valid_filename}/{filename}"
+    )
 
 
 class QuestionFile(models.Model):

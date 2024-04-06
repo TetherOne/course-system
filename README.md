@@ -52,12 +52,15 @@
 
 ## 2. Технологии
 
+#### Linters
+    - Flake8
+    - Black
+
   - Django + DRF
   - SQLite (временно)
   - RabbitMQ
   - Celery
   - Redis
-  - Black
   - Vue.js
 
 ## 3. Источники
