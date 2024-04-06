@@ -63,7 +63,7 @@
 #### Message Broker
     - RabbitMQ
 
-#### Task Queue
+#### Task Queues
     - Celery
 
 #### Linters
