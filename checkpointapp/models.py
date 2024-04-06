@@ -22,6 +22,19 @@ class CheckPoint(models.Model):
     def __str__(self):
         return f"{self.title}"
 
+    def save(self, *args, **kwargs):
+        """
+        After saving a new checkpoint, the points
+        are recalculated in the Summary of this course
+        """
+        super().save(*args, **kwargs)
+        for module in self.module.course.modules.all():
+            for summary in Summary.objects.filter(
+                course=module.course,
+            ):
+                summary.calculate_summary_points()
+                summary.save()
+
 
 class PassedCheckPoint(models.Model):
 
@@ -77,7 +90,7 @@ class PassedCheckPoint(models.Model):
         ).first()
 
         if summary:
-            summary.calculate_current_points()
+            summary.calculate_summary_points()
             summary.save()
 
 
@@ -123,20 +136,6 @@ class Summary(models.Model):
                 or 0
             )
 
-    def calculate_current_points(self):
-        """
-        To calculate the student's current score
-        for all checkpoints of this course
-        """
-        if self.course:
-            self.current_points = (
-                PassedCheckPoint.objects.filter(
-                    student=self.student,
-                    checkpoint__module__course=self.course,
-                ).aggregate(Sum("points"))["points__sum"]
-                or 0
-            )
-
     def save(self, *args, **kwargs):
-        self.calculate_summary_points()
         super().save(*args, **kwargs)
+        self.calculate_summary_points()
