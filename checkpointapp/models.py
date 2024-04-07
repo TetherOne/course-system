@@ -2,6 +2,8 @@ from checkpointapp.tasks import calculate_percentage_and_status
 
 from userapp.models import StudentProfile
 
+from .tasks import set_summary_grade
+
 from courseapp.models import Module
 
 from django.db.models import Sum
@@ -60,18 +62,27 @@ class PassedCheckPoint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-
+        """
+        Recalculation of points in the PassedCheckPoint table.
+        Checking the presence of a summary table for a given
+        student and course. If there is no entry in the
+        Summary table - it will be created.
+        """
         calculate_percentage_and_status(self)
-
         super().save(*args, **kwargs)
-        summary = self.student.summaries.filter(
+        summary = Summary.objects.filter(
+            student=self.student,
             course=self.checkpoint.module.course,
         ).first()
+        if not summary:
+            summary = Summary.objects.create(
+                student=self.student,
+                course=self.checkpoint.module.course,
+            )
 
-        if summary:
-            summary.calculate_summary_points()
-            summary.save()
-from .tasks import set_summary_grade
+        summary.calculate_summary_points()
+        summary.save()
+
 
 class Summary(models.Model):
 

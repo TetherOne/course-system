@@ -35,10 +35,10 @@ def set_summary_grade(instance):
     else:
         percentage = (instance.current_points / instance.total) * 100
         if percentage < 41:
-            instance.grade = '2'
+            instance.grade = "2"
         elif 41 <= percentage < 63:
-            instance.grade = '3'
+            instance.grade = "3"
         elif 63 <= percentage < 85:
-            instance.grade = '4'
+            instance.grade = "4"
         else:
-            instance.grade = '5'
+            instance.grade = "5"
