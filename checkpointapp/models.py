@@ -71,7 +71,7 @@ class PassedCheckPoint(models.Model):
         if summary:
             summary.calculate_summary_points()
             summary.save()
-
+from .tasks import set_summary_grade
 
 class Summary(models.Model):
 
@@ -115,24 +115,7 @@ class Summary(models.Model):
                 )["questions__max_points__sum"]
                 or 0
             )
-        self.set_summary_grade()
-
-    def set_summary_grade(self):
-        """
-        To calculate the grade of this course
-        """
-        if self.total == 0:
-            self.grade = None
-        else:
-            percentage = (self.current_points / self.total) * 100
-            if percentage < 41:
-                self.grade = '2'
-            elif 41 <= percentage < 63:
-                self.grade = '3'
-            elif 63 <= percentage < 85:
-                self.grade = '4'
-            else:
-                self.grade = '5'
+        set_summary_grade(self)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
