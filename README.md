@@ -50,7 +50,7 @@
         помощи почты и пароля, если пользователь забыл пароль, то его можно будет
         восстановить через почту (на нее придет сообщение со ссылкой для сброса пароля).
 
-## 2. Технологии
+### 2. Technologies
 
 ### Frameworks
     - Django + DRF
@@ -71,7 +71,7 @@
     - Black
 
 
-## 3. Источники
+## 3. Sources
   - https://pypi.org/
   - https://django.fun/docs/
   - https://docs.djangoproject.com/en/5.0/
