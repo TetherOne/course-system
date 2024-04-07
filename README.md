@@ -52,21 +52,21 @@
 
 ## 2. Technologies
 
-Frameworks
+### Frameworks
     - Django + DRF
     - Vue.js
 
-#### Databases
+### Databases
     - SQLite (temporarily)
     - Redis
 
-#### Message Broker
+### Message Broker
     - RabbitMQ
 
-#### Task Queues
+### Task Queues
     - Celery
 
-#### Linters
+### Linters
     - Flake8
     - Black
 
