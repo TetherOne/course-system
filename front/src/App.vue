@@ -3,21 +3,17 @@ import Header from './components/elements/Header.vue';
 import {
     useUserStore
 } from './stores/user.js';
-
 import {
     getStudent,
     getStudentCourses,
     getTeacher,
     getTeacherCourses
 } from './requests.js';
-
 import {
     studentRole,
     teacherRole
 } from './stores/user.js';
 
-
-const stdAvatar = './src/assets/avatar.png';
 
 
 export default {
@@ -63,7 +59,7 @@ export default {
             this.user.name = info.name;
             this.user.fatherName = info.fatherName;
             this.user.faculty = info.faculty;
-            this.user.avatar = info.avatar === null ? stdAvatar : info.avatar;
+            this.user.avatar = info.avatar;
         },
 
         async loadCourses() {

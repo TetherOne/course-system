@@ -2,6 +2,9 @@
 import {
     useUserStore
 } from '../../stores/user.js';
+import Avatar from 'primevue/avatar';
+import 'primeicons/primeicons.css'
+
 
 
 export default {
@@ -11,6 +14,14 @@ export default {
         return {
             user
         }
+    },
+    components: {
+        Avatar
+    },
+    computed: {
+        getNameFirstLetter() {
+            return this.user.name.slice(0, 1);
+        }
     }
 }
 </script>
@@ -18,11 +29,14 @@ export default {
 
 <template>
     <div id="header" class="flex-row">
-        <a :href="user.profileLink" class="flex-row label">
-            <img id="avatar" :src="user.avatar" alt="Ваш аватар">
+        <router-link :to="user.profileLink" class="flex-row label">
+            <Avatar v-if="user.avatar === null" :label="getNameFirstLetter" shape="circle" size="large"/>
+            <Avatar v-if="user.avatar !== null" :image="user.avatar" shape="circle" size="large"/>
+
             <div>{{ user.fullName }}</div>
-        </a>
+        </router-link>
         <div class="spacer"></div>
+        <span class="pi pi-moon"></span>
         <a href="/settings">
             <img class="ico" src="/src/assets/settings.svg" alt="Настройки" title="Настройки">
         </a>

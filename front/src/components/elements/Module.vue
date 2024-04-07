@@ -58,7 +58,7 @@ export default {
 <template>
     <div class="flex-column module-card">
         <div>{{ index }}. {{ name }}</div>
-        <a class="sub" :href="`/lesson/${lesson.id}`" v-for="(lesson, i) in lessons">{{ i + 1}}. {{ lesson.name }}</a>
+        <router-link class="sub" :to="`/lesson/${lesson.id}`" v-for="(lesson, i) in lessons">{{ i + 1}}. {{ lesson.name }}</router-link>
 
         <div v-if="noLessons">{{ noLessonsWarn }}</div>
 

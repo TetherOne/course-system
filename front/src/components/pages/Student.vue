@@ -1,18 +1,14 @@
 <script>
 import CoursesList from '../elements/CoursesList.vue';
-
-import {
-    useUserStore
-} from '../../stores/user.js';
-
-import {
-    studentBySelf
-} from '../elements/CoursesList.vue';
+import {useUserStore} from '../../stores/user.js';
+import {studentBySelf} from '../elements/CoursesList.vue';
+import Button from 'primevue/button';
 
 
 export default {
     components: {
-        CoursesList
+        CoursesList,
+        Button
     },
 
     setup() {
@@ -46,6 +42,7 @@ export default {
 <template>
     <CoursesList :courses="user.courses" :view="studentBySelf"></CoursesList>
     <div v-if="noCourses">{{ noCoursesWarn }}</div>
+    <Button label="Some text"/>
 </template>
 
 

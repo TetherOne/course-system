@@ -6,11 +6,14 @@ import {
     studentLink,
     teacherLink
 } from '../router.js';
+import {
+    userRoles
+} from '#config';
 
 
 const userStoreName = 'user';
 
-const standardUserId = 1;
+const standardUserId = 2;
 
 export const guestRole = 0;
 export const studentRole = 1;
@@ -20,7 +23,7 @@ export const useUserStore = defineStore(userStoreName, {
     state: () => {
         return {
             id: standardUserId,
-            role: teacherRole,
+            role: userRoles.student,
             surname: '',
             name: '',
             fatherName: '',
@@ -35,7 +38,7 @@ export const useUserStore = defineStore(userStoreName, {
             return `${state.surname} ${state.name} ${state.fatherName}`;
         },
         profileLink: (state) => {
-            return state.role === studentRole ? studentLink : `${teacherLink}/${state.id}`;
+            return state.role === userRoles.student ? studentLink : `${teacherLink}/${state.id}`;
         }
     }
 });

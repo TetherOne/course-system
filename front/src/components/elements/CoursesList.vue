@@ -80,7 +80,8 @@ export default {
 <template>
     <div class="flex-column">
         <div class="flex-column course-card" v-for="course in courses">
-            <a :href="`/course/${course.id}`">{{ course.name }}</a>
+            <router-link :to="`/course/${course.id}`">{{ course.name }}</router-link>
+
             <a :href="`/teacher/${course.teacherId}`" v-if="view === studentBySelf">{{ course.teacherShortName }}</a>
         </div>
 
