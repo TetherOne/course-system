@@ -85,4 +85,5 @@ class SummaryAdmin(admin.ModelAdmin):
         "course",
         "total",
         "current_points",
+        "grade",
     )
