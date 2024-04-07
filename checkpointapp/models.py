@@ -90,6 +90,7 @@ class Summary(models.Model):
     )
     current_points = models.IntegerField(default=0, editable=False)
     total = models.IntegerField(default=0)
+    grade = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def calculate_summary_points(self):
@@ -114,6 +115,24 @@ class Summary(models.Model):
                 )["questions__max_points__sum"]
                 or 0
             )
+        self.set_summary_grade()
+
+    def set_summary_grade(self):
+        """
+        To calculate the grade of this course
+        """
+        if self.total == 0:
+            self.grade = None
+        else:
+            percentage = (self.current_points / self.total) * 100
+            if percentage < 41:
+                self.grade = '2'
+            elif 41 <= percentage < 63:
+                self.grade = '3'
+            elif 63 <= percentage < 85:
+                self.grade = '4'
+            else:
+                self.grade = '5'
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
