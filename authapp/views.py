@@ -95,7 +95,6 @@ class MyPasswordResetCompleteView(PasswordResetCompleteView):
 
 
 class CurrentUserView(APIView):
-
     def get(self, request):
         serializer = CurrentUserSerializer(request.user)
         return Response(

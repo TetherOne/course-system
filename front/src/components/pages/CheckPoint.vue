@@ -132,13 +132,13 @@ export default {
             <div class="flex-column question" v-for="question in questions">
                 <div>{{ question.question_text }}</div>
                 <div class="flex-row sub" v-for="answer in question.answers">
-                    <input type="radio" :name="question.id" :id="answer.id" :disabled="isPassedByStudent" v-model="answer.chosen">
+                    <input type="radio" :name="question.id" :id="answer.id" v-model="answer.chosen">
                     <label :for="answer.id">{{ answer.answer_text }}</label>
                 </div>
             </div>
         </div>
         <input v-if="user.role === studentRole()" type="submit" value="Отправить" class="submit-btn"
-               :disabled="isPassedByStudent" @click="handleCompletion">
+               @click="handleCompletion">
     </div>
 </template>
 
