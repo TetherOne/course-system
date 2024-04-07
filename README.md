@@ -52,7 +52,7 @@
 
 ## 2. Технологии
 
-#### Frameworks
+### Frameworks
     - Django + DRF
     - Vue.js
 
