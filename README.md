@@ -50,11 +50,11 @@
         помощи почты и пароля, если пользователь забыл пароль, то его можно будет
         восстановить через почту (на нее придет сообщение со ссылкой для сброса пароля).
 
-### 2. Technologies
+## 2. Technologies
 
-### Frameworks
-    Django + DRF
-    Vue.js
+Frameworks
+    - Django + DRF
+    - Vue.js
 
 #### Databases
     - SQLite (temporarily)
