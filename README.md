@@ -53,8 +53,8 @@
 ### 2. Technologies
 
 ### Frameworks
-    - Django + DRF
-    - Vue.js
+    Django + DRF
+    Vue.js
 
 #### Databases
     - SQLite (temporarily)
