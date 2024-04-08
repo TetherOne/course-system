@@ -7,10 +7,7 @@ from rest_framework import serializers
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        exclude = [
-            "is_correct",
-        ]
-
+        fields = "__all__"
 
 class QuestionSerializer(serializers.ModelSerializer):
 
