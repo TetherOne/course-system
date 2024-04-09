@@ -13,7 +13,7 @@ import {
 
 const userStoreName = 'user';
 
-const standardUserId = 2;
+const standardUserId = 3;
 
 export const guestRole = 0;
 export const studentRole = 1;
