@@ -9,7 +9,6 @@ class AnswerSerializer(serializers.ModelSerializer):
         model = Answer
         fields = "__all__"
 
-
 class QuestionSerializer(serializers.ModelSerializer):
 
     answers = AnswerSerializer(
