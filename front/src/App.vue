@@ -1,5 +1,6 @@
 <script>
 import Header from './components/elements/Header.vue';
+import Button from 'primevue/button'
 import {
     useUserStore
 } from './stores/user.js';

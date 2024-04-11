@@ -16,10 +16,7 @@ idea/
 /.idea/
 /.idea
 .idea/
-/front_vue/.vscode/
-/front_vue/node_modules/
 
-/front/.vscode/
 /front/node_modules/
 
 .pytest_cache/
@@ -30,4 +27,3 @@ idea/
 .env/
 /.env/
 /.env
-

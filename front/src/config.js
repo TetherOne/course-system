@@ -1,7 +1,7 @@
-export const backHostName = '127.0.0.1';
-export const backPort = 8000;
-export const backURL = `http://${backHostName}:${backPort}`;
+const djangoHost = '127.0.0.1';
+const djangoPort = 8000;
+export const djangoURL = `http://${djangoHost}:${djangoPort}`;
 
-export const frontHostName = 'localhost';
-export const frontPort = 5137;
-export const frontURL = `http://${frontHostName}:${frontPort}`;
+export const viteHost = 'localhost';
+export const vitePort = 8001;
+export const viteURL = `http://${viteHost}:${vitePort}`;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import {
-    frontURL
+    viteURL
 } from './config.js';
 
 import {
@@ -9,9 +9,9 @@ import {
 } from './functions.js';
 
 
-export const userAPI = `${frontURL}/api/userapp`;
-export const courseAPI = `${frontURL}/api/courseapp`;
-export const checkPointAPI = `${frontURL}/api/checkpointapp`;
+export const userAPI = `${viteURL}/api/userapp`;
+export const courseAPI = `${viteURL}/api/courseapp`;
+export const checkPointAPI = `${viteURL}/api/checkpointapp`;
 
 
 export async function getStudent(id) {
