@@ -13,7 +13,7 @@ import {
 
 const userStoreName = 'user';
 
-const standardUserId = 3;
+const standardUserId = 10;
 
 export const guestRole = 0;
 export const studentRole = 1;
@@ -23,7 +23,7 @@ export const useUserStore = defineStore(userStoreName, {
     state: () => {
         return {
             id: standardUserId,
-            role: userRoles.student,
+            role: userRoles.teacher,
             surname: '',
             name: '',
             fatherName: '',

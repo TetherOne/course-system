@@ -2,20 +2,28 @@
 import {
     getModuleLessons,
     getModuleCheckPoint
-} from '../../requests.js';
+} from '../../requests.js'
 
 import {
     studentBySelf,
     teacherBySelf
-} from '../pages/Course.vue';
+} from '../pages/Course.vue'
+
+import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
+
 
 
 export default {
-    setup() {
+    setup () {
         return {
             studentBySelf,
             teacherBySelf
         }
+    },
+    components: {
+        Button,
+        InputText
     },
 
     props: {
@@ -33,22 +41,30 @@ export default {
         }
     },
 
-    data() {
+    data () {
         return {
             lessons: [],
             noLessonsWarn: 'Здесь пока нет уроков...',
-            checkPoint: {}
+            checkPoint: {},
+            addLessonFormVisible: false,
+            newLesson: {
+                name: '',
+                description: '',
+                video: '',
+                otherFiles: []
+            },
+            addCheckpointFormVisible: false
         }
     },
 
-    async created() {
-        this.lessons = await getModuleLessons(this.id);
-        this.checkPoint = await getModuleCheckPoint(this.id);
+    async created () {
+        this.lessons = await getModuleLessons(this.id)
+        this.checkPoint = await getModuleCheckPoint(this.id)
     },
 
     computed: {
-        noLessons() {
-            return !this.lessons.length;
+        noLessons () {
+            return !this.lessons.length
         }
     }
 }
@@ -58,11 +74,23 @@ export default {
 <template>
     <div class="flex-column module-card">
         <div>{{ index }}. {{ name }}</div>
-        <router-link class="sub" :to="`/lesson/${lesson.id}`" v-for="(lesson, i) in lessons">{{ i + 1}}. {{ lesson.name }}</router-link>
+        <router-link class="sub" :to="`/lesson/${lesson.id}`" v-for="(lesson, i) in lessons">{{ i + 1 }}. {{
+                lesson.name
+            }}
+        </router-link>
 
         <div v-if="noLessons">{{ noLessonsWarn }}</div>
 
         <a class="check-point-link" :href="`/checkPoint/${checkPoint.id}`">КТ "{{ checkPoint.title }}"</a>
+
+        <Button v-if="view===teacherBySelf" label="Добавить урок" @click="addLessonFormVisible=!addLessonFormVisible"/>
+        <div v-if="addLessonFormVisible" class="sub flex-column flex-start">
+            <label>Название</label>
+            <InputText v-model="newLesson.name"/>
+            <small>Введите название урока</small>
+        </div>
+
+        <Button v-if="view===teacherBySelf" label="Добавить КТ"/>
     </div>
 </template>
 
@@ -93,5 +121,9 @@ export default {
 
 .check-point-link {
     background-color: #EB946F;
+}
+
+Button {
+    align-self: flex-start;
 }
 </style>

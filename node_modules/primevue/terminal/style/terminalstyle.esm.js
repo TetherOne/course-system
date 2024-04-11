@@ -1,0 +1,17 @@
+import BaseStyle from 'primevue/base/style';
+
+var classes = {
+  root: 'p-terminal p-component',
+  content: 'p-terminal-content',
+  prompt: 'p-terminal-prompt',
+  command: 'p-terminal-command',
+  response: 'p-terminal-response',
+  container: 'p-terminal-prompt-container',
+  commandText: 'p-terminal-input'
+};
+var TerminalStyle = BaseStyle.extend({
+  name: 'terminal',
+  classes: classes
+});
+
+export { TerminalStyle as default };

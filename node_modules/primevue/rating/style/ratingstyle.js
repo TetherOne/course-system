@@ -1,0 +1,44 @@
+this.primevue = this.primevue || {};
+this.primevue.rating = this.primevue.rating || {};
+this.primevue.rating.style = (function (BaseStyle) {
+    'use strict';
+
+    function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+    var BaseStyle__default = /*#__PURE__*/_interopDefaultLegacy(BaseStyle);
+
+    var classes = {
+      root: function root(_ref) {
+        var props = _ref.props;
+        return ['p-rating', {
+          'p-readonly': props.readonly,
+          'p-disabled': props.disabled
+        }];
+      },
+      cancelItem: function cancelItem(_ref2) {
+        var instance = _ref2.instance;
+        return ['p-rating-item p-rating-cancel-item', {
+          'p-focus': instance.focusedOptionIndex === 0 && instance.isFocusVisibleItem
+        }];
+      },
+      cancelIcon: 'p-rating-icon p-rating-cancel',
+      item: function item(_ref3) {
+        var instance = _ref3.instance,
+          props = _ref3.props,
+          value = _ref3.value;
+        return ['p-rating-item', {
+          'p-rating-item-active': value <= props.modelValue,
+          'p-focus': value === instance.focusedOptionIndex && instance.isFocusVisibleItem
+        }];
+      },
+      onIcon: 'p-rating-icon',
+      offIcon: 'p-rating-icon'
+    };
+    var RatingStyle = BaseStyle__default["default"].extend({
+      name: 'rating',
+      classes: classes
+    });
+
+    return RatingStyle;
+
+})(primevue.base.style);

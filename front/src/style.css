@@ -91,3 +91,7 @@ table, th, td {
 th, td {
     padding: var(--std-padding);
 }
+
+.flex-start {
+    align-items: flex-start;
+}

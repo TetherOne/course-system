@@ -1,10 +1,11 @@
-<script>
+<script lang="ts">
 import {
     useUserStore
 } from '../../stores/user.js';
 import Avatar from 'primevue/avatar';
 import 'primeicons/primeicons.css'
-
+let a = 5;
+let b: number = 5;
 
 
 export default {
