@@ -4,44 +4,19 @@ import {
 } from 'vue-router';
 
 import Student from '#pages/Student';
-import Teacher from '#pages/Teacher';
-import Course from '#pages/Course';
-import Lesson from '#pages/Lesson';
-import Checkpoint from '#pages/CheckPoint'
-import Participants from '#pages/Participants';
 
 
-export const studentLink = '/student';
-export const teacherLink = '/teacher';
-const courseLink = '/course';
-const lessonLink = '/lesson';
-const checkPointLink = '/checkPoint';
-const participantsLink = '/participants';
+export const studentPath = '/student';
+export const teacherPath = '/teacher/:id';
+const coursePath = '/course/:id';
+const lessonPath = '/lesson/:id';
+const checkpointPath = '/checkPoint/:id';
+const participantsPath = '/participants/:courseId';
 
 const routes = [
     {
-        path: studentLink,
+        path: studentPath,
         component: Student
-    },
-    {
-        path: `${teacherLink}/:id`,
-        component: Teacher
-    },
-    {
-        path: `${courseLink}/:id`,
-        component: Course
-    },
-    {
-        path: `${lessonLink}/:id`,
-        component: Lesson
-    },
-    {
-        path: `${checkPointLink}/:id`,
-        component: Checkpoint
-    },
-    {
-        path: `${participantsLink}/:id`,
-        component: Participants
     }
 ];
 

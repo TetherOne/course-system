@@ -8,7 +8,6 @@ import {
 } from '#config';
 
 
-
 export default defineConfig({
     plugins: [vue()],
     server: {

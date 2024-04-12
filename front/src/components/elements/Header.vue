@@ -1,53 +1,42 @@
-<script>
-import {
-    useUserStore
-} from '../../stores/user.js';
+<script setup>
+import Panel from 'primevue/panel';
+import Avatar from 'primevue/avatar';
+import Button from 'primevue/button';
+
+import useUserStore from '#store';
 
 
-export default {
-    setup() {
-        const user = useUserStore();
-
-        return {
-            user
-        }
-    }
-}
+const user = useUserStore();
 </script>
 
-
 <template>
-    <div id="header" class="flex-row">
-        <a :href="user.profileLink" class="flex-row label">
-            <img id="avatar" :src="user.avatar" alt="Ваш аватар">
-            <div>{{ user.fullName }}</div>
-        </a>
-        <div class="spacer"></div>
-        <a href="/settings">
-            <img class="ico" src="/src/assets/settings.svg" alt="Настройки" title="Настройки">
-        </a>
-        <a href="/exit">
-            <img src="/src/assets/logOut.svg" alt="Выход" class="ico" title="Выход">
-        </a>
-    </div>
+    <Panel class="align-self-stretch">
+        <template #header>
+            <router-link :to="user.profileLink" class="flex-row align-items-center">
+                <Avatar v-if="user.avatar === null" :label="user.nameFirstLetter" size="large" shape="circle"/>
+                <Avatar v-if="user.avatar !== null" :image="user.avatar" size="large" shape="circle"/>
+                <div id="username">{{ user.fullName }}</div>
+            </router-link>
+        </template>
+        <template #icons>
+            <div class="flex-row buttons">
+                <Button icon="pi pi-cog"/>
+                <Button icon="pi pi-moon"/>
+                <Button icon="pi pi-sign-out"/>
+            </div>
+        </template>
+    </Panel>
 </template>
 
-
 <style scoped>
-#header {
-    background-color: var(--header-background-color);
-    align-self: stretch;
-    padding: var(--std-padding);
-    align-items: center;
+.p-panel {
+    background-color: var(--theme-color);
+    border: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
-#avatar {
-    width: var(--avatar-width);
-    height: var(--avatar-width);
-}
-
-#header a {
-    color: black;
-    text-decoration: none;
+#username {
+    color: white;
 }
 </style>
