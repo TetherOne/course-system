@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 import {
-    courseAPI
+    courseAppAPI
 } from '../../requests.js';
 
 import {
@@ -56,7 +56,7 @@ export default {
                 return;
             }
 
-            await axios.post(`${courseAPI}/courses/`, {
+            await axios.post(`${courseAppAPI}/courses/`, {
                 course_name: this.newCourseName,
                 description: this.newCourseDescription,
                 status: true,

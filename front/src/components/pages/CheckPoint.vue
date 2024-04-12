@@ -5,7 +5,7 @@ import {
     getCheckPoint,
     getStudentPassedCheckPoints,
     getCheckPointResults,
-    checkPointAPI
+    checkpointAppAPI
 } from '../../requests.js';
 
 import {
@@ -100,7 +100,7 @@ export default {
                 checkpoint: this.id,
                 points: this.score
             })
-            await axios.post(`${checkPointAPI}/passed-checkpoints/`, {
+            await axios.post(`${checkpointAppAPI}/passed-checkpoints/`, {
                 student: this.user.id,
                 checkpoint: this.id,
                 points: this.score

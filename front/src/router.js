@@ -3,12 +3,12 @@ import {
     createWebHistory
 } from 'vue-router';
 
-import Student from './components/pages/Student.vue';
-import Teacher from './components/pages/Teacher.vue';
-import Course from './components/pages/Course.vue';
-import Lesson from './components/pages/Lesson.vue';
-import CheckPoint from './components/pages/CheckPoint.vue'
-import Participants from './components/pages/Participants.vue';
+import Student from '#pages/Student';
+import Teacher from '#pages/Teacher';
+import Course from '#pages/Course';
+import Lesson from '#pages/Lesson';
+import Checkpoint from '#pages/CheckPoint'
+import Participants from '#pages/Participants';
 
 
 export const studentLink = '/student';
@@ -37,13 +37,14 @@ const routes = [
     },
     {
         path: `${checkPointLink}/:id`,
-        component: CheckPoint
+        component: Checkpoint
     },
     {
         path: `${participantsLink}/:id`,
         component: Participants
     }
 ];
+
 
 export default createRouter({
     history: createWebHistory(),

@@ -1,35 +1,28 @@
 import axios from 'axios';
 
-import {
-    viteURL
-} from './config.js';
-
-import {
-    shortenName
-} from './functions.js';
+import { viteURL } from '#config';
 
 
-export const userAPI = `${viteURL}/api/userapp`;
-export const courseAPI = `${viteURL}/api/courseapp`;
-export const checkPointAPI = `${viteURL}/api/checkpointapp`;
+const API = `${viteURL}/api`;
+const userAppAPI = `${API}/userapp`;
+const studentsAPI = `${userAppAPI}/students`;
+const teachersAPI = `${userAppAPI}/teachers`;
+const courseAppAPI = `${API}/courseapp`;
+const checkpointAppAPI = `${API}/checkpointapp`;
+
+const standardConfig = {
+    params: {
+        format: 'json'
+    }
+};
 
 
 export async function getStudent(id) {
-    const rawStudent = (await axios.get(`${userAPI}/students/${id}/?format=json`)).data;
-
-    return {
-        id: rawStudent.id,
-        surname: rawStudent.surname,
-        name: rawStudent.name,
-        fatherName: rawStudent.father_name,
-        faculty: rawStudent.faculty,
-        group: rawStudent.group,
-        avatar: rawStudent.avatar
-    }
+    return (await axios.get(`${userAppAPI}/students`, standardConfig)).data;
 }
 
 async function getStudentEnrollments(id) {
-    const rawEnrollments = (await axios.get(`${courseAPI}/enrollments/?student=${id}&format=json`)).data;
+    const rawEnrollments = (await axios.get(`${courseAppAPI}/enrollments/?student=${id}&format=json`)).data;
     const enrollments = rawEnrollments.map(enrollment => {
         return {
             id: enrollment.id,
@@ -57,7 +50,7 @@ export async function getStudentCourses(id) {
 }
 
 export async function getCourse(id) {
-    const rawCourse = (await axios.get(`${courseAPI}/courses/${id}/?format=json`)).data;
+    const rawCourse = (await axios.get(`${courseAppAPI}/courses/${id}/?format=json`)).data;
 
     return {
         id: rawCourse.id,
@@ -69,7 +62,7 @@ export async function getCourse(id) {
 }
 
 export async function getTeacher(id) {
-    const rawTeacher = (await axios.get(`${userAPI}/teachers/${id}/?format=json`)).data;
+    const rawTeacher = (await axios.get(`${userAppAPI}/teachers/${id}/?format=json`)).data;
 
     return {
         id: rawTeacher.id,
@@ -82,7 +75,7 @@ export async function getTeacher(id) {
 }
 
 export async function getTeacherCourses(id) {
-    const rawCourses = (await axios.get(`${courseAPI}/courses/?teacher_profile=${id}&format=json`)).data;
+    const rawCourses = (await axios.get(`${courseAppAPI}/courses/?teacher_profile=${id}&format=json`)).data;
     const courses = rawCourses.map(course => {
         return {
             id: course.id,
@@ -96,7 +89,7 @@ export async function getTeacherCourses(id) {
 }
 
 export async function getCourseModules(courseId) {
-    const rawModules = (await axios.get(`${courseAPI}/modules/?course=${courseId}&format=json`)).data;
+    const rawModules = (await axios.get(`${courseAppAPI}/modules/?course=${courseId}&format=json`)).data;
     const modules = rawModules.map(module => {
         return {
             id: module.id,
@@ -108,7 +101,7 @@ export async function getCourseModules(courseId) {
 }
 
 export async function getModule(id) {
-    const rawModule = (await axios.get(`${courseAPI}/modules/${id}/?format=json`)).data;
+    const rawModule = (await axios.get(`${courseAppAPI}/modules/${id}/?format=json`)).data;
 
     return {
         id: rawModule.id,
@@ -117,7 +110,7 @@ export async function getModule(id) {
 }
 
 export async function getModuleLessons(moduleId) {
-    const rawLessons = (await axios.get(`${courseAPI}/lessons/?module=${moduleId}&format=json`)).data;
+    const rawLessons = (await axios.get(`${courseAppAPI}/lessons/?module=${moduleId}&format=json`)).data;
     const lessons = rawLessons.map(lesson => {
         return {
             id: lesson.id,
@@ -131,7 +124,7 @@ export async function getModuleLessons(moduleId) {
 }
 
 export async function getLesson(id) {
-    const rawLesson = (await axios.get(`${courseAPI}/lessons/${id}/?format=json`)).data;
+    const rawLesson = (await axios.get(`${courseAppAPI}/lessons/${id}/?format=json`)).data;
 
     return {
         id: rawLesson.id,
@@ -142,7 +135,7 @@ export async function getLesson(id) {
 }
 
 export async function getCheckPoint(id) {
-    const rawCheckPoint = (await axios.get(`${checkPointAPI}/checkpoints/${id}/?format=json`)).data;
+    const rawCheckPoint = (await axios.get(`${checkpointAppAPI}/checkpoints/${id}/?format=json`)).data;
     const checkPoint = {
         id: rawCheckPoint.id,
         title: rawCheckPoint.title,
@@ -153,7 +146,7 @@ export async function getCheckPoint(id) {
 }
 
 export async function getModuleCheckPoint(moduleId) {
-    const rawCheckPoint = (await axios.get(`${checkPointAPI}/checkpoints/?module=${moduleId}&format=json`)).data[0];
+    const rawCheckPoint = (await axios.get(`${checkpointAppAPI}/checkpoints/?module=${moduleId}&format=json`)).data[0];
 
     return {
         id: rawCheckPoint.id,
@@ -175,25 +168,25 @@ export async function getCourseCheckPoints(courseId) {
 }
 
 export async function getStudentPassedCheckPoints(studentId) {
-    const checkPoints = (await axios.get(`${checkPointAPI}/passed-checkpoints/?student=${studentId}&format=json`)).data;
+    const checkPoints = (await axios.get(`${checkpointAppAPI}/passed-checkpoints/?student=${studentId}&format=json`)).data;
 
     return checkPoints;
 }
 
 export async function getCheckPointResults(studentId, checkPointId) {
-    const result = (await axios.get(`${checkPointAPI}/passed-checkpoints/?student=${studentId}&checkpoint=${checkPointId}&format=json`)).data[0];
+    const result = (await axios.get(`${checkpointAppAPI}/passed-checkpoints/?student=${studentId}&checkpoint=${checkPointId}&format=json`)).data[0];
 
     return result;
 }
 
 export async function getLessonOtherFiles(lessonId) {
-    const otherFiles = (await axios.get(`${courseAPI}/lesson-other-files/?lesson=${lessonId}&format=json`)).data;
+    const otherFiles = (await axios.get(`${courseAppAPI}/lesson-other-files/?lesson=${lessonId}&format=json`)).data;
 
     return otherFiles;
 }
 
 export async function getCourseStudents(courseId) {
-    const enrollments = (await axios.get(`${courseAPI}/enrollments/?course=${courseId}&format=json`)).data;
+    const enrollments = (await axios.get(`${courseAppAPI}/enrollments/?course=${courseId}&format=json`)).data;
     const students = enrollments.map(enrollment => {
         return {
             id: enrollment.student.id,

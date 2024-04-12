@@ -17,7 +17,7 @@ import {
 } from '../../stores/user.js';
 
 import {
-    courseAPI
+    courseAppAPI
 } from '../../requests.js';
 
 import Module from '../elements/Module.vue';
@@ -89,7 +89,7 @@ export default {
                 alert('Введите имя модуля');
             }
 
-            await axios.post(`${courseAPI}/modules/`, {
+            await axios.post(`${courseAppAPI}/modules/`, {
                 module_name: this.newModuleName,
                 course: this.id
             });
