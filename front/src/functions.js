@@ -10,6 +10,10 @@ export function showToast(useToastInstance, type, message, title = '') {
         severity: type,
         summary: title,
         detail: message,
-        life: 3000
+        life: 10000
     });
+}
+
+export function fullName(surname, name, fatherName) {
+    return `${surname} ${name} ${fatherName === null ? '' : fatherName}`;
 }

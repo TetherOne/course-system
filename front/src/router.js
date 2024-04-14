@@ -6,13 +6,15 @@ import {
 import Student from '#pages/Student';
 import Teacher from '#pages/Teacher';
 import Course from '#pages/Course';
+import Lesson from '#pages/Lesson';
+import Checkpoint from '#pages/Checkpoint';
 
 
 export const studentPath = '/student';
 export const teacherPath = '/teacher/:id';
 export const coursePath = '/course/:id';
 const lessonPath = '/lesson/:id';
-const checkpointPath = '/checkPoint/:id';
+const checkpointPath = '/checkpoint/:id';
 const participantsPath = '/participants/:courseId';
 
 const routes = [
@@ -27,6 +29,14 @@ const routes = [
     {
         path: coursePath,
         component: Course
+    },
+    {
+        path: lessonPath,
+        component: Lesson
+    },
+    {
+        path: checkpointPath,
+        component: Checkpoint
     }
 ];
 

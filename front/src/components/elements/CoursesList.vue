@@ -8,7 +8,6 @@ import { useRoute } from 'vue-router';
 import Card from 'primevue/card';
 import Divider from 'primevue/divider';
 import Fieldset from 'primevue/fieldset';
-import Button from 'primevue/button';
 
 import { useToast } from 'primevue/usetoast';
 
@@ -104,10 +103,6 @@ async function getTeacherShortName(teacherId) {
     return shortenName(teacher.surname, teacher.name, teacher.father_name);
 }
 
-function debug() {
-
-}
-
 
 onBeforeMount(() => {
     setView();
@@ -133,7 +128,6 @@ onBeforeMount(() => {
             <Divider v-if="i < courses.length - 1"/>
         </div>
     </Fieldset>
-    <Button @click="debug">Отладка CoursesList</Button>
 </template>
 
 <style scoped>
