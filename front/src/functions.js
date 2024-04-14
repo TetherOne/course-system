@@ -4,3 +4,12 @@ export function shortenName(surname, name, fatherName) {
 
     return `${surname} ${name} ${fatherName}`;
 }
+
+export function showToast(useToastInstance, type, message, title = '') {
+    useToastInstance.add({
+        severity: type,
+        summary: title,
+        detail: message,
+        life: 3000
+    });
+}

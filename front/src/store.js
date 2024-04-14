@@ -30,7 +30,6 @@ export default defineStore(storeName, () => {
     const group = ref('__group__');
 
     const avatar = ref('__avatarPath__');
-    const courses = ref([]);
 
     const fullName = computed(() => {
         let storeFatherName = father_name.value;
@@ -57,7 +56,6 @@ export default defineStore(storeName, () => {
         faculty,
         group,
         avatar,
-        courses,
         fullName,
         profileLink,
         nameFirstLetter

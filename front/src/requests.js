@@ -38,7 +38,8 @@ export async function getStudentCourses(studentId) {
     const courses = [];
     for (const enrollment of enrollments) {
         const courseId = enrollment.course;
-        courses.push(await getCourse(courseId));
+        const course = await getCourse(courseId);
+        courses.push(course);
     }
     return courses;
 }
