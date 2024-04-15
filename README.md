@@ -56,8 +56,10 @@
     - Django + DRF
     - Vue.js
 
-### Databases
+### SQL Database
     - SQLite (temporarily)
+
+### NoSQL Database
     - Redis
 
 ### Message Broker
