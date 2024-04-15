@@ -65,7 +65,7 @@ class LessonViewSet(ModelViewSet):
     ).all()
     serializer_class = LessonSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["module",]
+    filterset_fields = ["module"]
 
 
 class LessonOtherFileViewSet(ModelViewSet):
