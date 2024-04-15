@@ -1,8 +1,8 @@
-from django.db import models
-
 from cheackpoints.models import PassedCheckPoint
 from profiles.models import StudentProfile
 from questions.models import Question
+
+from django.db import models
 
 
 class HistoryOfPassedAnswer(models.Model):

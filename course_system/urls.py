@@ -35,6 +35,7 @@ urlpatterns = [
     path("api/courses/", include("courses.urls")),
     path("api/questions/", include("questions.urls")),
     path("api/cheackpoints/", include("cheackpoints.urls")),
+    path("api/history/", include("history.urls")),
 ]
 
 urlpatterns.extend(
