@@ -1,8 +1,10 @@
+from history.serializers import HistoryOfPassedAnswerSerializer
+
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.viewsets import ModelViewSet
 
 from history.models import HistoryOfPassedAnswer
-from history.serializers import HistoryOfPassedAnswerSerializer
+
+from rest_framework.viewsets import ModelViewSet
 
 
 class HistoryOfPassedAnswerViewSet(ModelViewSet):
