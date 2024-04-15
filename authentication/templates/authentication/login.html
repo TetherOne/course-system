@@ -1,0 +1,22 @@
+{% block title %}
+	
+{% endblock %}
+
+{% block body %}
+	<form method="post">
+        {% csrf_token %}
+
+        <p>
+            {{ form.username }}
+        </p>
+
+        <p>
+            {{ form.password }}
+        </p>
+
+
+        <button type="submit">Войти</button>
+
+        <p ><a href="{% url 'authentication:password_reset' %}">Забыли пароль?</a></p>
+    </form>
+{% endblock %}
