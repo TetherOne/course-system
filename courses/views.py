@@ -19,7 +19,10 @@ from courses.models import Module
 
 class EnrollmentViewSet(ModelViewSet):
 
-    queryset = Enrollment.objects.prefetch_related("student")
+    queryset = Enrollment.objects.prefetch_related(
+        "student",
+        "course",
+    ).all()
     serializer_class = EnrollmentSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = [
@@ -30,7 +33,9 @@ class EnrollmentViewSet(ModelViewSet):
 
 class CourseViewSet(ModelViewSet):
 
-    queryset = Course.objects.all()
+    queryset = Course.objects.prefetch_related(
+        "teacher_profile",
+    ).all()
     serializer_class = CourseSerializer
     filter_backends = [
         DjangoFilterBackend,
@@ -42,7 +47,9 @@ class CourseViewSet(ModelViewSet):
 
 class ModuleViewSet(ModelViewSet):
 
-    queryset = Module.objects.all()
+    queryset = Module.objects.prefetch_related(
+        "course",
+    ).all()
     serializer_class = ModuleSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = [
@@ -53,15 +60,19 @@ class ModuleViewSet(ModelViewSet):
 
 class LessonViewSet(ModelViewSet):
 
-    queryset = Lesson.objects.all()
+    queryset = Lesson.objects.prefetch_related(
+        "module",
+    ).all()
     serializer_class = LessonSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["module"]
+    filterset_fields = ["module",]
 
 
 class LessonOtherFileViewSet(ModelViewSet):
 
-    queryset = LessonOtherFile.objects.all()
+    queryset = LessonOtherFile.objects.prefetch_related(
+        "lesson",
+    ).all()
     serializer_class = LessonOtherFileSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["lesson"]

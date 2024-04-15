@@ -13,7 +13,10 @@ from cheackpoints.models import Summary
 
 class CheckPointViewSet(ModelViewSet):
 
-    queryset = CheckPoint.objects.prefetch_related("questions")
+    queryset = CheckPoint.objects.prefetch_related(
+        "questions",
+        "module",
+    ).all()
     serializer_class = CheckPointSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["module"]
@@ -21,16 +24,28 @@ class CheckPointViewSet(ModelViewSet):
 
 class PassedCheckPointViewSet(ModelViewSet):
 
-    queryset = PassedCheckPoint.objects.all()
+    queryset = PassedCheckPoint.objects.prefetch_related(
+        "checkpoint",
+        "student",
+    ).all()
     serializer_class = PassedCheckPointSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["checkpoint", "student"]
+    filterset_fields = [
+        "checkpoint",
+        "student",
+    ]
     ordering_fields = ["created_at"]
 
 
 class SummaryViewSet(ModelViewSet):
 
-    queryset = Summary.objects.all()
+    queryset = Summary.objects.prefetch_related(
+        "student",
+        "course",
+    ).all()
     serializer_class = SummarySerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["student", "course"]
+    filterset_fields = [
+        "student",
+        "course",
+    ]

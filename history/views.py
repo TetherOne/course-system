@@ -11,7 +11,7 @@ class HistoryOfPassedAnswerViewSet(ModelViewSet):
         "student",
         "checkpoint",
         "question",
-    )
+    ).all()
     serializer_class = HistoryOfPassedAnswerSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = [
