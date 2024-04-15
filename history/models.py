@@ -1,6 +1,8 @@
 from cheackpoints.models import PassedCheckPoint
 from profiles.models import StudentProfile
+
 from questions.models import Question
+from questions.models import Answer
 
 from django.db import models
 
@@ -19,6 +21,11 @@ class HistoryOfPassedAnswer(models.Model):
     )
     question = models.ForeignKey(
         Question,
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+    answer = models.ForeignKey(
+        Answer,
         on_delete=models.SET_NULL,
         null=True,
     )
