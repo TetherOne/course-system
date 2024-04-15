@@ -5,7 +5,6 @@ from authentication.models import CustomUser
 
 class TeacherProfile(models.Model):
 
-    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     surname = models.CharField(max_length=100, blank=True, null=True)
     father_name = models.CharField(max_length=100, blank=True, null=True)
@@ -28,7 +27,6 @@ class TeacherProfile(models.Model):
 
 class StudentProfile(models.Model):
 
-    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     surname = models.CharField(max_length=100, blank=True, null=True)
     father_name = models.CharField(max_length=100, blank=True, null=True)

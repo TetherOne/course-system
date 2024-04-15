@@ -8,7 +8,6 @@ import re
 
 class Question(models.Model):
 
-    id = models.AutoField(primary_key=True)
     checkpoint = models.ForeignKey(
         CheckPoint,
         on_delete=models.CASCADE,
@@ -44,7 +43,6 @@ class Question(models.Model):
 
 class Answer(models.Model):
 
-    id = models.AutoField(primary_key=True)
     question = models.ForeignKey(
         Question,
         on_delete=models.CASCADE,
@@ -76,7 +74,6 @@ def answer_file_directory_path(
 
 class AnswerFile(models.Model):
 
-    id = models.AutoField(primary_key=True)
     answer = models.ForeignKey(
         Answer,
         on_delete=models.CASCADE,
@@ -110,7 +107,6 @@ def question_file_directory_path(
 
 class QuestionFile(models.Model):
 
-    id = models.AutoField(primary_key=True)
     question = models.ForeignKey(
         Question,
         on_delete=models.CASCADE,

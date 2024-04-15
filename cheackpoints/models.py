@@ -13,7 +13,6 @@ from django.db import models
 
 class CheckPoint(models.Model):
 
-    id = models.AutoField(primary_key=True)
     checkpoint_number = models.IntegerField()
     module = models.ForeignKey(
         Module,

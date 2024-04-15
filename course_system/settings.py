@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "cheackpoints.apps.CheckpointappConfig",
     "questions.apps.QuestionappConfig",
     "authentication.apps.AuthappConfig",
+    "history.apps.HistoryConfig"
 ]
 
 MIDDLEWARE = [
