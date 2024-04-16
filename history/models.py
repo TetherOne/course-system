@@ -24,7 +24,7 @@ class HistoryOfPassedAnswer(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
-    answer = models.ForeignKey(
+    selected_answer = models.ForeignKey(
         Answer,
         on_delete=models.SET_NULL,
         null=True,
