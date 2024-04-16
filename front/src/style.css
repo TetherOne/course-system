@@ -34,6 +34,18 @@ a:hover {
     align-items: center;
 }
 
+.align-items-start {
+    align-items: flex-start;
+}
+
 .align-self-stretch {
     align-self: stretch;
+}
+
+.align-self-center {
+    align-self: center;
+}
+
+.align-self-start {
+    align-self: flex-start;
 }

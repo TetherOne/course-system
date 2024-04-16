@@ -1,10 +1,17 @@
 <script>
 import { useUserStore } from '#store';
 import { API } from '#classes/api';
+import axios from 'axios';
 
 import Fieldset from 'primevue/fieldset';
 import Divider from 'primevue/divider';
 import Card from 'primevue/card';
+import InputGroup from 'primevue/inputgroup';
+import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
+import Panel from 'primevue/panel';
+import FloatLabel from 'primevue/floatlabel';
+import Textarea from 'primevue/textarea';
 
 import {
     UserRoles,
@@ -22,7 +29,13 @@ export default {
     data() {
         return {
             legend: '_legend_',
-            courses: []
+            courses: [],
+            newCourse: {
+                formVisible: false,
+                name: '',
+                description: '',
+                password: ''
+            }
         };
     },
     props: {
@@ -34,27 +47,34 @@ export default {
     components: {
         Fieldset,
         Divider,
-        Card
+        Card,
+        InputGroup,
+        InputText,
+        Button,
+        Panel,
+        FloatLabel,
+        Textarea
     },
     setup() {
         const user = useUserStore();
 
         return {
-            user
+            user,
+            UserRoles
         };
     },
     methods: {
         getLegend() {
-            switch (this.user.role) {
+            switch (this.pageUserRole) {
                 case UserRoles.Student:
                     return 'Моё обучение';
                 case UserRoles.Teacher:
-                    switch (this.pageUserRole) {
+                    switch (this.user.role) {
                         case UserRoles.Student:
                             return 'Курсы';
                         case UserRoles.Teacher:
                             return 'Мои курсы';
-                    }
+                }
             }
         },
         getTeacherShortName(teacher) {
@@ -69,7 +89,7 @@ export default {
         },
         async loadCourses() {
             try {
-                switch (this.user.role) {
+                switch (this.pageUserRole) {
                     case UserRoles.Student:
                         this.courses = await API.studentCourses(this.user.id);
 
@@ -86,19 +106,49 @@ export default {
                         break;
                     case UserRoles.Teacher:
                         this.courses = await API.teacherCourses(parseInt(this.$route.params.id));
+
+                        if (this.pageUserRole === UserRoles.Student) {
+                            for (const course of this.courses) {
+                                course.enteredPassword = '';
+                            }
+                        }
+
                         break;
                 }
             } catch (error) {
                 this.user.showToast(Toasts.Error, `Ошибка загрузки курсов:\n${error}`);
             }
-        }
-    },
-    computed: {
+        },
         courseLink(courseId) {
+            console.log('courseLink');
             return coursePath.replace(':id', courseId);
         },
         teacherLink(teacherId) {
             return teacherPath.replace(':id', teacherId);
+        },
+        enroll() {
+            // In development
+        },
+        async addCourse() {
+            if (!this.newCourse.name || !this.newCourse.password) {
+                this.user.showToast(Toasts.Error, 'Поля "Название курса" и "Пароль курса" обязательны');
+                return;
+            }
+
+            try {
+                await axios.post(`${API.coursesAPI}/`, {
+                    course_name: this.newCourse.name,
+                    description: this.newCourse.description,
+                    status: true,
+                    course_password: this.newCourse.password,
+                    teacher_profile: this.user.id
+                });
+
+                this.$router.go();
+                this.user.showToast(Toasts.Success, 'Курс добавлен');
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка добавления курса:\n${error}`);
+            }
         }
     },
     created() {
@@ -114,18 +164,49 @@ export default {
 
             <div class="flex-column" v-for="course in courses">
                 <Card>
-                    <template #header>
+                    <template #title>
                         <router-link :to="courseLink(course.id)">{{ course.course_name }}</router-link>
                     </template>
 
                     <template #subtitle v-if="user.isStudent">
-                        <router-link :to="teacherLink(course.teacher_profile)">{{ course.teacherShortName }}</router-link>
+                        <router-link :to="teacherLink(course.teacher_profile)">{{
+                                course.teacherShortName
+                            }}
+                        </router-link>
                     </template>
 
                     <template #content>
                         {{ course.description }}
                     </template>
+
+                    <template #footer v-if="user.isStudent && pageUserRole === UserRoles.Teacher">
+                        <InputGroup v-if="user.hasCourse(course.id)">
+                            <Button class="pi pi-check" disabled/>
+                            <InputText placeholder="Вы уже зачислены на этот курс" disabled/>
+                        </InputGroup>
+                        <InputGroup v-if="!user.hasCourse(course.id)">
+                            <Button class="pi pi-user-plus" @click="enroll"/>
+                            <InputText placeholder="Пароль" v-model="course.enteredPassword"/>
+                        </InputGroup>
+                    </template>
                 </Card>
+            </div>
+
+            <div class="flex-column align-items-center align-self-center" v-if="user.role === UserRoles.Teacher">
+                <Button
+                    @click="newCourse.formVisible = !newCourse.formVisible"
+                    class="align-self-start"
+                >Новый курс</Button>
+
+                <Panel header="Новый курс" v-if="newCourse.formVisible">
+                    <div class="flex-column align-items-start">
+                        <InputText v-model="newCourse.name" placeholder="Название курса"/>
+                        <Textarea v-model="newCourse.description" rows="10" cols="100" placeholder="Описание курса"/>
+                        <InputText v-model="newCourse.password" placeholder="Пароль курса"/>
+
+                        <Button class="align-self-center" @click="addCourse">Добавить</Button>
+                    </div>
+                </Panel>
             </div>
 
         </div>
@@ -135,5 +216,6 @@ export default {
 <style scoped>
 .p-fieldset {
     min-width: 60vw;
+    max-width: 80vw;
 }
 </style>

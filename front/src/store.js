@@ -19,6 +19,7 @@ export const useUserStore = defineStore(storeName, {
             group: '_group_',
 
             avatar: '_avatarPath_',
+            courses: [],
             toast: useToast()
         };
     },
@@ -28,7 +29,6 @@ export const useUserStore = defineStore(storeName, {
         isTeacher: (state) => state.role === UserRoles.Teacher,
 
         nameFirstLetter: (state) => state.name.slice(0, 1),
-
         fullName: (state) => `${state.surname} ${state.name} ${state.fatherName}`
     },
     actions: {
@@ -39,6 +39,14 @@ export const useUserStore = defineStore(storeName, {
                 detail: message,
                 life: 10000
             });
+        },
+        hasCourse(courseId) {
+            for (const course of this.courses) {
+                if (course.id === courseId) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 });

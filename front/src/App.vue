@@ -4,7 +4,6 @@ import { useUserStore } from '#store';
 import { API } from '#classes/api';
 
 import Toast from 'primevue/toast';
-import Button from 'primevue/button';
 
 
 export const UserRoles = {
@@ -24,7 +23,6 @@ export default {
     name: 'App',
     components: {
         Header,
-        Button,
         Toast
     },
     setup() {
@@ -36,6 +34,7 @@ export default {
     },
     created() {
         this.loadUserData();
+        this.loadUserCourses();
     },
     methods: {
         async loadUserData() {
@@ -59,8 +58,19 @@ export default {
                 this.user.showToast(Toasts.Error, `Ошибка загрузки данных:\n${error}`);
             }
         },
-        debug() {
-            this.user.showToast('warn', 'DEBUG');
+        async loadUserCourses() {
+            try {
+                switch (this.user.role) {
+                    case UserRoles.Student:
+                        this.user.courses = await API.studentCourses(this.user.id);
+                        break;
+                    case UserRoles.Teacher:
+                        this.user.courses = await API.teacherCourses(this.user.id);
+                        break;
+                }
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка загрузки ваших курсов:\n${error}`);
+            }
         }
     }
 };
@@ -71,7 +81,6 @@ export default {
         <Header/>
         <router-view/>
         <Toast/>
-        <Button @click="debug" icon="pi pi-wrench"/>
     </div>
 </template>
 
