@@ -32,10 +32,17 @@ export default {
     },
     async created() {
         if (this.user.role === UserRoles.Student) {
-            try
-            const teacher = await API.teacher(this.id);
+            try {
+                const teacher = await API.teacher(this.id);
 
-            this.surname
+                this.surname = teacher.surname;
+                this.name = teacher.name;
+                this.fatherName = teacher.father_name;
+                this.faculty = teacher.faculty;
+                this.avatar = teacher.avatar;
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка загрузки информации о преподавателе:\n${error}`);
+            }
         }
     }
 };
