@@ -10,7 +10,9 @@ from questions.models import Answer
 
 class QuestionViewSet(ModelViewSet):
 
-    queryset = Question.objects.prefetch_related("answers")
+    queryset = Question.objects.prefetch_related(
+        "checkpoint",
+    ).all()
     serializer_class = QuestionSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["checkpoint"]
@@ -18,7 +20,9 @@ class QuestionViewSet(ModelViewSet):
 
 class AnswerViewSet(ModelViewSet):
 
-    queryset = Answer.objects.all()
+    queryset = Answer.objects.prefetch_related(
+        "question",
+    ).all()
     serializer_class = AnswerSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["question"]

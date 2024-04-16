@@ -1,4 +1,7 @@
-from cheackpoints.tasks import calculate_percentage_and_status
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+
+from checkpoints.tasks import calculate_percentage_and_status
 
 from profiles.models import StudentProfile
 
@@ -13,7 +16,6 @@ from django.db import models
 
 class CheckPoint(models.Model):
 
-    id = models.AutoField(primary_key=True)
     checkpoint_number = models.IntegerField()
     module = models.ForeignKey(
         Module,
@@ -80,6 +82,28 @@ class PassedCheckPoint(models.Model):
                 course=self.checkpoint.module.course,
             )
 
+        summary.calculate_summary_points()
+        summary.save()
+
+
+@receiver(
+    post_delete,
+    sender=PassedCheckPoint,
+)
+def update_summary_points_on_passed_checkpoint_delete(
+        sender,
+        instance,
+        **kwargs,
+):
+    """
+    Automatically recalculate summary points when
+    a PassedCheckPoint record is deleted.
+    """
+    summary = Summary.objects.filter(
+        student=instance.student,
+        course=instance.checkpoint.module.course,
+    ).first()
+    if summary:
         summary.calculate_summary_points()
         summary.save()
 

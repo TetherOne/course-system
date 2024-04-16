@@ -23,7 +23,7 @@ class UserViewSet(ModelViewSet):
 
 class TeacherProfileViewSet(ModelViewSet):
 
-    queryset = TeacherProfile.objects.all()
+    queryset = TeacherProfile.objects.select_related("user").all()
     serializer_class = TeacherSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["user"]
@@ -31,7 +31,7 @@ class TeacherProfileViewSet(ModelViewSet):
 
 class StudentProfileViewSet(ModelViewSet):
 
-    queryset = StudentProfile.objects.all()
+    queryset = StudentProfile.objects.select_related("user").all()
     serializer_class = StudentSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["user"]
