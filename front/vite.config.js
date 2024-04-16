@@ -19,5 +19,10 @@ export default defineConfig({
                 changeOrigin: true
             }
         }
+    },
+    optimizeDeps: {
+        exclude: [
+            'primevue'
+        ]
     }
 });

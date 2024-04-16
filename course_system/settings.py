@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 from config import RECAPTCHA_PRIVATE_KEY
@@ -98,8 +98,12 @@ WSGI_APPLICATION = "course_system.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": os.environ.get("DB_HOST"),
+        "PORT": os.environ.get("DB_PORT"),
     }
 }
 
@@ -179,7 +183,7 @@ AUTH_USER_MODEL = "authentication.CustomUser"
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": "redis://redis:6379/0",
     }
 }
 CACHALOT_TIMEOUT = 600
@@ -205,3 +209,5 @@ RECAPTCHA_PRIVATE_KEY = RECAPTCHA_PRIVATE_KEY
 
 
 INTERNAL_IPS = ["127.0.0.1"]
+
+CELERY_BROKER_URL = "amqp://guest:guest@rabbitmq:5672"

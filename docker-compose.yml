@@ -1,0 +1,60 @@
+services:
+  web-app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/course_system
+    environment:
+      - DB_HOST=database
+      - DB_NAME=course-db
+      - DB_USER=postgres
+      - DB_PASSWORD=qwerty
+      - DB_PORT=5432
+    command: >
+      sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - database
+      - redis
+      - rabbitmq
+      - worker
+
+  database:
+    image: postgres:15
+    restart: always
+    environment:
+      - POSTGRES_DB=course-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwerty
+
+  redis:
+    image: redis:7
+    hostname: redis
+
+  rabbitmq:
+    hostname: rabbitmq
+    image: rabbitmq:3-management
+    restart: on-failure
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    command: celery -A course_system worker -l info
+    volumes:
+      - .:/course_system
+    links:
+      - rabbitmq
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
