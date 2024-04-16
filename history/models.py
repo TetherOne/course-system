@@ -1,4 +1,4 @@
-from cheackpoints.models import PassedCheckPoint
+from checkpoints.models import PassedCheckPoint
 from profiles.models import StudentProfile
 
 from questions.models import Question

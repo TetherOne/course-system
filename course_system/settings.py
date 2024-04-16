@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "courses.apps.CourseappConfig",
     "profiles.apps.AuthappConfig",
-    "cheackpoints.apps.CheckpointappConfig",
+    "checkpoints.apps.CheckpointappConfig",
     "questions.apps.QuestionappConfig",
     "authentication.apps.AuthappConfig",
     "history.apps.HistoryConfig"

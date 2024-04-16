@@ -19,7 +19,7 @@ export const teacherRole = 2;
 export const useUserStore = defineStore(userStoreName, {
     state: () => {
         return {
-            id: 4,
+            id: 1,
             role: studentRole,
             surname: '',
             name: '',

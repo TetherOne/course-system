@@ -1,14 +1,14 @@
-from cheackpoints.serializers import PassedCheckPointSerializer
-from cheackpoints.serializers import CheckPointSerializer
-from cheackpoints.serializers import SummarySerializer
+from checkpoints.serializers import PassedCheckPointSerializer
+from checkpoints.serializers import CheckPointSerializer
+from checkpoints.serializers import SummarySerializer
 
 from django_filters.rest_framework import DjangoFilterBackend
 
 from rest_framework.viewsets import ModelViewSet
 
-from cheackpoints.models import PassedCheckPoint
-from cheackpoints.models import CheckPoint
-from cheackpoints.models import Summary
+from checkpoints.models import PassedCheckPoint
+from checkpoints.models import CheckPoint
+from checkpoints.models import Summary
 
 
 class CheckPointViewSet(ModelViewSet):

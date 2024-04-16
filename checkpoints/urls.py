@@ -1,6 +1,6 @@
-from cheackpoints.views import PassedCheckPointViewSet
-from cheackpoints.views import CheckPointViewSet
-from cheackpoints.views import SummaryViewSet
+from checkpoints.views import PassedCheckPointViewSet
+from checkpoints.views import CheckPointViewSet
+from checkpoints.views import SummaryViewSet
 
 from rest_framework.routers import DefaultRouter
 
@@ -8,7 +8,7 @@ from django.urls import include
 from django.urls import path
 
 
-app_name = "cheackpoints"
+app_name = "checkpoints"
 
 
 routers = DefaultRouter()

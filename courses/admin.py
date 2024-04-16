@@ -4,7 +4,7 @@ from courses.models import Lesson
 from courses.models import Module
 from courses.models import Course
 
-from cheackpoints.models import CheckPoint
+from checkpoints.models import CheckPoint
 
 from django.utils.html import format_html
 

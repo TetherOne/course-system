@@ -1,6 +1,6 @@
-from cheackpoints.models import PassedCheckPoint
-from cheackpoints.models import CheckPoint
-from cheackpoints.models import Summary
+from checkpoints.models import PassedCheckPoint
+from checkpoints.models import CheckPoint
+from checkpoints.models import Summary
 
 from questions.models import Question
 
