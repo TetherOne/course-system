@@ -15,6 +15,8 @@ import {
     useUserStore
 } from '../../stores/user.js';
 
+import { frontURL } from '../../config.js';
+
 
 export default {
     components: {
@@ -77,7 +79,7 @@ export default {
 
         async handleCompletion() {
             for (const question of this.questions) {
-                axios.post(`http://127.0.0.1:8000/api/history/history-of-passed-answers/`, {
+                axios.post(`${frontURL}/api/history/history-of-passed-answers/`, {
                     student: this.user.id,
                     checkpoint: this.id,
                     question: question.id,
