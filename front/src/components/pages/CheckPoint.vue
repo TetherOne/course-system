@@ -1,5 +1,7 @@
 <script>
 import axios from 'axios';
+import RadioButton from 'primevue/radiobutton';
+import Button from 'primevue/button';
 
 import {
     getCheckPoint,
@@ -13,14 +15,20 @@ import {
     useUserStore
 } from '../../stores/user.js';
 
+import { frontURL } from '../../config.js';
+
 
 export default {
+    components: {
+        Button,
+        RadioButton
+    },
     setup() {
         const user = useUserStore();
 
         return {
             user
-        }
+        };
     },
 
     data() {
@@ -31,7 +39,7 @@ export default {
             isPassedByStudent: false,
             grade: 0,
             score: 0
-        }
+        };
     },
 
     async created() {
@@ -48,7 +56,7 @@ export default {
 
     methods: {
         studentRole() {
-            return studentRole
+            return studentRole;
         },
         async F_isPassedByStudent() {
             let passedCheckPoints = await getStudentPassedCheckPoints(this.user.id);
@@ -70,9 +78,14 @@ export default {
         },
 
         async handleCompletion() {
-            this.estimate();
-            await this.sendResult();
-            window.location.reload();
+            for (const question of this.questions) {
+                axios.post(`${frontURL}/api/history/history-of-passed-answers/`, {
+                    student: this.user.id,
+                    checkpoint: this.id,
+                    question: question.id,
+                    selected_answer: question.chosenAnswer
+                });
+            }
         },
 
         estimate() {
@@ -88,9 +101,7 @@ export default {
 
         prepareAnswers() {
             for (const question of this.questions) {
-                for (const answer of question.answers) {
-                    answer.chosen = false;
-                }
+                question.chosenAnswer = null;
             }
         },
 
@@ -99,7 +110,7 @@ export default {
                 student: this.user.id,
                 checkpoint: this.id,
                 points: this.score
-            })
+            });
             await axios.post(`${checkPointAPI}/passed-checkpoints/`, {
                 student: this.user.id,
                 checkpoint: this.id,
@@ -115,24 +126,29 @@ export default {
                 '3': 'orange',
                 '4': 'yellow',
                 '5': 'green'
-            }
+            };
 
             return map[this.grade];
         }
     }
-}
+};
 </script>
 
 
 <template>
     <div id="check-point-wrapper" class="flex-column">
         <h2>КТ "{{ title }}"</h2>
-        <div v-if="isPassedByStudent">Вы уже прошли данную КТ. Ваша оценка: <span :style="{'color': gradeColor}" id="grade">{{ grade }}</span></div>
+        <div v-if="isPassedByStudent">Вы уже прошли данную КТ. Ваша оценка: <span :style="{'color': gradeColor}"
+                                                                                  id="grade">{{ grade }}</span></div>
         <div class="flex-column">
             <div class="flex-column question" v-for="question in questions">
                 <div>{{ question.question_text }}</div>
                 <div class="flex-row sub" v-for="answer in question.answers">
-                    <input type="radio" :name="question.id" :id="answer.id" v-model="answer.chosen">
+                    <RadioButton
+                        :inputId="`${question.id}`"
+                        v-model="question.chosenAnswer"
+                        :value="answer.id"
+                    />
                     <label :for="answer.id">{{ answer.answer_text }}</label>
                 </div>
             </div>

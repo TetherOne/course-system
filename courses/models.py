@@ -30,7 +30,6 @@ class Enrollment(models.Model):
 
 class Course(models.Model):
 
-    id = models.AutoField(primary_key=True)
     course_name = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(max_length=10000, blank=True, null=True)
     status = models.BooleanField(default=True)
@@ -72,7 +71,6 @@ def lesson_video_directory_path(
 
 class Lesson(models.Model):
 
-    id = models.AutoField(primary_key=True)
     lesson_name = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(max_length=10000, blank=True, null=True)
     module = models.ForeignKey(
@@ -111,7 +109,6 @@ def other_file_directory_path(
 
 class LessonOtherFile(models.Model):
 
-    id = models.AutoField(primary_key=True)
     lesson = models.ForeignKey(
         Lesson,
         on_delete=models.CASCADE,
@@ -126,7 +123,6 @@ class LessonOtherFile(models.Model):
 
 class Module(models.Model):
 
-    id = models.AutoField(primary_key=True)
     module_name = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     course = models.ForeignKey(
