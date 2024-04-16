@@ -1,13 +1,39 @@
-<script setup>
-import CoursesList from '#elements/CoursesList';
-import useUserStore from '#store';
+<script>
+import { useUserStore } from '#store';
+import { forbiddenPath } from '#router';
+import { UserRoles } from '#app';
 
 
-const user = useUserStore();
+export default {
+    name: 'Student',
+    data() {
+        return {
+
+        }
+    },
+    setup() {
+        const user = useUserStore();
+
+        return {
+            user,
+            forbiddenPath
+        };
+    },
+    methods: {
+        handleVisit() {
+            if (!this.user.isStudent) {
+                this.$router.push(forbiddenPath);
+            }
+        }
+    },
+    created() {
+        this.handleVisit();
+    }
+};
 </script>
 
 <template>
-    <CoursesList/>
+
 </template>
 
 <style scoped>

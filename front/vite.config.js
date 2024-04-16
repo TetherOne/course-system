@@ -16,7 +16,6 @@ export default defineConfig({
         proxy: {
             '/api': {
                 target: djangoURL,
-                ws: true,
                 changeOrigin: true
             }
         }

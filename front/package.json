@@ -21,6 +21,7 @@
         "vite": "^5.1.6"
     },
     "imports": {
+        "#app": "./src/App.vue",
         "#config": "./src/config.js",
         "#router": "./src/router.js",
         "#store": "./src/store.js",

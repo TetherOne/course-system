@@ -5,17 +5,12 @@ import {
 
 import Student from '#pages/Student';
 import Teacher from '#pages/Teacher';
-import Course from '#pages/Course';
-import Lesson from '#pages/Lesson';
-import Checkpoint from '#pages/Checkpoint';
+import Forbidden from '#pages/Forbidden';
 
 
 export const studentPath = '/student';
 export const teacherPath = '/teacher/:id';
-export const coursePath = '/course/:id';
-const lessonPath = '/lesson/:id';
-const checkpointPath = '/checkpoint/:id';
-const participantsPath = '/participants/:courseId';
+export const forbiddenPath = '/forbidden';
 
 const routes = [
     {
@@ -27,21 +22,12 @@ const routes = [
         component: Teacher
     },
     {
-        path: coursePath,
-        component: Course
-    },
-    {
-        path: lessonPath,
-        component: Lesson
-    },
-    {
-        path: checkpointPath,
-        component: Checkpoint
+        path: forbiddenPath,
+        component: Forbidden
     }
 ];
 
-
-export default createRouter({
+export const router = createRouter({
     history: createWebHistory(),
     routes: routes
 });

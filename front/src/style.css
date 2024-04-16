@@ -1,8 +1,7 @@
 :root {
     --std-gap: 10px;
-    --sub-margin: 20px;
 
-    --theme-color: #10b981;
+    --green: #10b981;
 }
 
 body {
@@ -22,26 +21,6 @@ body {
     gap: var(--std-gap);
 }
 
-.sub {
-    margin-left: var(--sub-margin);
-}
-
-.spacer {
-    flex-grow: 1;
-}
-
-.align-items-center {
-    align-items: center;
-}
-
-.align-self-center {
-    align-self: center;
-}
-
-.align-self-stretch {
-    align-self: stretch;
-}
-
 a {
     text-decoration: none;
     color: inherit;
@@ -51,6 +30,6 @@ a:hover {
     text-decoration: underline;
 }
 
-.buttons {
-    gap: 1px;
+.align-items-center {
+    align-items: center;
 }

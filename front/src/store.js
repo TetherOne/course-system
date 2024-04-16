@@ -1,63 +1,36 @@
 import { defineStore } from 'pinia';
-import {
-    ref,
-    computed
-} from 'vue';
 
-import {
-    studentPath,
-    teacherPath
-} from '#router';
+import { UserRoles } from '#app';
 
 
 const storeName = 'user';
-export const UserRoles = {
-    Guest: 0,
-    Student: 1,
-    Teacher: 2
-};
 
+export const useUserStore = defineStore(storeName, {
+    state: () => {
+        return {
+            id: 1,
+            role: UserRoles.Student,
 
-export default defineStore(storeName, () => {
-    const id = ref(1);
-    const role = ref(UserRoles.Student);
+            surname: '_surname_',
+            name: '_name_',
+            fatherName: '_fatherName_',
 
-    const surname = ref('__surname__');
-    const name = ref('__name__');
-    const father_name = ref('__fatherName__');
+            faculty: '_faculty_',
+            group: '_group_',
 
-    const faculty = ref('__faculty__');
-    const group = ref('__group__');
-
-    const avatar = ref('__avatarPath__');
-
-    const fullName = computed(() => {
-        let storeFatherName = father_name.value;
-        if (storeFatherName === null) {
-            storeFatherName = '';
+            avatar: '_avatarPath_'
         }
-        return `${surname.value} ${name.value} ${storeFatherName}`;
-    });
+    },
+    getters: {
+        isGuest: (state) => state.role === UserRoles.Guest,
+        isStudent: (state) => state.role === UserRoles.Student,
+        isTeacher: (state) => state.role === UserRoles.Teacher,
 
-    const profileLink = computed(() => {
-        return role.value === UserRoles.Student ? studentPath : teacherPath.replace(':id', id.value);
-    });
+        nameFirstLetter: (state) => state.name.slice(0, 1),
 
-    const nameFirstLetter = computed(() => {
-        return name.value.slice(0, 1);
-    });
-
-    return {
-        id,
-        role,
-        surname,
-        name,
-        father_name,
-        faculty,
-        group,
-        avatar,
-        fullName,
-        profileLink,
-        nameFirstLetter
-    };
+        fullName: (state) => {
+            const fullName = `${state.surname} ${state.name} ${state.fatherName}`;
+            return fullName;
+        }
+    }
 });
