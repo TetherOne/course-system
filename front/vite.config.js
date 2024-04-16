@@ -23,7 +23,9 @@ export default defineConfig({
     },
     optimizeDeps: {
         exclude: [
-            'primevue'
+            'primevue',
+            "vue",
+            "pinia"
         ]
     }
 });
