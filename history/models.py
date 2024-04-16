@@ -1,4 +1,4 @@
-from checkpoints.models import PassedCheckPoint
+from checkpoints.models import CheckPoint
 from profiles.models import StudentProfile
 
 from questions.models import Question
@@ -15,7 +15,7 @@ class HistoryOfPassedAnswer(models.Model):
         null=True,
     )
     checkpoint = models.ForeignKey(
-        PassedCheckPoint,
+        CheckPoint,
         on_delete=models.SET_NULL,
         null=True,
     )
