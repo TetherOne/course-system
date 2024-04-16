@@ -53,11 +53,12 @@ INSTALLED_APPS = [
     "captcha",
     "django_recaptcha",
     "debug_toolbar",
-    "courseapp.apps.CourseappConfig",
-    "userapp.apps.AuthappConfig",
-    "checkpointapp.apps.CheckpointappConfig",
-    "questionapp.apps.QuestionappConfig",
-    "authapp.apps.AuthappConfig",
+    "courses.apps.CourseappConfig",
+    "profiles.apps.AuthappConfig",
+    "checkpoints.apps.CheckpointappConfig",
+    "questions.apps.QuestionappConfig",
+    "authentication.apps.AuthappConfig",
+    "history.apps.HistoryConfig"
 ]
 
 MIDDLEWARE = [
@@ -172,7 +173,7 @@ REST_FRAMEWORK = {
         "django_filters.rest_framework.DjangoFilterBackend",
     },
 }
-AUTH_USER_MODEL = "authapp.CustomUser"
+AUTH_USER_MODEL = "authentication.CustomUser"
 
 
 CACHES = {

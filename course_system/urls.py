@@ -30,11 +30,12 @@ import mimetypes
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/authapp/", include("authapp.urls")),
-    path("api/userapp/", include("userapp.urls")),
-    path("api/courseapp/", include("courseapp.urls")),
-    path("api/questionapp/", include("questionapp.urls")),
-    path("api/checkpointapp/", include("checkpointapp.urls")),
+    path("api/authapp/", include("authentication.urls")),
+    path("api/userapp/", include("profiles.urls")),
+    path("api/courseapp/", include("courses.urls")),
+    path("api/questionapp/", include("questions.urls")),
+    path("api/checkpointapp/", include("checkpoints.urls")),
+    path("api/history/", include("history.urls")),
 ]
 
 urlpatterns.extend(
