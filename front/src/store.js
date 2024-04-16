@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-
 import { UserRoles } from '#app';
+import { useToast } from 'primevue/usetoast';
 
 
 const storeName = 'user';
@@ -18,8 +18,9 @@ export const useUserStore = defineStore(storeName, {
             faculty: '_faculty_',
             group: '_group_',
 
-            avatar: '_avatarPath_'
-        }
+            avatar: '_avatarPath_',
+            toast: useToast()
+        };
     },
     getters: {
         isGuest: (state) => state.role === UserRoles.Guest,
@@ -28,9 +29,16 @@ export const useUserStore = defineStore(storeName, {
 
         nameFirstLetter: (state) => state.name.slice(0, 1),
 
-        fullName: (state) => {
-            const fullName = `${state.surname} ${state.name} ${state.fatherName}`;
-            return fullName;
+        fullName: (state) => `${state.surname} ${state.name} ${state.fatherName}`
+    },
+    actions: {
+        showToast(type, message, title = '') {
+            this.toast.add({
+                severity: type,
+                summary: title,
+                detail: message,
+                life: 10000
+            });
         }
     }
 });

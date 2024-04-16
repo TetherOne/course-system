@@ -44,7 +44,7 @@ export default {
 </script>
 
 <template>
-    <Panel>
+    <Panel class="align-self-stretch">
         <template #header>
             <div class="flex-row align-items-center">
                 <Avatar v-if="userHasAvatar" :image="user.avatar" size="large" shape="circle"/>

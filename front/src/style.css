@@ -33,3 +33,7 @@ a:hover {
 .align-items-center {
     align-items: center;
 }
+
+.align-self-stretch {
+    align-self: stretch;
+}

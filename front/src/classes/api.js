@@ -32,16 +32,14 @@ export class API {
 
 
     static async student(id) {
-        const student = (await axios.get(`${this.studentsAPI}/${id}`, this.standardConfig)).data;
-        return student;
+        return (await axios.get(`${this.studentsAPI}/${id}`, this.standardConfig)).data;
     }
 
     static async studentEnrollments(studentId) {
         const config = structuredClone(this.standardConfig);
         config.params.student = studentId;
 
-        const enrollments = (await axios.get(this.enrollmentsAPI, config)).data;
-        return enrollments;
+        return (await axios.get(this.enrollmentsAPI, config)).data;
     }
 
     static async studentCourses(studentId) {
@@ -58,20 +56,17 @@ export class API {
     }
 
     static async course(id) {
-        const course = (await axios.get(`${this.coursesAPI}/${id}`, this.standardConfig)).data;
-        return course;
+        return (await axios.get(`${this.coursesAPI}/${id}`, this.standardConfig)).data;
     }
 
     static async teacher(id) {
-        const teacher = (await axios.get(`${this.teachersAPI}/${id}`, this.standardConfig)).data;
-        return teacher;
+        return (await axios.get(`${this.teachersAPI}/${id}`, this.standardConfig)).data;
     }
 
     static async teacherCourses(teacherId) {
         const config = structuredClone(this.standardConfig);
         config.params.teacher_profile = teacherId;
 
-        const courses = await axios.get(this.coursesAPI, config);
-        return courses;
+        return (await axios.get(this.coursesAPI, config)).data;
     }
 }

@@ -2,21 +2,18 @@
 import { useUserStore } from '#store';
 import { forbiddenPath } from '#router';
 import { UserRoles } from '#app';
+import CoursesList from '#elements/CoursesList';
 
 
 export default {
     name: 'Student',
-    data() {
-        return {
-
-        }
-    },
+    components: { CoursesList },
     setup() {
         const user = useUserStore();
 
         return {
             user,
-            forbiddenPath
+            UserRoles
         };
     },
     methods: {
@@ -33,7 +30,7 @@ export default {
 </script>
 
 <template>
-
+    <CoursesList :page-user-role="UserRoles.Student"/>
 </template>
 
 <style scoped>

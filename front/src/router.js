@@ -5,11 +5,13 @@ import {
 
 import Student from '#pages/Student';
 import Teacher from '#pages/Teacher';
+import Course from '#pages/Course';
 import Forbidden from '#pages/Forbidden';
 
 
 export const studentPath = '/student';
 export const teacherPath = '/teacher/:id';
+export const coursePath = '/course/:id';
 export const forbiddenPath = '/forbidden';
 
 const routes = [
@@ -20,6 +22,10 @@ const routes = [
     {
         path: teacherPath,
         component: Teacher
+    },
+    {
+        path: coursePath,
+        component: Course
     },
     {
         path: forbiddenPath,
