@@ -1,27 +1,44 @@
 <script>
+import { API } from '#classes/api';
+import { useUserStore } from '#store';
+import { Toasts } from '#app';
+import { UserRoles } from '#app';
 import axios from 'axios';
-import RadioButton from 'primevue/radiobutton';
+
+import Fieldset from 'primevue/fieldset';
 import Button from 'primevue/button';
-
-import {
-    getCheckPoint,
-    getStudentPassedCheckPoints,
-    getCheckPointResults,
-    checkPointAPI
-} from '../../requests.js';
-
-import {
-    studentRole,
-    useUserStore
-} from '../../stores/user.js';
-
-import { frontURL } from '../../config.js';
+import RadioButton from 'primevue/radiobutton';
+import Card from 'primevue/card';
+import Divider from 'primevue/divider';
+import Badge from 'primevue/badge';
 
 
 export default {
+    name: 'Checkpoint',
     components: {
+        Fieldset,
         Button,
-        RadioButton
+        RadioButton,
+        Card,
+        Divider,
+        Badge
+    },
+    data() {
+        return {
+            id: parseInt(this.$route.params.id),
+            name: '_checkpointName_',
+            questions: [],
+            passed: false,
+
+            grade: 0,
+
+            colors: {
+                2: 'danger',
+                3: 'warning',
+                4: 'info',
+                5: 'success'
+            }
+        };
     },
     setup() {
         const user = useUserStore();
@@ -30,145 +47,122 @@ export default {
             user
         };
     },
-
-    data() {
-        return {
-            id: parseInt(this.$route.params.id),
-            title: '',
-            questions: [],
-            isPassedByStudent: false,
-            grade: 0,
-            score: 0
-        };
-    },
-
-    async created() {
-        await this.loadData();
-        this.prepareAnswers();
-
-        this.isPassedByStudent = this.user.role === studentRole && await this.F_isPassedByStudent();
-
-        if (this.isPassedByStudent) {
-            const info = await getCheckPointResults(this.user.id, this.id);
-            this.grade = info.grade;
-        }
-    },
-
     methods: {
-        studentRole() {
-            return studentRole;
-        },
-        async F_isPassedByStudent() {
-            let passedCheckPoints = await getStudentPassedCheckPoints(this.user.id);
-            if (passedCheckPoints.length === 0) {
-                return false;
-            }
-
-            passedCheckPoints = passedCheckPoints.filter(cp => {
-                return cp.checkpoint === this.id;
-            });
-
-            return passedCheckPoints.length !== 0;
-        },
-
         async loadData() {
-            const checkPoint = await getCheckPoint(this.id);
-            this.title = checkPoint.title;
-            this.questions = checkPoint.questions;
-        },
+            try {
+                const checkpoint = await API.checkpoint(this.id);
 
-        async handleCompletion() {
-            for (const question of this.questions) {
-                axios.post(`${frontURL}/api/history/history-of-passed-answers/`, {
-                    student: this.user.id,
-                    checkpoint: this.id,
-                    question: question.id,
-                    selected_answer: question.chosenAnswer
-                });
+                this.name = checkpoint.title;
+                this.questions = checkpoint.questions;
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка загрузки данных КТ:\n${error}`);
             }
         },
-
-        estimate() {
-            for (const question of this.questions) {
-                for (const answer of question.answers) {
-                    if (answer.is_correct && answer.chosen) {
-                        this.score += question.max_points;
-                        break;
-                    }
-                }
-            }
-        },
-
-        prepareAnswers() {
+        prepareQuestions() {
             for (const question of this.questions) {
                 question.chosenAnswer = null;
             }
         },
+        async alreadyPassed() {
+            try {
+                const result = await API.didStudentPassCheckpoint(this.user.id, this.id);
+                return result;
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка загрузки вашего результата по данной КТ:\n${error}`);
+            }
+        },
+        async send() {
+            if (!this.allQuestionsAnswered()) {
+                this.user.showToast(Toasts.Warn, `Вы должны ответить на все вопросы`);
+            }
 
-        async sendResult() {
-            console.log({
-                student: this.user.id,
-                checkpoint: this.id,
-                points: this.score
-            });
-            await axios.post(`${checkPointAPI}/passed-checkpoints/`, {
-                student: this.user.id,
-                checkpoint: this.id,
-                points: this.score
-            });
+            const score = this.calcScore();
+
+            try {
+                await axios.post(`${API.passedCheckpointsAPI}/`, {
+                    student: this.user.id,
+                    checkpoint: this.id,
+                    points: score
+                });
+
+                for (const question of this.questions) {
+                    await axios.post(`${API.historyOfPassedAnswersAPI}/`, {
+                        student: this.user.id,
+                        checkpoint: this.id,
+                        question: question.id,
+                        selected_answer: question.chosenAnswer
+                    });
+                }
+
+                this.$router.go();
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка отправки результата:\n${error}`);
+            }
+        },
+        calcScore() {
+            let score = 0;
+            for (const question of this.questions) {
+                const chosenAnswerId = question.chosenAnswer;
+
+                for (const answer of question.answers) {
+                    if (answer.id === chosenAnswerId) {
+                        score += question.max_points;
+                        break;
+                    }
+                }
+            }
+            return score;
+        },
+        allQuestionsAnswered() {
+            for (const question of this.questions) {
+                if (question.chosenAnswer === null) {
+                    return false;
+                }
+            }
+            return true;
         }
     },
+    async created() {
+        await this.loadData();
+        this.prepareQuestions();
 
-    computed: {
-        gradeColor() {
-            const map = {
-                '2': 'red',
-                '3': 'orange',
-                '4': 'yellow',
-                '5': 'green'
-            };
+        if (this.user.role === UserRoles.Student) {
+            this.passed = await this.alreadyPassed();
+        }
 
-            return map[this.grade];
+        if (this.passed) {
+            const checkpoint = await API.studentCheckpointResult(this.user.id, this.id);
+            this.grade = checkpoint.grade;
         }
     }
-};
+}
 </script>
 
-
 <template>
-    <div id="check-point-wrapper" class="flex-column">
-        <h2>КТ "{{ title }}"</h2>
-        <div v-if="isPassedByStudent">Вы уже прошли данную КТ. Ваша оценка: <span :style="{'color': gradeColor}"
-                                                                                  id="grade">{{ grade }}</span></div>
+    <Fieldset :legend="`КТ '${name}'`">
         <div class="flex-column">
-            <div class="flex-column question" v-for="question in questions">
-                <div>{{ question.question_text }}</div>
-                <div class="flex-row sub" v-for="answer in question.answers">
-                    <RadioButton
-                        :inputId="`${question.id}`"
-                        v-model="question.chosenAnswer"
-                        :value="answer.id"
-                    />
-                    <label :for="answer.id">{{ answer.answer_text }}</label>
-                </div>
+            <div v-if="passed">
+                Вы уже прошли данную КТ. Ваша оценка: <Badge :value="grade" :severity="colors[grade]"/>
             </div>
+            <div class="flex-column" v-for="(question, questionIndex) in questions">
+                <Card>
+                    <template #title>{{ questionIndex + 1 }}. {{ question.question_text }}</template>
+                    <template #content>
+                        <div class="flex-column">
+                            <div class="flex-row" v-for="answer in question.answers">
+                                <RadioButton v-model="question.chosenAnswer" :inputId="`${answer.id}`" :value="answer.id" :disabled="passed"/>
+                                <label :for="`${answer.id}`">{{ answer.answer_text }}</label>
+                            </div>
+                        </div>
+                    </template>
+                </Card>
+                <Divider v-if="questionIndex < questions.length - 1"/>
+            </div>
+            <Button @click="send" :disabled="passed">Отправить</Button>
         </div>
-        <input v-if="user.role === studentRole()" type="submit" value="Отправить" class="submit-btn"
-               @click="handleCompletion">
-    </div>
+    </Fieldset>
 </template>
 
-
 <style scoped>
-#check-point-wrapper {
-    padding: var(--std-padding);
-    border-radius: var(--std-corner-radius);
-    background-color: #e6e6e6;
-}
 
-.question {
-    padding: var(--std-padding);
-    border-radius: var(--std-corner-radius);
-    background-color: white;
-}
 </style>

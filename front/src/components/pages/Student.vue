@@ -1,53 +1,37 @@
 <script>
-import CoursesList from '../elements/CoursesList.vue';
-
-import {
-    useUserStore
-} from '../../stores/user.js';
-
-import {
-    studentBySelf
-} from '../elements/CoursesList.vue';
+import { useUserStore } from '#store';
+import { forbiddenPath } from '#router';
+import { UserRoles } from '#app';
+import CoursesList from '#elements/CoursesList';
 
 
 export default {
-    components: {
-        CoursesList
-    },
-
+    name: 'Student',
+    components: { CoursesList },
     setup() {
         const user = useUserStore();
 
         return {
             user,
-            studentBySelf
+            UserRoles
+        };
+    },
+    methods: {
+        handleVisit() {
+            if (!this.user.isStudent) {
+                this.$router.push(forbiddenPath);
+            }
         }
     },
-
-    data() {
-        return {
-            noCoursesWarn: 'У вас пока нет курсов...'
-        }
-    },
-
     created() {
-
-    },
-
-    computed: {
-        noCourses() {
-            return !this.user.courses.length;
-        }
+        this.handleVisit();
     }
-}
+};
 </script>
 
-
 <template>
-    <CoursesList :courses="user.courses" :view="studentBySelf"></CoursesList>
-    <div v-if="noCourses">{{ noCoursesWarn }}</div>
+    <CoursesList :page-user-role="UserRoles.Student"/>
 </template>
-
 
 <style scoped>
 

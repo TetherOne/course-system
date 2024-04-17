@@ -1,133 +1,222 @@
 <script>
+import { useUserStore } from '#store';
+import { API } from '#classes/api';
 import axios from 'axios';
 
-import {
-    courseAPI
-} from '../../requests.js';
+import Fieldset from 'primevue/fieldset';
+import Divider from 'primevue/divider';
+import Card from 'primevue/card';
+import InputGroup from 'primevue/inputgroup';
+import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
+import Panel from 'primevue/panel';
+import FloatLabel from 'primevue/floatlabel';
+import Textarea from 'primevue/textarea';
 
 import {
-    useUserStore
-} from '../../stores/user.js';
+    UserRoles,
+    Toasts
+} from '#app';
 
+import {
+    coursePath,
+    teacherPath
+} from '#router';
 
-export const studentBySelf = 1;
-export const teacherBySelf = 2;
-export const teacherByStudent = 3;
 
 export default {
+    name: 'CoursesList',
+    data() {
+        return {
+            legend: '_legend_',
+            courses: [],
+            newCourse: {
+                formVisible: false,
+                name: '',
+                description: '',
+                password: ''
+            }
+        };
+    },
+    props: {
+        pageUserRole: {
+            type: Number,
+            required: true
+        }
+    },
+    components: {
+        Fieldset,
+        Divider,
+        Card,
+        InputGroup,
+        InputText,
+        Button,
+        Panel,
+        FloatLabel,
+        Textarea
+    },
     setup() {
         const user = useUserStore();
 
         return {
             user,
-            studentBySelf,
-            teacherBySelf,
-            teacherByStudent
-        }
+            UserRoles
+        };
     },
-
-    props: {
-        courses: {
-            type: Array
-        },
-
-        view: {
-            type: Number
-        }
-    },
-
-    data() {
-        return {
-            addCourseFormVisible: false,
-            newCourseName: '',
-            newCourseDescription: '',
-            newCoursePassword: ''
-        }
-    },
-
     methods: {
-        handleAddCourse() {
-            this.addCourseFormVisible = true;
+        getLegend() {
+            switch (this.pageUserRole) {
+                case UserRoles.Student:
+                    return 'Моё обучение';
+                case UserRoles.Teacher:
+                    switch (this.user.role) {
+                        case UserRoles.Student:
+                            return 'Курсы';
+                        case UserRoles.Teacher:
+                            return 'Мои курсы';
+                }
+            }
         },
+        getTeacherShortName(teacher) {
+            const name = `${teacher.name.slice(0, 1)}.`;
 
+            let fatherName = '';
+            if (teacher.father_name !== null) {
+                fatherName = `${teacher.father_name.slice(0, 1)}.`;
+            }
+
+            return `${teacher.surname} ${name} ${fatherName}`;
+        },
+        async loadCourses() {
+            try {
+                switch (this.pageUserRole) {
+                    case UserRoles.Student:
+                        this.courses = await API.studentCourses(this.user.id);
+
+                        for (const course of this.courses) {
+                            try {
+                                const teacher = await API.teacher(course.teacher_profile);
+                                course.teacherShortName = this.getTeacherShortName(teacher);
+                            } catch (error) {
+                                this.user.showToast(Toasts.Error, `Ошибка загрузки информации о преподавателе
+                                курса ${course.course_name}`);
+                            }
+                        }
+
+                        break;
+                    case UserRoles.Teacher:
+                        this.courses = await API.teacherCourses(parseInt(this.$route.params.id));
+
+                        if (this.pageUserRole === UserRoles.Student) {
+                            for (const course of this.courses) {
+                                course.enteredPassword = '';
+                            }
+                        }
+
+                        break;
+                }
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка загрузки курсов:\n${error}`);
+            }
+        },
+        courseLink(courseId) {
+            console.log('courseLink');
+            return coursePath.replace(':id', courseId);
+        },
+        teacherLink(teacherId) {
+            return teacherPath.replace(':id', teacherId);
+        },
+        enroll() {
+            // In development
+        },
         async addCourse() {
-            if (!this.validateNewCourseData()) {
-                alert('Заполните все поля');
+            if (!this.newCourse.name || !this.newCourse.password) {
+                this.user.showToast(Toasts.Error, 'Поля "Название курса" и "Пароль курса" обязательны');
                 return;
             }
 
-            await axios.post(`${courseAPI}/courses/`, {
-                course_name: this.newCourseName,
-                description: this.newCourseDescription,
-                status: true,
-                teacher_profile: parseInt(this.user.id),
-                course_password: this.newCoursePassword
-            });
+            try {
+                await axios.post(`${API.coursesAPI}/`, {
+                    course_name: this.newCourse.name,
+                    description: this.newCourse.description,
+                    status: true,
+                    course_password: this.newCourse.password,
+                    teacher_profile: this.user.id
+                });
 
-            window.location.reload();
-        },
-
-        validateNewCourseData() {
-            if (!this.newCourseName || !this.newCourseDescription || !this.newCoursePassword) {
-                return false;
+                this.$router.go();
+                this.user.showToast(Toasts.Success, 'Курс добавлен');
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка добавления курса:\n${error}`);
             }
-            return true;
         }
+    },
+    created() {
+        this.legend = this.getLegend();
+        this.loadCourses();
     }
-}
+};
 </script>
 
 <template>
-    <div class="flex-column">
-        <div class="flex-column course-card" v-for="course in courses">
-            <a :href="`/course/${course.id}`">{{ course.name }}</a>
-            <a :href="`/teacher/${course.teacherId}`" v-if="view === studentBySelf">{{ course.teacherShortName }}</a>
-        </div>
+    <Fieldset :legend="legend">
+        <div class="flex-column">
 
-        <button v-if="view === teacherBySelf" @click="handleAddCourse">Добавить курс</button>
+            <div class="flex-column" v-for="(course, courseIndex) in courses">
+                <Card>
+                    <template #title>
+                        <router-link :to="courseLink(course.id)">{{ course.course_name }}</router-link>
+                    </template>
 
-        <div class="flex-column container" id="add-course-form" v-if="addCourseFormVisible">
-            <div class="flex-row">
-                <label for="new-course-name">Название:</label>
-                <input type="text" id="new-course-name" v-model="newCourseName">
+                    <template #subtitle v-if="user.isStudent">
+                        <router-link :to="teacherLink(course.teacher_profile)">{{
+                                course.teacherShortName
+                            }}
+                        </router-link>
+                    </template>
+
+                    <template #content>
+                        {{ course.description }}
+                    </template>
+
+                    <template #footer v-if="user.isStudent && pageUserRole === UserRoles.Teacher">
+                        <InputGroup v-if="user.hasCourse(course.id)">
+                            <Button class="pi pi-check" disabled/>
+                            <InputText placeholder="Вы уже зачислены на этот курс" disabled/>
+                        </InputGroup>
+                        <InputGroup v-if="!user.hasCourse(course.id)">
+                            <Button class="pi pi-user-plus" @click="enroll"/>
+                            <InputText placeholder="Пароль" v-model="course.enteredPassword"/>
+                        </InputGroup>
+                    </template>
+                </Card>
+                <Divider v-if="courseIndex < courses.length - 1"/>
             </div>
-            <div class="flex-row">
-                <label for="new-course-description">Описание:</label>
-                <textarea id="new-course-description" cols="30" rows="10" v-model="newCourseDescription"></textarea>
+
+            <div class="flex-column align-items-center align-self-center" v-if="user.role === UserRoles.Teacher">
+                <Button
+                    @click="newCourse.formVisible = !newCourse.formVisible"
+                    class="align-self-start"
+                >Новый курс</Button>
+
+                <Panel header="Новый курс" v-if="newCourse.formVisible">
+                    <div class="flex-column align-items-start">
+                        <InputText v-model="newCourse.name" placeholder="Название курса"/>
+                        <Textarea v-model="newCourse.description" rows="10" cols="100" placeholder="Описание курса"/>
+                        <InputText v-model="newCourse.password" placeholder="Пароль курса"/>
+
+                        <Button class="align-self-center" @click="addCourse">Добавить</Button>
+                    </div>
+                </Panel>
             </div>
-            <div class="flex-row">
-                <label title="Пароль, по которому студент получает доступ к курсу">Пароль:</label>
-                <input type="text" v-model="newCoursePassword">
-            </div>
-            <input type="submit" value="Добавить" style="align-self: center" @click="addCourse">
+
         </div>
-    </div>
+    </Fieldset>
 </template>
 
 <style scoped>
-.course-card {
-    background-color: var(--course-card-background-color);
-    border-radius: var(--std-corner-radius);
-    padding: var(--std-padding);
-    transition: 100ms;
-    font-size: 1.5rem
-}
-
-.course-card:hover {
-    transform: translateX(10px);
-    box-shadow: 0 0 7px gray;
-}
-
-.course-card a {
-    color: black;
-    text-decoration: none;
-}
-
-.course-card a:hover {
-    text-decoration: underline;
-}
-
-button {
-    align-self: center;
+.p-fieldset {
+    min-width: 60vw;
+    max-width: 80vw;
 }
 </style>

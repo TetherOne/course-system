@@ -1,7 +1,7 @@
 {
-    "name": "front_vue",
+    "name": "course_system_front",
     "private": true,
-    "version": "0.0.0",
+    "version": "1.0.0",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -11,6 +11,7 @@
     "dependencies": {
         "axios": "^1.6.7",
         "pinia": "^2.1.7",
+        "primeicons": "^7.0.0",
         "primevue": "^3.51.0",
         "vue": "^3.4.21",
         "vue-router": "^4.3.0"
@@ -18,5 +19,16 @@
     "devDependencies": {
         "@vitejs/plugin-vue": "^5.0.4",
         "vite": "^5.1.6"
+    },
+    "imports": {
+        "#app": "./src/App.vue",
+        "#config": "./src/config.js",
+        "#router": "./src/router.js",
+        "#store": "./src/store.js",
+        "#elements/*": "./src/components/elements/*.vue",
+        "#pages/*": "./src/components/pages/*.vue",
+        "#requests": "./src/requests.js",
+        "#functions": "./src/functions.js",
+        "#classes/*": "./src/classes/*.js"
     }
 }

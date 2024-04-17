@@ -1,149 +1,161 @@
 <script>
-import axios from 'axios';
+import { API } from '#classes/api';
+import { useUserStore } from '#store';
 
 import {
-    useUserStore
-} from '../../stores/user.js';
+    teacherPath,
+    lessonPath,
+    checkpointPath
+} from '#router';
 
 import {
-    getCourse,
-    getCourseModules,
-    getTeacher
-} from '../../requests.js';
+    Toasts,
+    UserRoles
+} from '#app';
 
-import {
-    studentRole,
-    teacherRole
-} from '../../stores/user.js';
-
-import {
-    courseAPI
-} from '../../requests.js';
-
-import Module from '../elements/Module.vue';
-
-export const studentBySelf = 1;
-export const teacherBySelf = 2;
+import Fieldset from 'primevue/fieldset';
+import Card from 'primevue/card';
+import Divider from 'primevue/divider';
 
 
 export default {
+    name: 'Course',
+    components: {
+        Fieldset,
+        Card,
+        Divider
+    },
+    data() {
+        return {
+            id: parseInt(this.$route.params.id),
+            name: '_courseName_',
+            description: '_courseDescription_',
+            teacherId: 0,
+            teacherLink: '',
+            teacherName: '_teacherName_',
+            modules: [],
+        }
+    },
     setup() {
         const user = useUserStore();
 
         return {
-            user,
-            studentBySelf,
-            teacherBySelf
-        }
+            user
+        };
     },
-
-    components: {
-        Module
-    },
-
-    data() {
-        return {
-            id: this.$route.params.id,
-            name: '',
-            description: '',
-            teacherId: 0,
-            teacherFullName: '',
-            modules: [],
-            view: this.user.role === studentRole ? studentBySelf : teacherBySelf,
-            
-            addingModuleFormVisible: false,
-            newModuleName: ''
-        }
-    },
-
-    created() {
-        this.loadAllData();
-    },
-
     methods: {
-        loadAllData() {
-            this.loadCourse();
-            this.loadModules();
-        },
+        async loadData() {
+            try {
+                const course = await API.course(this.id);
 
-        async loadCourse() {
-            const course = await getCourse(this.id);
-            this.name = course.name;
-            this.description = course.description;
-            this.password = course.password;
+                this.name = course.course_name;
+                this.description = course.description;
+                this.teacherId = course.teacher_profile;
+                this.teacherLink = teacherPath.replace(':id', this.teacherId);
 
-            if (this.view === studentBySelf) {
-                this.teacherId = course.teacherId;
-                const teacher = await getTeacher(this.teacherId);
+                try {
+                    this.modules = await API.courseModules(this.id);
 
-                this.teacherFullName = `${teacher.surname} ${teacher.name} ${teacher.fatherName}`;
+                    for (const module of this.modules) {
+                        module.lessons = await this.getModuleLessons(module.id);console.log(module.lessons)
+                    }
+
+                } catch (error) {
+                    this.user.showToast(Toasts.Error, `Ошибка загрузки модулей:\n${error}`);
+                }
+
+                if (this.user.role === UserRoles.Student) {
+                    try {
+                        const teacher = await API.teacher(this.teacherId);
+
+                        if (teacher.father_name === null) {
+                            teacher.father_name = '';
+                        }
+
+                        this.teacherName = `${teacher.surname} ${teacher.name} ${teacher.father_name}`;
+                    } catch (error) {
+                        this.user.showToast(Toasts.Error, `Ошибка загрузки данных преподавателя:\n${error}`);
+                    }
+                }
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка загрузки данных курса:\n${error}`);
             }
         },
-
-        async loadModules() {
-            this.modules = await getCourseModules(this.id);
-        },
-
-        async addModule() {
-            if (!this.validateNewModuleData()) {
-                alert('Введите имя модуля');
+        async getModuleLessons(moduleId) {
+            try {
+                const lessons = await API.moduleLessons(moduleId);
+                return lessons;
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка загрузки уроков модуля ${moduleId}:\n${error}`);
             }
-
-            await axios.post(`${courseAPI}/modules/`, {
-                module_name: this.newModuleName,
-                course: this.id
-            });
-            window.location.reload();
         },
-
-        validateNewModuleData() {
-            return this.newModuleName.length;
+        async loadModulesCheckpoints() {
+            for (const module of this.modules) {
+                try {
+                    module.checkpoints = await API.moduleCheckpoints(module.id);
+                } catch (error) {
+                    this.user.showToast(Toasts.Error, `Ошибка загрузки контрольных точек модуля ${module.id}:\n${error}`);
+                }
+            }
+        },
+        lessonLink(lessonId) {
+            return lessonPath.replace(':id', lessonId);
+        },
+        checkpointLink(checkpointId) {
+            return checkpointPath.replace(':id', checkpointId);
         }
+    },
+    async created() {
+        await this.loadData();
+        await this.loadModulesCheckpoints();
     }
-}
+};
 </script>
 
-
 <template>
-    <div id="annotation" class="flex-column">
-        <h2 id="title">{{ name }}</h2>
-        <div id="teacher-info" v-if="view === studentBySelf">Курс ведёт: <a :href="`/teacher/${teacherId}`">{{ teacherFullName }}</a></div>
+    <Fieldset :legend="name">
+        <div class="flex-column">
+            <router-link :to="teacherLink">
+                <small>
+                    Преподаватель: {{ teacherName }}
+                </small>
+            </router-link>
 
-        <div class="label" v-if="view === teacherBySelf">
-            {{ description }}
-        </div>
+            <div class="flex-column" v-for="(module, moduleIndex) in modules">
+                <Card>
+                    <template #title>
+                        Модуль {{ moduleIndex + 1 }}. {{ module.module_name }}
+                    </template>
 
-        <a :href="`/participants/${this.id}`" class="label">Участники</a>
+                    <template #content>
+                        <div class="flex-column">
+                            <router-link v-for="(lesson, lessonIndex) in module.lessons" :to="lessonLink(lesson.id)">
+                                Урок {{ lessonIndex + 1 }}. {{ lesson.lesson_name }}
+                            </router-link>
+                        </div>
+                        <div v-if="module.lessons !== undefined && !module.lessons.length">
+                            Пока нет уроков
+                        </div>
 
-        <Module v-for="(module, i) in modules" :index="i + 1" :id="module.id" :name="module.name" :view="view"/>
+                        <Divider/>
 
-        <div class="flex-column" v-if="view === teacherBySelf">
-            <button @click="addingModuleFormVisible = true">Добавить модуль</button>
-            <div class="flex-column" v-if="addingModuleFormVisible">
-                <div class="flex-row">
-                    <label>Название:</label>
-                    <input type="text" v-model="newModuleName">
-                </div>
-                <input type="submit" value="Добавить" @click="addModule">
+                        <div class="flex-column">
+                            <router-link v-for="(checkpoint, checkpointId) in module.checkpoints" :to="checkpointLink(checkpoint.id)">
+                                КТ {{ checkpointId + 1 }}. {{ checkpoint.title }}
+                            </router-link>
+                        </div>
+
+                        <div v-if="module.checkpoints !== undefined && !module.checkpoints.length">
+                            Пока нет контрольных точек
+                        </div>
+                    </template>
+                </Card>
+                <Divider v-if="moduleIndex < modules.length - 1"/>
             </div>
         </div>
-    </div>
+    </Fieldset>
 </template>
 
-
 <style scoped>
-#annotation {
-    background-color: #e6e6e6;
-    padding: calc(var(--std-padding) + 1em);
-    border-radius: var(--std-corner-radius);
-    max-width: 60vw;
-}
 
-#title {
-    text-align: center;
-}
-
-#teacher-info a {
-    color: black;
-}
 </style>

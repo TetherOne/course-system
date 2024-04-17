@@ -1,22 +1,21 @@
-import {defineConfig} from 'vite';
+import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
 import {
-    frontHostName,
-    frontPort,
-    backURL
-} from './src/config.js';
+    viteHost,
+    vitePort,
+    djangoURL
+} from '#config';
 
 
 export default defineConfig({
     plugins: [vue()],
     server: {
-        host: frontHostName,
-        port: frontPort,
+        host: viteHost,
+        port: vitePort,
         proxy: {
             '/api': {
-                target: backURL,
-                ws: true,
+                target: djangoURL,
                 changeOrigin: true
             }
         }

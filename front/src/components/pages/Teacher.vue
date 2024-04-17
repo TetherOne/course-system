@@ -1,47 +1,70 @@
 <script>
-import {
-    useUserStore
-} from '../../stores/user.js';
-import CoursesList from "../elements/CoursesList.vue";
-
-import {
-    teacherByStudent,
-    teacherBySelf
-} from '../elements/CoursesList.vue';
+import CoursesList from '#elements/CoursesList';
+import { UserRoles } from '#app';
+import Avatar from 'primevue/avatar';
+import { useUserStore } from '#store';
+import { API } from '#classes/api';
 
 
 export default {
+    name: 'Teacher',
     components: {
-        CoursesList
+        CoursesList,
+        Avatar
     },
-
+    data() {
+        return {
+            id: parseInt(this.$route.params.id),
+            surname: '_surname_',
+            name: '_name_',
+            fatherName: '_fatherName_',
+            faculty: '_faculty_',
+            avatar: '_avatarPath_'
+        }
+    },
     setup() {
         const user = useUserStore();
 
         return {
-            user,
-            teacherByStudent,
-            teacherBySelf
-        }
+            UserRoles,
+            user
+        };
     },
+    async created() {
+        if (this.user.role === UserRoles.Student) {
+            try {
+                const teacher = await API.teacher(this.id);
 
-    computed: {
-        view() {
-            if (this.user.id == this.$route.params.id) {
-                return teacherBySelf;
-            } else {
-                return teacherByStudent;
+                this.surname = teacher.surname;
+                this.name = teacher.name;
+                this.fatherName = teacher.father_name;
+                this.faculty = teacher.faculty;
+                this.avatar = teacher.avatar;
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка загрузки информации о преподавателе:\n${error}`);
             }
         }
     }
-}
+};
 </script>
 
-
 <template>
-    <CoursesList :courses="user.courses" :view="view"></CoursesList>
+    <div class="flex-column" v-if="user.role === UserRoles.Student">
+        <div class="flex-row">
+            <Avatar v-if="avatar" :image="avatar" size="xlarge" shape="circle"/>
+            <Avatar v-if="!avatar" :label="name.slice(0, 1)" size="xlarge" shape="circle"/>
+            <span>
+                {{ surname }}
+                {{ name }}
+                {{ fatherName === null ? '' : fatherName }}
+            </span>
+        </div>
+        <div>
+            Факультет: {{ faculty }}
+        </div>
+    </div>
+    <CoursesList :pageUserRole="UserRoles.Teacher"/>
 </template>
-
 
 <style scoped>
 
