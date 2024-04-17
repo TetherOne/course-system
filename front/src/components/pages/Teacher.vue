@@ -49,7 +49,7 @@ export default {
 </script>
 
 <template>
-    <div class="flex-column">
+    <div class="flex-column" v-if="user.role === UserRoles.Student">
         <div class="flex-row">
             <Avatar v-if="avatar" :image="avatar" size="xlarge" shape="circle"/>
             <Avatar v-if="!avatar" :label="name.slice(0, 1)" size="xlarge" shape="circle"/>

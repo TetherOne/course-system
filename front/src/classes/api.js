@@ -24,6 +24,9 @@ export class API {
     static checkpointsAPI = `${this.checkpointAppAPI}/checkpoints`;
     static passedCheckpointsAPI = `${this.checkpointAppAPI}/passed-checkpoints`;
 
+    static historyAPI = `${this.API}/history`;
+    static historyOfPassedAnswersAPI = `${this.historyAPI}/history-of-passed-answers`;
+
     static standardConfig = {
         params: {
             format: 'json'
@@ -68,5 +71,54 @@ export class API {
         config.params.teacher_profile = teacherId;
 
         return (await axios.get(this.coursesAPI, config)).data;
+    }
+
+    static async courseModules(courseId) {
+        const config = structuredClone(this.standardConfig);
+        config.params.course = courseId;
+
+        const modules = (await axios.get(this.modulesAPI, config)).data;
+        return modules;
+    }
+    
+    static async moduleLessons(moduleId) {
+        const config = structuredClone(this.standardConfig);
+        config.params.module = moduleId;
+
+        const lessons = (await axios.get(this.lessonsAPI, config)).data;
+        return lessons;
+    }
+
+    static async moduleCheckpoints(moduleId) {
+        const config = structuredClone(this.standardConfig);
+        config.params.module = moduleId;
+
+        const checkpoints = (await axios.get(this.checkpointsAPI, config)).data;
+        return checkpoints;
+    }
+
+    static async checkpoint(id) {
+        const checkpoint = (await axios.get(`${this.checkpointsAPI}/${id}`, this.standardConfig)).data;
+        return checkpoint;
+    }
+
+    static async didStudentPassCheckpoint(studentId, checkpointId) {
+        const config = structuredClone(this.standardConfig);
+        config.params.student = studentId;
+        config.params.checkpoint = checkpointId;
+
+        const checkpoints = (await axios.get(this.passedCheckpointsAPI, config)).data;
+
+        return checkpoints.length > 0;
+    }
+
+    static async studentCheckpointResult(studentId, checkpointId) {
+        const config = structuredClone(this.standardConfig);
+        config.params.student = studentId;
+        config.params.checkpoint = checkpointId;
+
+        const result = (await axios.get(this.passedCheckpointsAPI, config)).data[0];
+
+        return result;
     }
 }

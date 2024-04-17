@@ -162,7 +162,7 @@ export default {
     <Fieldset :legend="legend">
         <div class="flex-column">
 
-            <div class="flex-column" v-for="course in courses">
+            <div class="flex-column" v-for="(course, courseIndex) in courses">
                 <Card>
                     <template #title>
                         <router-link :to="courseLink(course.id)">{{ course.course_name }}</router-link>
@@ -190,6 +190,7 @@ export default {
                         </InputGroup>
                     </template>
                 </Card>
+                <Divider v-if="courseIndex < courses.length - 1"/>
             </div>
 
             <div class="flex-column align-items-center align-self-center" v-if="user.role === UserRoles.Teacher">
