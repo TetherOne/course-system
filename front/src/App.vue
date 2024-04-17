@@ -84,6 +84,73 @@ export default {
     </div>
 </template>
 
-<style scoped>
+<style lang="sass">
+$standardGap: 10px
+$subMargin: 24px
 
+
+body
+    margin: 0
+    padding: 0
+    box-sizing: border-box
+
+
+@mixin flex($direction)
+    gap: $standardGap
+    display: flex
+    flex-direction: $direction
+
+.flexRow
+    @include flex(row)
+
+.flexColumn
+    @include flex(column)
+
+
+@mixin justify($type)
+    justify-content: $type
+
+@each $type in flex-start, flex-end, center
+    .justify
+
+
+@mixin align($type)
+    align-items: $type
+
+.alignStart
+    @include align(flex-start)
+
+.alignCenter
+    @include align(center)
+
+.alignEnd
+    @include align(flex-end)
+
+
+@mixin alignSelf($type)
+    align-self: $type
+
+.alignSelfStretch
+    @include alignSelf(stretch)
+
+.alignSelfStart
+    @include alignSelf(flex-start)
+
+.alignSelfCenter
+    @include alignSelf(center)
+
+.alignSelfEnd
+    @include alignSelf(flex-end)
+
+
+.sub
+    margin-left: $subMargin
+
+
+a
+    color: inherit
+    text-decoration: none
+
+    &:hover
+        text-decoration: underline
 </style>

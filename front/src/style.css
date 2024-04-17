@@ -21,13 +21,16 @@ body {
     gap: var(--std-gap);
 }
 
-a {
-    text-decoration: none;
-    color: inherit;
+.justify-center {
+    justify-content: center;
 }
 
-a:hover {
-    text-decoration: underline;
+.justify-start {
+    justify-content: flex-start;
+}
+
+.justify-end {
+    justify-content: flex-end;
 }
 
 .align-items-center {
@@ -52,8 +55,4 @@ a:hover {
 
 .sub {
     margin-left: 24px;
-}
-
-.justify-end {
-    justify-content: flex-end;
 }
