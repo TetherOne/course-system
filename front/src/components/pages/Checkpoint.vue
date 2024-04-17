@@ -152,7 +152,7 @@ export default {
                     <template #content>
                         <div class="flex-column">
                             <div class="flex-row" v-for="answer in question.answers">
-                                <RadioButton v-model="question.chosenAnswer" :inputId="`${answer.id}`" :value="answer.id" :disabled="passed"/>
+                                <RadioButton v-model="question.chosenAnswer" :inputId="`${answer.id}`" :value="answer.id"/>
                                 <label :for="`${answer.id}`">{{ answer.answer_text }}</label>
                             </div>
                         </div>
@@ -160,7 +160,7 @@ export default {
                 </Card>
                 <Divider v-if="questionIndex < questions.length - 1"/>
             </div>
-            <Button @click="send" :disabled="passed">Отправить</Button>
+            <Button @click="send">Отправить</Button>
         </div>
     </Fieldset>
 </template>
