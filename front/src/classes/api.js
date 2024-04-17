@@ -117,9 +117,9 @@ export class API {
         config.params.student = studentId;
         config.params.checkpoint = checkpointId;
 
-        const result = (await axios.get(this.passedCheckpointsAPI, config)).data[0];
+        const result = (await axios.get(this.passedCheckpointsAPI, config)).data;
 
-        return result;
+        return result[result.length - 1];
     }
 
     static async lesson(id) {
