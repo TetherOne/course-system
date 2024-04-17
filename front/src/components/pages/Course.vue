@@ -19,6 +19,8 @@ import Divider from 'primevue/divider';
 import Button from 'primevue/button';
 import Panel from 'primevue/panel';
 import InputText from 'primevue/inputtext';
+import Textarea from 'primevue/textarea';
+import Dialog from 'primevue/dialog';
 
 
 export default {
@@ -29,7 +31,9 @@ export default {
         Divider,
         Button,
         Panel,
-        InputText
+        InputText,
+        Textarea,
+        Dialog
     },
     data() {
         return {
@@ -127,11 +131,38 @@ export default {
                 this.$router.go();
             } catch (error) {
                 this.user.showToast(Toasts.Error, `Ошибка добавления модуля:${error}`);            }
+        },
+        async addLesson(moduleId) {
+            const module = this.modules.filter(module => module.id === moduleId)[0];
+
+            if (module.newLesson.name === '') {
+                this.user.showToast(Toasts.Error, 'Поле "Название урока" обязательно для заполнения"');
+                return;
+            }
+
+            try {
+                await API.addLesson(moduleId, module.newLesson.name, module.newLesson.description);
+                this.$router.go();
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка добавления урока:\n${error}`);
+            }
         }
     },
     async created() {
         await this.loadData();
         await this.loadModulesCheckpoints();
+
+        for (const module of this.modules) {
+            module.newLesson = {
+                formVisible: false,
+                name: '',
+                description: ''
+            };
+            module.newCheckpoint = {
+                formVisible: false,
+                name: ''
+            }
+        }
     }
 };
 </script>
@@ -159,6 +190,32 @@ export default {
                         </div>
                         <div v-if="module.lessons !== undefined && !module.lessons.length">
                             Пока нет уроков
+                        </div>
+
+                        <Divider/>
+
+                        <div class="flex-column align-items-center align-self-center" v-if="user.role === UserRoles.Teacher && module.newLesson">
+                            <Button
+                                @click="module.newLesson.formVisible = true"
+                                class="align-self-start"
+                            >Новый урок</Button>
+
+                            <Dialog v-model:visible="module.newLesson.formVisible" modal header="Добавить урок">
+                                <div class="flex-column">
+                                    <div class="flex-row align-items-center">
+                                        <label for="lessonName">Название урока</label>
+                                        <InputText id="lessonName" v-model="module.newLesson.name"/>
+                                    </div>
+                                    <div class="flex-column">
+                                        <label for="description">Описание</label>
+                                        <Textarea id="description" v-model="module.newLesson.description"/>
+                                    </div>
+                                    <div class="flex-row justify-end">
+                                        <Button @click="module.newLesson.formVisible = false" label="Отмена"/>
+                                        <Button @click="addLesson(module.id)" label="Сохранить"/>
+                                    </div>
+                                </div>
+                            </Dialog>
                         </div>
 
                         <Divider/>

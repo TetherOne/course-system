@@ -141,4 +141,14 @@ export class API {
             course: courseId
         });
     }
+
+    static async addLesson(moduleId, lessonName, lessonDescription = null, videoPath = null) {
+        console.log(moduleId, lessonName, lessonDescription)
+        await axios.post(`${this.lessonsAPI}/`, {
+            lesson_name: lessonName,
+            description: lessonDescription,
+            module: moduleId,
+            video: videoPath
+        });
+    }
 }

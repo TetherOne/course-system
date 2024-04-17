@@ -53,3 +53,7 @@ a:hover {
 .sub {
     margin-left: 24px;
 }
+
+.justify-end {
+    justify-content: flex-end;
+}
