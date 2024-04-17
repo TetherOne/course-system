@@ -11,11 +11,31 @@ from .models import Module
 
 class EnrollmentSerializer(serializers.ModelSerializer):
 
-    student = StudentSerializer()
+    course_password = serializers.CharField(write_only=True)
 
     class Meta:
         model = Enrollment
         fields = "__all__"
+
+    def validate(self, data):
+        """
+        Password verification
+        """
+        course = data["course"]
+        course_password = data.get("course_password")
+        if course.course_password != course_password:
+            raise serializers.ValidationError(
+                "Неверный пароль курса.",
+            )
+        return data
+
+    def create(self, validated_data):
+        """
+        Removing a password when creating an
+        entry in Enrollment
+        """
+        validated_data.pop("course_password")
+        return super().create(validated_data)
 
 
 class CourseSerializer(serializers.ModelSerializer):

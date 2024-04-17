@@ -7,7 +7,6 @@ from courses.serializers import CourseSerializer
 from courses.serializers import ModuleSerializer
 
 from rest_framework.filters import OrderingFilter
-
 from rest_framework.viewsets import ModelViewSet
 
 from courses.models import LessonOtherFile
@@ -29,6 +28,16 @@ class EnrollmentViewSet(ModelViewSet):
         "student",
         "course",
     ]
+
+    def get_serializer_context(self):
+        """
+        Pass the password to serializer
+        """
+        context = super().get_serializer_context()
+        context["course_password"] = self.request.data.get(
+            "course_password",
+        )
+        return context
 
 
 class CourseViewSet(ModelViewSet):
