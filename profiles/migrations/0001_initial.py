@@ -15,30 +15,76 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='StudentProfile',
+            name="StudentProfile",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=100, null=True)),
-                ('surname', models.CharField(blank=True, max_length=100, null=True)),
-                ('father_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('faculty', models.CharField(blank=True, max_length=100, null=True)),
-                ('group', models.CharField(blank=True, max_length=100, null=True)),
-                ('avatar', models.ImageField(blank=True, null=True, upload_to='student-avatars/')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='student_profile', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(blank=True, max_length=100, null=True)),
+                ("surname", models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "father_name",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                ("faculty", models.CharField(blank=True, max_length=100, null=True)),
+                ("group", models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "avatar",
+                    models.ImageField(
+                        blank=True, null=True, upload_to="student-avatars/"
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="student_profile",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='TeacherProfile',
+            name="TeacherProfile",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=100, null=True)),
-                ('surname', models.CharField(blank=True, max_length=100, null=True)),
-                ('father_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('faculty', models.CharField(blank=True, max_length=100, null=True)),
-                ('avatar', models.ImageField(blank=True, null=True, upload_to='teacher-avatars/')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='teacher_profile', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(blank=True, max_length=100, null=True)),
+                ("surname", models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "father_name",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                ("faculty", models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "avatar",
+                    models.ImageField(
+                        blank=True, null=True, upload_to="teacher-avatars/"
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="teacher_profile",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]
