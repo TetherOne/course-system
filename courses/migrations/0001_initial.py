@@ -10,64 +10,176 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('profiles', '0001_initial'),
+        ("profiles", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Lesson',
+            name="Lesson",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('lesson_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('description', models.TextField(blank=True, max_length=10000, null=True)),
-                ('video', models.FileField(blank=True, null=True, upload_to=courses.models.lesson_video_directory_path)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "lesson_name",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, max_length=10000, null=True),
+                ),
+                (
+                    "video",
+                    models.FileField(
+                        blank=True,
+                        null=True,
+                        upload_to=courses.models.lesson_video_directory_path,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Course',
+            name="Course",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('course_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('description', models.TextField(blank=True, max_length=10000, null=True)),
-                ('status', models.BooleanField(default=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('course_password', models.CharField(blank=True, default='', max_length=50)),
-                ('teacher_profile', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='courses', to='profiles.teacherprofile')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "course_name",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, max_length=10000, null=True),
+                ),
+                ("status", models.BooleanField(default=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "course_password",
+                    models.CharField(blank=True, default="", max_length=50),
+                ),
+                (
+                    "teacher_profile",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="courses",
+                        to="profiles.teacherprofile",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='LessonOtherFile',
+            name="LessonOtherFile",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('other_file', models.FileField(blank=True, null=True, upload_to=courses.models.other_file_directory_path)),
-                ('lesson', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='other_files', to='courses.lesson')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "other_file",
+                    models.FileField(
+                        blank=True,
+                        null=True,
+                        upload_to=courses.models.other_file_directory_path,
+                    ),
+                ),
+                (
+                    "lesson",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="other_files",
+                        to="courses.lesson",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Module',
+            name="Module",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('module_name', models.CharField(blank=True, max_length=100, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='modules', to='courses.course')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "module_name",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "course",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="modules",
+                        to="courses.course",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='lesson',
-            name='module',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='videos', to='courses.module'),
+            model_name="lesson",
+            name="module",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="videos",
+                to="courses.module",
+            ),
         ),
         migrations.CreateModel(
-            name='Enrollment',
+            name="Enrollment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('enrollment_date', models.DateTimeField(auto_now_add=True)),
-                ('course', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='enrollments', to='courses.course')),
-                ('student', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='enrollments', to='profiles.studentprofile')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("enrollment_date", models.DateTimeField(auto_now_add=True)),
+                (
+                    "course",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="enrollments",
+                        to="courses.course",
+                    ),
+                ),
+                (
+                    "student",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="enrollments",
+                        to="profiles.studentprofile",
+                    ),
+                ),
             ],
             options={
-                'unique_together': {('student', 'course')},
+                "unique_together": {("student", "course")},
             },
         ),
     ]

@@ -9,20 +9,56 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('checkpoints', '0001_initial'),
-        ('profiles', '0001_initial'),
-        ('questions', '0001_initial'),
+        ("checkpoints", "0001_initial"),
+        ("profiles", "0001_initial"),
+        ("questions", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='HistoryOfPassedAnswer',
+            name="HistoryOfPassedAnswer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('answer', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='questions.answer')),
-                ('checkpoint', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='checkpoints.passedcheckpoint')),
-                ('question', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='questions.question')),
-                ('student', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='profiles.studentprofile')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "answer",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="questions.answer",
+                    ),
+                ),
+                (
+                    "checkpoint",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="checkpoints.passedcheckpoint",
+                    ),
+                ),
+                (
+                    "question",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="questions.question",
+                    ),
+                ),
+                (
+                    "student",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="profiles.studentprofile",
+                    ),
+                ),
             ],
         ),
     ]

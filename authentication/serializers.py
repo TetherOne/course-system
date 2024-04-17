@@ -12,6 +12,7 @@ from rest_framework import serializers
 
 
 class CurrentUserSerializer(serializers.ModelSerializer):
+
     user_profile = serializers.SerializerMethodField()
 
     class Meta:
