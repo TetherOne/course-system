@@ -24,6 +24,7 @@ class CheckPoint(models.Model):
     )
     title = models.TextField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+    status = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.title}"
@@ -91,9 +92,9 @@ class PassedCheckPoint(models.Model):
     sender=PassedCheckPoint,
 )
 def update_summary_points_on_passed_checkpoint_delete(
-        sender,
-        instance,
-        **kwargs,
+    sender,
+    instance,
+    **kwargs,
 ):
     """
     Automatically recalculate summary points when

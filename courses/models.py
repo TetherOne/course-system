@@ -84,6 +84,7 @@ class Lesson(models.Model):
         blank=True,
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    status = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.lesson_name}"
@@ -130,6 +131,7 @@ class Module(models.Model):
         on_delete=models.CASCADE,
         related_name="modules",
     )
+    status = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.module_name}"
