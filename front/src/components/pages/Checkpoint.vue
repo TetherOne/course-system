@@ -106,7 +106,9 @@ export default {
 
                 for (const answer of question.answers) {
                     if (answer.id === chosenAnswerId) {
-                        score += question.max_points;
+                        if (answer.is_correct) {
+                            score += question.max_points;
+                        }
                         break;
                     }
                 }

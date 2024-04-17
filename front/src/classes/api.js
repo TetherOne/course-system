@@ -121,4 +121,24 @@ export class API {
 
         return result;
     }
+
+    static async lesson(id) {
+        const lesson = (await axios.get(`${this.lessonsAPI}/${id}`, this.standardConfig)).data;
+        return lesson;
+    }
+
+    static async lessonFiles(id) {
+        const config = structuredClone(this.standardConfig);
+        config.params.lesson = id;
+
+        const files = (await axios.get(this.lessonFilesAPI, config)).data;
+        return files;
+    }
+
+    static async addModule(moduleName, courseId) {
+        await axios.post(`${this.modulesAPI}/`, {
+            module_name: moduleName,
+            course: courseId
+        });
+    }
 }

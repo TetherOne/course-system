@@ -9,7 +9,7 @@ export const useUserStore = defineStore(storeName, {
     state: () => {
         return {
             id: 1,
-            role: UserRoles.Student,
+            role: UserRoles.Teacher,
 
             surname: '_surname_',
             name: '_name_',

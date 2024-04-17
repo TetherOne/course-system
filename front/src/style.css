@@ -49,3 +49,7 @@ a:hover {
 .align-self-start {
     align-self: flex-start;
 }
+
+.sub {
+    margin-left: 24px;
+}

@@ -16,6 +16,9 @@ import {
 import Fieldset from 'primevue/fieldset';
 import Card from 'primevue/card';
 import Divider from 'primevue/divider';
+import Button from 'primevue/button';
+import Panel from 'primevue/panel';
+import InputText from 'primevue/inputtext';
 
 
 export default {
@@ -23,7 +26,10 @@ export default {
     components: {
         Fieldset,
         Card,
-        Divider
+        Divider,
+        Button,
+        Panel,
+        InputText
     },
     data() {
         return {
@@ -34,13 +40,19 @@ export default {
             teacherLink: '',
             teacherName: '_teacherName_',
             modules: [],
+
+            newModule: {
+                formVisible: false,
+                name: ''
+            }
         }
     },
     setup() {
         const user = useUserStore();
 
         return {
-            user
+            user,
+            UserRoles
         };
     },
     methods: {
@@ -103,6 +115,18 @@ export default {
         },
         checkpointLink(checkpointId) {
             return checkpointPath.replace(':id', checkpointId);
+        },
+        async addModule() {
+            if (this.newModule.name === '') {
+                this.user.showToast(Toasts.Error, 'Поле "Название модуля" обязательно для заполнения');
+                return;
+            }
+
+            try {
+                await API.addModule(this.newModule.name, this.id);
+                this.$router.go();
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка добавления модуля:${error}`);            }
         }
     },
     async created() {
@@ -115,7 +139,7 @@ export default {
 <template>
     <Fieldset :legend="name">
         <div class="flex-column">
-            <router-link :to="teacherLink">
+            <router-link v-if="user.role === UserRoles.Student" :to="teacherLink">
                 <small>
                     Преподаватель: {{ teacherName }}
                 </small>
@@ -152,6 +176,23 @@ export default {
                 </Card>
                 <Divider v-if="moduleIndex < modules.length - 1"/>
             </div>
+        </div>
+
+        <Divider/>
+
+        <div class="flex-column align-items-center align-self-center" v-if="user.role === UserRoles.Teacher">
+            <Button
+                @click="newModule.formVisible = !newModule.formVisible"
+                class="align-self-start"
+            >Новый модуль</Button>
+
+            <Panel header="Новый курс" v-if="newModule.formVisible">
+                <div class="flex-column align-items-start">
+                    <InputText v-model="newModule.name" placeholder="Название модуля"/>
+
+                    <Button class="align-self-center" @click="addModule">Добавить</Button>
+                </div>
+            </Panel>
         </div>
     </Fieldset>
 </template>
