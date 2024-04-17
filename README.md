@@ -57,7 +57,7 @@
     - Vue.js
 
 ### SQL Database
-    - SQLite (temporarily)
+    - PostgreSQL
 
 ### NoSQL Database
     - Redis
