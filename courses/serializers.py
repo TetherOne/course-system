@@ -1,5 +1,3 @@
-from profiles.serializers import StudentSerializer
-
 from rest_framework import serializers
 
 from .models import LessonOtherFile
