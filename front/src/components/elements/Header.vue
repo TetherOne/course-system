@@ -44,17 +44,17 @@ export default {
 </script>
 
 <template>
-    <Panel class="align-self-stretch">
+    <Panel class="alignSelfStretch">
         <template #header>
-            <div class="flex-row align-items-center">
+            <div class="flexRow alignCenter">
                 <Avatar v-if="userHasAvatar" :image="user.avatar" size="large" shape="circle"/>
                 <Avatar v-if="!userHasAvatar" :label="user.nameFirstLetter" size="large" shape="circle"/>
-                <router-link :to="profileLink" id="user-name">{{ user.fullName }}</router-link>
+                <router-link :to="profileLink" id="userName">{{ user.fullName }}</router-link>
             </div>
         </template>
 
         <template #icons>
-            <div class="flex-row">
+            <div class="flexRow">
                 <Button icon="pi pi-cog"/>
                 <Button icon="pi pi-moon"/>
                 <Button icon="pi pi-sign-out"/>
@@ -65,14 +65,14 @@ export default {
 
 <style scoped>
 .p-panel {
-    background-color: var(--green);
+    background-color: var(--primary-color);
 
     border: none;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
 
-#user-name {
+#userName {
     color: white;
 }
 </style>

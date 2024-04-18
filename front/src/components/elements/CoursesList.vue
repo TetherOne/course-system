@@ -160,9 +160,9 @@ export default {
 
 <template>
     <Fieldset :legend="legend">
-        <div class="flex-column">
+        <div class="flexColumn">
 
-            <div class="flex-column" v-for="(course, courseIndex) in courses">
+            <div class="flexColumn" v-for="(course, courseIndex) in courses">
                 <Card>
                     <template #title>
                         <router-link :to="courseLink(course.id)">{{ course.course_name }}</router-link>
@@ -193,19 +193,19 @@ export default {
                 <Divider v-if="courseIndex < courses.length - 1"/>
             </div>
 
-            <div class="flex-column align-items-center align-self-center" v-if="user.role === UserRoles.Teacher">
+            <div class="flexColumn alignCenter alignSelfCenter" v-if="user.role === UserRoles.Teacher">
                 <Button
                     @click="newCourse.formVisible = !newCourse.formVisible"
-                    class="align-self-start"
+                    class="alignSelfStart"
                 >Новый курс</Button>
 
                 <Panel header="Новый курс" v-if="newCourse.formVisible">
-                    <div class="flex-column align-items-start">
+                    <div class="flexColumn align-items-start">
                         <InputText v-model="newCourse.name" placeholder="Название курса"/>
                         <Textarea v-model="newCourse.description" rows="10" cols="100" placeholder="Описание курса"/>
                         <InputText v-model="newCourse.password" placeholder="Пароль курса"/>
 
-                        <Button class="align-self-center" @click="addCourse">Добавить</Button>
+                        <Button class="alignSelfCenter" @click="addCourse">Добавить</Button>
                     </div>
                 </Panel>
             </div>

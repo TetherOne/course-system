@@ -77,7 +77,7 @@ export default {
 </script>
 
 <template>
-    <div class="flex-column align-items-center">
+    <div class="flexColumn alignCenter">
         <Header/>
         <router-view/>
         <Toast/>
@@ -95,23 +95,29 @@ body
     box-sizing: border-box
 
 
-@mixin flex($direction)
-    gap: $standardGap
+.flex
     display: flex
-    flex-direction: $direction
+    gap: $standardGap
 
 .flexRow
-    @include flex(row)
+    @extend .flex
 
 .flexColumn
-    @include flex(column)
+    @extend .flex
+    flex-direction: column
 
 
 @mixin justify($type)
     justify-content: $type
 
-@each $type in flex-start, flex-end, center
-    .justify
+.justifyStart
+    @include justify(flex-start)
+
+.justifyEnd
+    @include justify(flex-end)
+
+.justifyCenter
+    @include justify(center)
 
 
 @mixin align($type)
@@ -120,32 +126,31 @@ body
 .alignStart
     @include align(flex-start)
 
-.alignCenter
-    @include align(center)
-
 .alignEnd
     @include align(flex-end)
+
+.alignCenter
+    @include align(center)
 
 
 @mixin alignSelf($type)
     align-self: $type
 
-.alignSelfStretch
-    @include alignSelf(stretch)
-
 .alignSelfStart
     @include alignSelf(flex-start)
-
-.alignSelfCenter
-    @include alignSelf(center)
 
 .alignSelfEnd
     @include alignSelf(flex-end)
 
+.alignSelfStretch
+    @include alignSelf(stretch)
+
+.alignSelfCenter
+    @include alignSelf(center)
+
 
 .sub
     margin-left: $subMargin
-
 
 a
     color: inherit
