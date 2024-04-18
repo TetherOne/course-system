@@ -39,7 +39,7 @@ class EnrollmentSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = "__all__"
+        exclude = "course_password",
 
 
 class ModuleSerializer(serializers.ModelSerializer):
