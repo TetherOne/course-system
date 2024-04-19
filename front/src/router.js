@@ -4,10 +4,10 @@ import {
 } from 'vue-router';
 
 import Student from '#pages/Student';
-import Teacher from '#pages/Teacher';
-import Course from '#pages/Course';
-import Lesson from '#pages/Lesson';
-import Checkpoint from '#pages/Checkpoint';
+// import Teacher from '#pages/Teacher';
+// import Course from '#pages/Course';
+// import Lesson from '#pages/Lesson';
+// import Checkpoint from '#pages/Checkpoint';
 import Forbidden from '#pages/Forbidden';
 
 
@@ -23,22 +23,22 @@ const routes = [
         path: studentPath,
         component: Student
     },
-    {
-        path: teacherPath,
-        component: Teacher
-    },
-    {
-        path: coursePath,
-        component: Course
-    },
-    {
-        path: lessonPath,
-        component: Lesson
-    },
-    {
-        path: checkpointPath,
-        component: Checkpoint
-    },
+    // {
+    //     path: teacherPath,
+    //     component: Teacher
+    // },
+    // {
+    //     path: coursePath,
+    //     component: Course
+    // },
+    // {
+    //     path: lessonPath,
+    //     component: Lesson
+    // },
+    // {
+    //     path: checkpointPath,
+    //     component: Checkpoint
+    // },
     {
         path: forbiddenPath,
         component: Forbidden

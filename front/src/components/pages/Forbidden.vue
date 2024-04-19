@@ -1,13 +1,5 @@
-<script>
+<script setup>
 import Panel from 'primevue/panel';
-
-
-export default {
-    name: 'Forbidden',
-    components: {
-        Panel
-    }
-};
 </script>
 
 <template>

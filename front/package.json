@@ -22,14 +22,12 @@
         "vite": "^5.1.6"
     },
     "imports": {
-        "#app": "./src/App.vue",
+        "#/*": "./src/*",
         "#config": "./src/config.js",
         "#router": "./src/router.js",
-        "#store": "./src/store.js",
+        "#stores/*": "./src/stores/*.js",
         "#elements/*": "./src/components/elements/*.vue",
         "#pages/*": "./src/components/pages/*.vue",
-        "#requests": "./src/requests.js",
-        "#functions": "./src/functions.js",
         "#classes/*": "./src/classes/*.js"
     }
 }

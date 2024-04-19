@@ -1,79 +1,69 @@
-<script>
-import Header from '#elements/Header';
-import { useUserStore } from '#store';
-import { API } from '#classes/api';
-
+<script setup>
 import Toast from 'primevue/toast';
 
+import {API} from '#classes/API';
 
-export const UserRoles = {
-    Guest: 0,
-    Student: 1,
-    Teacher: 2
-};
+import Header from '#elements/Header'
 
-export const Toasts = {
-    Success: 'success',
-    Info: 'info',
-    Warn: 'warn',
-    Error: 'error'
-};
+import {useUserStore} from '#stores/user';
+import {useCommonStore} from '#stores/common';
 
-export default {
-    name: 'App',
-    components: {
-        Header,
-        Toast
-    },
-    setup() {
-        const user = useUserStore();
 
-        return {
-            user
-        };
-    },
-    created() {
-        this.loadUserData();
-        this.loadUserCourses();
-    },
-    methods: {
-        async loadUserData() {
-            let data = {};
-            const id = this.user.id;
+const user = useUserStore();
+const common = useCommonStore();
 
-            try {
-                if (this.user.isStudent) {
-                    data = await API.student(id);
-                    this.user.group = data.group;
-                } else if (this.user.isTeacher) {
-                    data = await API.teacher(id);
-                }
 
-                this.user.surname = data.surname;
-                this.user.name = data.name;
-                this.user.fatherName = data.father_name === null ? '' : data.father_name;
-                this.user.faculty = data.faculty;
-                this.user.avatar = data.avatar;
-            } catch (error) {
-                this.user.showToast(Toasts.Error, `Ошибка загрузки данных:\n${error}`);
-            }
-        },
-        async loadUserCourses() {
-            try {
-                switch (this.user.role) {
-                    case UserRoles.Student:
-                        this.user.courses = await API.studentCourses(this.user.id);
-                        break;
-                    case UserRoles.Teacher:
-                        this.user.courses = await API.teacherCourses(this.user.id);
-                        break;
-                }
-            } catch (error) {
-                this.user.showToast(Toasts.Error, `Ошибка загрузки ваших курсов:\n${error}`);
-            }
+async function loadData() {
+    try {
+        let data = {};
+
+        switch (user.role) {
+            case user.Roles.Student:
+                data = await API.student(user.id);
+                user.group = data.group;
+                break;
+            case user.Roles.Teacher:
+                data = await API.teacher(user.id);
+                break;
         }
+
+        user.surname = data.surname;
+        user.name = data.name;
+        user.fatherName = data.father_name;
+
+        user.faculty = data.faculty;
+        user.avatar = data.avatar;
+    } catch (error) {
+        common.showError(`Не удалось загрузить Ваши данные:\n${error}`);
     }
-};
+}
+
+async function loadCourses() {
+    try {
+        switch (user.role) {
+            case user.Roles.Student:
+                user.courses = await API.studentCourses(user.id);
+
+                for (const course of user.courses) {
+                    try {
+                        const teacher = await API.teacher(course.teacher_profile);
+                        course.teacherShortName = common.shortenName(teacher.surname, teacher.name, teacher.father_name);
+                    } catch (error) {
+                        common.showError(`Не удалось загрузить преподавателя курса "${course.course_name}"`);
+                    }
+                }
+
+                break;
+            case user.Roles.Teacher:
+                user.courses = await API.teacherCourses(user.id);
+        }
+    } catch (error) {
+        common.showError(`Не удалось загрузить Ваши курсы:\n${error}`);
+    }
+}
+
+loadData();
+loadCourses();
 </script>
 
 <template>
@@ -84,78 +74,62 @@ export default {
     </div>
 </template>
 
-<style lang="sass">
-$standardGap: 10px
-$subMargin: 24px
+<style lang="scss">
+@import './css/variables';
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.flex {
+    display: flex;
+    gap: $standardGap;
+}
+
+.flexRow {
+    @extend .flex;
+}
+
+.flexColumn {
+    @extend .flex;
+    flex-direction: column;
+}
 
 
-body
-    margin: 0
-    padding: 0
-    box-sizing: border-box
+$alignments: (
+    Start: flex-start,
+    End: flex-end,
+    Center: center,
+    Stretch: stretch
+);
+
+@each $alignmentName, $alignment in $alignments {
+    .justify#{$alignmentName} {
+        justify-content: $alignment;
+    }
+
+    .align#{$alignmentName} {
+        align-items: $alignment;
+    }
+
+    .alignSelf#{$alignmentName} {
+        align-self: $alignment;
+    }
+}
 
 
-.flex
-    display: flex
-    gap: $standardGap
+.sub {
+    margin-left: $subMargin;
+}
 
-.flexRow
-    @extend .flex
+a {
+    color: inherit;
+    text-decoration: none;
 
-.flexColumn
-    @extend .flex
-    flex-direction: column
-
-
-@mixin justify($type)
-    justify-content: $type
-
-.justifyStart
-    @include justify(flex-start)
-
-.justifyEnd
-    @include justify(flex-end)
-
-.justifyCenter
-    @include justify(center)
-
-
-@mixin align($type)
-    align-items: $type
-
-.alignStart
-    @include align(flex-start)
-
-.alignEnd
-    @include align(flex-end)
-
-.alignCenter
-    @include align(center)
-
-
-@mixin alignSelf($type)
-    align-self: $type
-
-.alignSelfStart
-    @include alignSelf(flex-start)
-
-.alignSelfEnd
-    @include alignSelf(flex-end)
-
-.alignSelfStretch
-    @include alignSelf(stretch)
-
-.alignSelfCenter
-    @include alignSelf(center)
-
-
-.sub
-    margin-left: $subMargin
-
-a
-    color: inherit
-    text-decoration: none
-
-    &:hover
-        text-decoration: underline
+    &:hover {
+        text-decoration: underline;
+    }
+}
 </style>

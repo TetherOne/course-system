@@ -1,78 +1,63 @@
-<script>
+<script setup>
 import Panel from 'primevue/panel';
 import Avatar from 'primevue/avatar';
 import Button from 'primevue/button';
 
-import { useUserStore } from '#store';
+import {computed} from 'vue';
 
-import {
-    studentPath,
-    teacherPath
-} from '#router';
-
-import { UserRoles } from '#app';
+import {useUserStore} from '#stores/user';
+import {useCommonStore} from '#stores/common';
 
 
-export default {
-    name: 'Header',
-    components: {
-        Panel,
-        Avatar,
-        Button
-    },
-    setup() {
-        const user = useUserStore();
+const user = useUserStore();
+const common = useCommonStore();
 
-        return {
-            user
-        };
-    },
-    computed: {
-        userHasAvatar() {
-            return this.user.avatar !== null;
-        },
-        profileLink() {
-            switch (this.user.role) {
-                case UserRoles.Student:
-                    return studentPath;
-                case UserRoles.Teacher:
-                    return teacherPath.replace(':id', this.user.id);
-            }
-        }
+const themeButtonIcon = computed(() => {
+    switch (common.currentTheme) {
+        case common.Themes.Light:
+            return 'pi pi-moon';
+        case common.Themes.Dark:
+            return 'pi pi-sun';
     }
-};
+});
 </script>
 
 <template>
     <Panel class="alignSelfStretch">
         <template #header>
-            <div class="flexRow alignCenter">
-                <Avatar v-if="userHasAvatar" :image="user.avatar" size="large" shape="circle"/>
-                <Avatar v-if="!userHasAvatar" :label="user.nameFirstLetter" size="large" shape="circle"/>
-                <router-link :to="profileLink" id="userName">{{ user.fullName }}</router-link>
-            </div>
+            <router-link :to="user.profileLink" class="flexRow alignCenter">
+                <Avatar :image="user.hasAvatar ? user.avatar : null"
+                        :label="user.hasAvatar ? null : user.nameFirstLetter" shape="circle" size="large"/>
+                <span id="userName">{{ user.fullName }}</span>
+            </router-link>
         </template>
-
         <template #icons>
-            <div class="flexRow">
+            <div class="flexRow" id="buttons">
                 <Button icon="pi pi-cog"/>
-                <Button icon="pi pi-moon"/>
+                <Button :icon="themeButtonIcon"/>
                 <Button icon="pi pi-sign-out"/>
             </div>
         </template>
     </Panel>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@import './../../css/variables';
+
+$headerTextColor: white;
 .p-panel {
-    background-color: var(--primary-color);
+    background-color: $mainColor;
 
     border: none;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+
+    & * {
+        color: $headerTextColor;
+    }
 }
 
-#userName {
-    color: white;
+#buttons {
+    gap: 1px;
 }
 </style>

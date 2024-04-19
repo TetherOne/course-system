@@ -1,8 +1,9 @@
-import { createApp } from 'vue';
-import { createPinia } from 'pinia';
-import App from '#app';
-import './style.css';
-import { router } from '#router';
+import {createApp} from 'vue';
+
+import {createPinia} from 'pinia';
+
+import App from '#/App.vue';
+import {router} from '#router';
 
 import PrimeVue from 'primevue/config';
 import 'primevue/resources/themes/aura-light-green/theme.css';
@@ -14,9 +15,8 @@ const pinia = createPinia();
 const app = createApp(App);
 
 
-
 app.use(ToastService);
-app.use(PrimeVue)
+app.use(PrimeVue);
 app.use(router);
 app.use(pinia);
 

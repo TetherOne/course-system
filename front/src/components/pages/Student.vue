@@ -1,38 +1,35 @@
-<script>
-import { useUserStore } from '#store';
-import { forbiddenPath } from '#router';
-import { UserRoles } from '#app';
+<script setup>
+import {useRouter} from 'vue-router';
+import {forbiddenPath} from '#router';
+
+import Fieldset from 'primevue/fieldset';
 import CoursesList from '#elements/CoursesList';
 
+import {useUserStore} from '#stores/user';
 
-export default {
-    name: 'Student',
-    components: { CoursesList },
-    setup() {
-        const user = useUserStore();
 
-        return {
-            user,
-            UserRoles
-        };
-    },
-    methods: {
-        handleVisit() {
-            if (!this.user.isStudent) {
-                this.$router.push(forbiddenPath);
-            }
-        }
-    },
-    created() {
-        this.handleVisit();
+
+const router = useRouter();
+
+const user = useUserStore();
+
+
+function handleVisit() {
+    switch (user.role) {
+        case user.Roles.Teacher:
+            router.push(forbiddenPath);
     }
-};
+}
+
+
+handleVisit();
 </script>
 
 <template>
-    <CoursesList :page-user-role="UserRoles.Student"/>
+    <Fieldset legend="Моё обучение"
+    <CoursesList :courses="user.courses"/>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>
