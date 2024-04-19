@@ -40,6 +40,11 @@ class Course(models.Model):
         null=True,
         related_name="courses",
     )
+    image = models.ImageField(
+        null=True,
+        upload_to="courses/",
+        blank=True,
+    )
     course_password = models.CharField(max_length=50, default="", blank=True)
 
     def __str__(self):
