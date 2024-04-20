@@ -1,15 +1,6 @@
-from django.db.models.signals import post_delete
-from django.dispatch import receiver
-
-from checkpoints.tasks import calculate_percentage_and_status
-
 from profiles.models import StudentProfile
 
-from .tasks import set_summary_grade
-
 from courses.models import Module
-
-from django.db.models import Sum
 
 from django.db import models
 
@@ -28,19 +19,6 @@ class CheckPoint(models.Model):
 
     def __str__(self):
         return f"{self.title}"
-
-    def save(self, *args, **kwargs):
-        """
-        After saving a new checkpoint, the points
-        are recalculated in the Summary of this course
-        """
-        super().save(*args, **kwargs)
-        for module in self.module.course.modules.all():
-            for summary in Summary.objects.filter(
-                course=module.course,
-            ):
-                summary.calculate_summary_points()
-                summary.save()
 
 
 class PassedCheckPoint(models.Model):
@@ -65,13 +43,6 @@ class PassedCheckPoint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        """
-        Recalculation of points in the PassedCheckPoint table.
-        Checking the presence of a summary table for a given
-        student and course. If there is no entry in the
-        Summary table - it will be created.
-        """
-        calculate_percentage_and_status(self)
         super().save(*args, **kwargs)
         summary = Summary.objects.filter(
             student=self.student,
@@ -82,30 +53,6 @@ class PassedCheckPoint(models.Model):
                 student=self.student,
                 course=self.checkpoint.module.course,
             )
-
-        summary.calculate_summary_points()
-        summary.save()
-
-
-@receiver(
-    post_delete,
-    sender=PassedCheckPoint,
-)
-def update_summary_points_on_passed_checkpoint_delete(
-    sender,
-    instance,
-    **kwargs,
-):
-    """
-    Automatically recalculate summary points when
-    a PassedCheckPoint record is deleted.
-    """
-    summary = Summary.objects.filter(
-        student=instance.student,
-        course=instance.checkpoint.module.course,
-    ).first()
-    if summary:
-        summary.calculate_summary_points()
         summary.save()
 
 
@@ -129,30 +76,6 @@ class Summary(models.Model):
     grade = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def calculate_summary_points(self):
-        """
-        To calculate the maximum score
-        for all checkpoints of this course
-        """
-        if self.course:
-            self.current_points = (
-                PassedCheckPoint.objects.filter(
-                    student=self.student,
-                    checkpoint__module__course=self.course,
-                ).aggregate(Sum("points"))["points__sum"]
-                or 0
-            )
-
-            self.total = (
-                CheckPoint.objects.filter(
-                    module__course=self.course,
-                ).aggregate(
-                    Sum("questions__max_points")
-                )["questions__max_points__sum"]
-                or 0
-            )
-        set_summary_grade(self)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        self.calculate_summary_points()

@@ -37,7 +37,6 @@ class Question(models.Model):
             ).first()
 
             if summary:
-                summary.calculate_summary_points()
                 summary.save()
 
 
