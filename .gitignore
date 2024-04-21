@@ -17,7 +17,7 @@ idea/
 /.idea
 .idea/
 
-/front/node_modules/
+/front_ts/node_modules/
 
 .pytest_cache/
 /.pytest_cache/
@@ -27,4 +27,3 @@ idea/
 .env/
 /.env/
 /.env
-/front_ts/
