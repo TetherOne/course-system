@@ -1,15 +1,6 @@
-from django.db.models.signals import post_delete
-from django.dispatch import receiver
-
-from checkpoints.tasks import calculate_percentage_and_status
-
 from profiles.models import StudentProfile
 
-from .tasks import set_summary_grade
-
 from courses.models import Module
-
-from django.db.models import Sum
 
 from django.db import models
 
@@ -27,14 +18,6 @@ class CheckPoint(models.Model):
 
     def __str__(self):
         return f"{self.title}"
-
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)
-    #     for module in self.module.course.modules.all():
-    #         for summary in Summary.objects.filter(
-    #             course=module.course,
-    #         ):
-    #             summary.save()
 
 
 class PassedCheckPoint(models.Model):
