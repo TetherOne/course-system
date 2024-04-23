@@ -1,8 +1,4 @@
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
 from checkpoints.models import CheckPoint
-from checkpoints.models import Summary
 
 from django.db import models
 
@@ -21,23 +17,6 @@ class Question(models.Model):
 
     def __str__(self):
         return f"{self.question_text}"
-
-
-@receiver(
-    post_save,
-    sender=Question,
-)
-def update_summary_total(
-        sender,
-        instance,
-        **kwargs,
-):
-    summaries = Summary.objects.filter(
-        course=instance.checkpoint.module.course,
-    )
-    for summary in summaries:
-        summary.calculate_total_points()
-        summary.save()
 
 
 class Answer(models.Model):
