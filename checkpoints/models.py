@@ -1,8 +1,8 @@
-from django.db.models import Sum
-
 from profiles.models import StudentProfile
 
 from courses.models import Module
+
+from django.db.models import Sum
 
 from django.db import models
 
@@ -44,18 +44,24 @@ class PassedCheckPoint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def calculate_points(self):
+        """
+        Calculate points for passed checkpoint
+        """
         from history.models import HistoryOfPassedAnswer
         total_points = 0
         history_records = HistoryOfPassedAnswer.objects.filter(
             student=self.student,
             checkpoint=self.checkpoint,
         )
-        if history_records.exists():  # Проверяем наличие записей в HistoryOfPassedAnswer
+        if history_records.exists():
             for passed_question in history_records:
                 total_points += passed_question.points
         self.points = total_points
 
     def save(self, *args, **kwargs):
+        """
+        Create Summary for student
+        """
         self.calculate_points()
         super().save(*args, **kwargs)
         summary = Summary.objects.filter(
@@ -105,5 +111,9 @@ class Summary(models.Model):
         self.total = total_points
 
     def save(self, *args, **kwargs):
+        """
+        Calculate total points for Summary
+        in course
+        """
         self.calculate_total_points()
         super().save(*args, **kwargs)
