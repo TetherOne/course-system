@@ -8,7 +8,7 @@ const storeName = 'user';
 export const useUserStore = defineStore(storeName, {
     state: () => {
         return {
-            id: 1,
+            id: 2,
             role: UserRoles.Student,
 
             surname: '_surname_',

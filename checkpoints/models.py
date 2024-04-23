@@ -43,7 +43,20 @@ class PassedCheckPoint(models.Model):
     grade = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def calculate_points(self):
+        from history.models import HistoryOfPassedAnswer
+        total_points = 0
+        history_records = HistoryOfPassedAnswer.objects.filter(
+            student=self.student,
+            checkpoint=self.checkpoint,
+        )
+        if history_records.exists():  # Проверяем наличие записей в HistoryOfPassedAnswer
+            for passed_question in history_records:
+                total_points += passed_question.points
+        self.points = total_points
+
     def save(self, *args, **kwargs):
+        self.calculate_points()
         super().save(*args, **kwargs)
         summary = Summary.objects.filter(
             student=self.student,

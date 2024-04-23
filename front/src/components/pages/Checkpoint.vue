@@ -79,12 +79,6 @@ export default {
             const score = this.calcScore();
 
             try {
-                await axios.post(`${API.passedCheckpointsAPI}/`, {
-                    student: this.user.id,
-                    checkpoint: this.id,
-                    points: score
-                });
-
                 for (const question of this.questions) {
                     await axios.post(`${API.historyOfPassedAnswersAPI}/`, {
                         student: this.user.id,
@@ -94,11 +88,18 @@ export default {
                     });
                 }
 
+                await axios.post(`${API.passedCheckpointsAPI}/`, {
+                    student: this.user.id,
+                    checkpoint: this.id,
+                    points: score
+                });
+
                 this.$router.go();
             } catch (error) {
                 this.user.showToast(Toasts.Error, `Ошибка отправки результата:\n${error}`);
             }
         },
+
         calcScore() {
             let score = 0;
             for (const question of this.questions) {
