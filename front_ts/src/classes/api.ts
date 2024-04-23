@@ -94,6 +94,20 @@ export default class API {
         return (await axios.get(API.modules, config)).data;
     }
 
+    static async addCourse(name: string, description: string, password: string, teacher: number) {
+        if (description === '') {
+            description = null;
+        }
+
+        await axios.post(API.courses, {
+            course_name: name,
+            description: description,
+            course_password: password,
+            teacher_profile: teacher,
+            status: true
+        });
+    }
+
 
     static async module(id: number): Promise<Module> {
         return (await axios.get(`${API.modules}${id}`, API.standardConfig)).data;
@@ -112,6 +126,15 @@ export default class API {
 
         return (await axios.get(API.checkpoints, config)).data;
     }
+
+    static async addModule(name: string, courseId: number) {
+        await axios.post(API.modules, {
+            module_name: name,
+            course: courseId,
+            status: true
+        });
+    }
+
 
     static async lesson(id: number): Promise<Lesson> {
         return (await axios.get(`${API.lessons}${id}`, API.standardConfig)).data;

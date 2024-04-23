@@ -1,9 +1,19 @@
 <script setup lang="ts">
-import {ref, Ref} from 'vue';
+import {
+    ref,
+    Ref
+} from 'vue';
 
-import {Role, useUserStore} from '#store';
+import {
+    Role,
+    useUserStore
+} from '#store';
 
-import {useRoute} from 'vue-router';
+import {
+    useRoute,
+    useRouter
+} from 'vue-router';
+
 import {teacherPath} from '#src/router';
 import API from '#src/classes/api';
 import {buildFullName} from '#src/functions';
@@ -13,12 +23,16 @@ import {Module} from '#src/models';
 import Fieldset from 'primevue/fieldset';
 import ModuleComponent from '#elements/Module.vue';
 import Divider from 'primevue/divider';
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
+import InputText from 'primevue/inputtext';
 import ToastMessage from '#elements/ToastMessage';
 
 
 const user = useUserStore();
 
 const route = useRoute();
+const router = useRouter();
 
 const id: Ref<number> = ref(parseInt(<string>route.params.id));
 const name = ref('{course_name}');
@@ -30,6 +44,11 @@ const teacherFullName = ref('{teacher_full_name}');
 const teacherLink = ref('{link_to_teacher}');
 
 const toast = ref(ToastMessage);
+
+const newModule = ref({
+    dialogVisible: false,
+    name: ''
+});
 
 
 async function loadCourse() {
@@ -52,6 +71,20 @@ async function loadCourse() {
     }
 }
 
+async function addModule() {
+    if (newModule.name === '') {
+        toast.value.showWarn('Поле "Название" обязательно', 'Пропущено поле');
+        return;
+    }
+
+    try {
+        await API.addModule(newModule.value.name, id.value);
+        router.go();
+    } catch (error) {
+        toast.value.showError(`Не удалось добавить модуль:\n${error}`);
+    }
+}
+
 
 loadCourse();
 </script>
@@ -63,7 +96,11 @@ loadCourse();
             <router-link :to="teacherLink">{{ teacherFullName }}</router-link>
         </div>
         <Divider/>
-        <div>{{ description }}</div>
+        <div class="flexRow alignCenter">
+            <div>{{ description }}</div>
+            <div class="spacer"></div>
+            <Button v-if="user.role === Role.Teacher" @click="newModule.dialogVisible = true">Добавить модуль</Button>
+        </div>
         <Divider/>
         <div class="flexColumn" v-for="(module, moduleIndex) in modules">
             <ModuleComponent :index="moduleIndex + 1" :id="module.id"/>
@@ -71,6 +108,15 @@ loadCourse();
         </div>
         <div class="alignSelfCenter" v-if="modules.length === 0">Пока нет модулей...</div>
     </Fieldset>
+    <Dialog v-model:visible="newModule.dialogVisible" modal header="Новый модуль" :style="{ width: '20vw' }">
+        <div class="flexColumn">
+            <InputText placeholder="Название модуля" v-model="newModule.name"/>
+            <div class="flexRow justifyEnd">
+                <Button @click="newModule.dialogVisible = false" severity="danger">Отмена</Button>
+                <Button @click="addModule">Добавить</Button>
+            </div>
+        </div>
+    </Dialog>
     <ToastMessage ref="toast"/>
 </template>
 

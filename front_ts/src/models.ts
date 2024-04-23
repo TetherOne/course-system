@@ -33,7 +33,8 @@ export type Course = Model & {
     teacher_profile: number,
     teacher: Teacher | undefined,
     teacherShortName: string | undefined,
-    teacherLink: string | undefined
+    teacherLink: string | undefined,
+    enterPasswordVisible: boolean
 }
 
 export type Module = Model & {

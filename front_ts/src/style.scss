@@ -17,6 +17,10 @@ $standardGap: 10px;
     flex-direction: column;
 }
 
+.spacer {
+    flex-grow: 1;
+}
+
 
 $alignments: (
         Start: flex-start,

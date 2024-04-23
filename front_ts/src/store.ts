@@ -1,18 +1,21 @@
 import {
     Ref,
+    ComputedRef
     ref,
     computed
 } from 'vue';
 
-import {defineStore} from 'pinia';
-import {buildFullName} from '#src/functions';
+import { defineStore } from 'pinia';
+
+import { Course } from '#src/models';
+
+import { buildFullName } from '#src/functions';
 
 import {
     studentPath,
     teacherPath
 } from '#src/router';
 
-import {Course} from '#src/models';
 
 
 export enum Role {
@@ -22,17 +25,17 @@ export enum Role {
 
 
 export const useUserStore = defineStore('user', () => {
-    const id = ref(1);
-    const role = ref(Role.Student);
+    const id: Ref<number> = ref(1);
+    const role: Ref<Role> = ref(Role.Teacher);
 
-    const surname = ref('{surname}');
-    const name = ref('{name}');
-    const fatherName: Ref<string | null> = ref('{father_name}');
+    const surname: Ref<string> = ref('');
+    const name: Ref<string> = ref('');
+    const fatherName: Ref<string | null> = ref('');
 
-    const faculty = ref('{faculty}');
-    const group = ref('{group}');
+    const faculty: Ref<string> = ref('');
+    const group: Ref<string> = ref('');
 
-    const avatar: Ref<string | null> = ref('{avatar_path}');
+    const avatar: Ref<string | null> = ref('');
 
     const courses: Ref<Course[]> = ref([]);
 
@@ -54,12 +57,12 @@ export const useUserStore = defineStore('user', () => {
         return name.value.slice(0, 1);
     });
 
-    const fullName = computed(() => {
+    const fullName: ComputedRef<string> = computed(() => {
         return buildFullName(surname.value, name.value, fatherName.value);
     });
 
 
-    const profileLink = computed(() => {
+    const profileLink: ComputedRef<string> = computed(() => {
         switch (role.value) {
             case Role.Student:
                 return studentPath;
