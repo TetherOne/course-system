@@ -1,0 +1,10 @@
+this.primevue = this.primevue || {};
+this.primevue.stepperpanel = this.primevue.stepperpanel || {};
+this.primevue.stepperpanel.style = (function () {
+	'use strict';
+
+	var StepperPanelStyle = {};
+
+	return StepperPanelStyle;
+
+})();
