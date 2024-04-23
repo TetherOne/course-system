@@ -1,5 +1,4 @@
 from checkpoints.models import CheckPoint
-from checkpoints.models import Summary
 
 from django.db import models
 
@@ -18,27 +17,6 @@ class Question(models.Model):
 
     def __str__(self):
         return f"{self.question_text}"
-
-    def save(self, *args, **kwargs):
-        """
-        For recalculating points for control points in Summary
-        models and PassedCheckPoint, when adding a new question
-        or changing his points
-        """
-        super().save(*args, **kwargs)
-        passed_checkpoints = self.checkpoint.passed_checkpoints.all()
-
-        for passed_checkpoint in passed_checkpoints:
-
-            passed_checkpoint.save()
-            summary = Summary.objects.filter(
-                student=passed_checkpoint.student,
-                course=passed_checkpoint.checkpoint.module.course,
-            ).first()
-
-            if summary:
-                summary.calculate_summary_points()
-                summary.save()
 
 
 class Answer(models.Model):
