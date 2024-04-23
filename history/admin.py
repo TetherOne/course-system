@@ -11,4 +11,6 @@ class HistoryOfPassedAnswerAdmin(admin.ModelAdmin):
         "checkpoint",
         "question",
         "selected_answer",
+        "is_correct",
+        "points",
     )

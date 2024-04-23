@@ -1,176 +1,171 @@
-<script setup lang="ts">
-import {Question} from '#src/models';
-
-import {ref, Ref} from 'vue';
-
-import API from '#src/classes/api';
-
-import {
-    useRoute,
-    useRouter
-} from 'vue-router';
-
-import {Role, useUserStore} from '#store';
+<script>
+import { API } from '#classes/api';
+import { useUserStore } from '#store';
+import { Toasts } from '#app';
+import { UserRoles } from '#app';
+import axios from 'axios';
 
 import Fieldset from 'primevue/fieldset';
-import Divider from 'primevue/divider';
-import Card from 'primevue/card';
-import RadioButton from 'primevue/radiobutton';
 import Button from 'primevue/button';
+import RadioButton from 'primevue/radiobutton';
+import Card from 'primevue/card';
+import Divider from 'primevue/divider';
 import Badge from 'primevue/badge';
-import Dialog from 'primevue/dialog';
-import ToastMessage from '#elements/ToastMessage';
 
 
-const user = useUserStore();
+export default {
+    name: 'Checkpoint',
+    components: {
+        Fieldset,
+        Button,
+        RadioButton,
+        Card,
+        Divider,
+        Badge
+    },
+    data() {
+        return {
+            id: parseInt(this.$route.params.id),
+            name: '_checkpointName_',
+            questions: [],
+            passed: false,
 
-const route = useRoute();
-const router = useRouter();
-const toast = ref(ToastMessage);
+            grade: 0,
 
-const id: Ref<number> = ref(parseInt(<string>route.params.id));
-const name: Ref<string> = ref('{checkpoint_name}');
-const questions: Ref<Question[]> = ref([]);
+            colors: {
+                2: 'danger',
+                3: 'warning',
+                4: 'info',
+                5: 'success'
+            }
+        };
+    },
+    setup() {
+        const user = useUserStore();
 
-const passable: Ref<boolean> = ref(true);
-const passed: Ref<boolean> = ref(false);
-const grade: Ref<string> = ref('');
+        return {
+            user
+        };
+    },
+    methods: {
+        async loadData() {
+            try {
+                const checkpoint = await API.checkpoint(this.id);
 
-const sendConfirmVisible = ref(false);
+                this.name = checkpoint.title;
+                this.questions = checkpoint.questions;
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка загрузки данных КТ:\n${error}`);
+            }
+        },
+        prepareQuestions() {
+            for (const question of this.questions) {
+                question.chosenAnswer = null;
+            }
+        },
+        async alreadyPassed() {
+            try {
+                const result = await API.didStudentPassCheckpoint(this.user.id, this.id);
+                return result;
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка загрузки вашего результата по данной КТ:\n${error}`);
+            }
+        },
+        async send() {
+            if (!this.allQuestionsAnswered()) {
+                this.user.showToast(Toasts.Warn, `Вы должны ответить на все вопросы`);
+            }
 
-const colors = {
-    '2': 'danger',
-    '3': 'warning',
-    '4': 'info',
-    '5': 'success'
-};
+            const score = this.calcScore();
 
+            try {
+                for (const question of this.questions) {
+                    await axios.post(`${API.historyOfPassedAnswersAPI}/`, {
+                        student: this.user.id,
+                        checkpoint: this.id,
+                        question: question.id,
+                        selected_answer: question.chosenAnswer
+                    });
+                }
 
-async function loadCheckpoint() {
-    try {
-        const checkpoint = await API.checkpoint(id.value);
+                await axios.post(`${API.passedCheckpointsAPI}/`, {
+                    student: this.user.id,
+                    checkpoint: this.id,
+                    points: score
+                });
 
-        name.value = checkpoint.title;
+                this.$router.go();
+            } catch (error) {
+                this.user.showToast(Toasts.Error, `Ошибка отправки результата:\n${error}`);
+            }
+        },
 
-        questions.value = checkpoint.questions;
-        for (const question of questions.value) {
-            question.chosenAnswer = null;
+        calcScore() {
+            let score = 0;
+            for (const question of this.questions) {
+                const chosenAnswerId = question.chosenAnswer;
+
+                for (const answer of question.answers) {
+                    if (answer.id === chosenAnswerId) {
+                        if (answer.is_correct) {
+                            score += question.max_points;
+                        }
+                        break;
+                    }
+                }
+            }
+            return score;
+        },
+        allQuestionsAnswered() {
+            for (const question of this.questions) {
+                if (question.chosenAnswer === null) {
+                    return false;
+                }
+            }
+            return true;
         }
-    } catch (error) {
-        toast.value.showError(`Не удалось загрузить контрольную точку:\n${error}`);
-    }
-}
+    },
+    async created() {
+        await this.loadData();
+        this.prepareQuestions();
 
-function allQuestionsAnswered() {
-    for (const question of questions.value) {
-        if (question.chosenAnswer === null) {
-            return false;
+        if (this.user.role === UserRoles.Student) {
+            this.passed = await this.alreadyPassed();
+        }
+
+        if (this.passed) {
+            const checkpoint = await API.studentCheckpointResult(this.user.id, this.id);
+            this.grade = checkpoint.grade;
         }
     }
-    return true;
 }
-
-function handleSend() {
-    if (!allQuestionsAnswered()) {
-        toast.value.showWarn('Вы должны ответить на все вопросы', 'Без пропущенных');
-        return;
-    }
-    sendConfirmVisible.value = true;
-}
-
-async function send() {
-    try {
-        for (const question of questions.value) {
-            await API.sendQuestionChoice(user.id, question.id, question.chosenAnswer, id.value);
-        }
-        router.go();
-    } catch (error) {
-        toast.value.showError(`Не удалось отправить результат:\n${error}`);
-    }
-}
-
-async function setGrade() {
-    const passedCheckpoints = await API.studentPassedCheckpoints(user.id);
-    const thisCheckpoint = passedCheckpoints.filter(checkpoint => checkpoint.id === id.value)[0];
-    grade.value = thisCheckpoint.grade;
-}
-
-async function passedByStudent() {
-    try {
-        const passedCheckpoints = await API.studentPassedCheckpoints(user.id);
-        return passedCheckpoints.some(checkpoint => {
-            return checkpoint.id === id.value;
-        });
-    } catch (error) {
-        toast.value.showWarn(`Не удалось установить результат КТ:\n${error}\nПрохождение недоступно`);
-        return true;
-    }
-}
-
-async function prepare() {
-    switch (user.role) {
-        case Role.Student:
-            passed.value = await passedByStudent();
-            passable.value = !passed.value;
-            await setGrade();
-            break;
-        case Role.Teacher:
-            passable.value = false;
-    }
-}
-
-
-loadCheckpoint();
-prepare();
 </script>
 
 <template>
-    <Fieldset :legend="name">
-        <div v-if="user.role === Role.Student && passed" class="flexRow alignCenter alignSelfCenter">
-            Вы уже прошли данную КТ. Ваша оценка:
-            <Badge :value="grade" :severity="colors[grade]"/>
-        </div>
-        <div v-for="(question, i) in questions" class="flexColumn">
-            <Card>
-                <template #title>{{ i + 1 }}. {{ question.question_text }}</template>
-                <template #content>
-                    <div v-for="answer in question.answers" class="flexRow alignCenter">
-                        <RadioButton v-model="question.chosenAnswer" :inputId="answer.id + ''" :value="answer.id"
-                                     :disabled="!passable"/>
-                        <label :for="answer.id + ''">{{ answer.answer_text }}</label>
-                    </div>
-                </template>
-            </Card>
-        </div>
-        <Divider/>
-        <Button class="alignSelfCenter" @click="handleSend" :disabled="!passable">Отправить</Button>
-        <Dialog v-model:visible="sendConfirmVisible" modal header="Завершить" :style="{ width: '20vw' }">
-            <div class="flexColumn">
-                <div>Вы уверены, что хотите отправить результаты? Это действие нельзя отменить</div>
-                <div class="flexRow justifyEnd">
-                    <Button severity="danger" @click="sendConfirmVisible = false">Отмена</Button>
-                    <Button @click="send">Отправить</Button>
-                </div>
+    <Fieldset :legend="`КТ '${name}'`">
+        <div class="flex-column">
+            <div v-if="passed">
+                Вы уже прошли данную КТ. Ваша оценка: <Badge :value="grade" :severity="colors[grade]"/>
             </div>
-        </Dialog>
+            <div class="flex-column" v-for="(question, questionIndex) in questions">
+                <Card>
+                    <template #title>{{ questionIndex + 1 }}. {{ question.question_text }}</template>
+                    <template #content>
+                        <div class="flex-column">
+                            <div class="flex-row" v-for="answer in question.answers">
+                                <RadioButton v-model="question.chosenAnswer" :inputId="`${answer.id}`" :value="answer.id"/>
+                                <label :for="`${answer.id}`">{{ answer.answer_text }}</label>
+                            </div>
+                        </div>
+                    </template>
+                </Card>
+                <Divider v-if="questionIndex < questions.length - 1"/>
+            </div>
+            <Button @click="send">Отправить</Button>
+        </div>
     </Fieldset>
-    <ToastMessage ref="toast"/>
 </template>
 
-<style scoped lang="scss">
-@import './../../style';
+<style scoped>
 
-
-.p-fieldset {
-    width: 60vw;
-}
-
-:deep(.p-fieldset-content) {
-    @extend .flexColumn;
-}
-
-:deep(.p-card-content) {
-    @extend .flexColumn;
-    @extend .sub;
-}
 </style>
