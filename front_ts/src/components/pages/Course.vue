@@ -21,7 +21,7 @@ import {buildFullName} from '#src/functions';
 import {Module} from '#src/models';
 
 import Fieldset from 'primevue/fieldset';
-import ModuleComponent from '#elements/Module.vue';
+import ModuleComponent from '#elements/Module';
 import Divider from 'primevue/divider';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
