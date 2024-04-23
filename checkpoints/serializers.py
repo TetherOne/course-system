@@ -13,16 +13,40 @@ class CheckPointSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CheckPoint
-        fields = "__all__"
+        fields = (
+            "id",
+            "questions",
+            "checkpoint_number",
+            "title",
+            "created_at",
+            "module",
+        )
 
 
 class PassedCheckPointSerializer(serializers.ModelSerializer):
     class Meta:
         model = PassedCheckPoint
-        fields = "__all__"
+        fields = (
+            "id",
+            "student",
+            "checkpoint",
+            "points",
+            "percent",
+            "status",
+            "grade",
+            "created_at",
+        )
 
 
 class SummarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Summary
-        fields = "__all__"
+        fields = (
+            "id",
+            "student",
+            "course",
+            "current_points",
+            "total",
+            "grade",
+            "created_at",
+        )

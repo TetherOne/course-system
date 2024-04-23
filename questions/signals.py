@@ -11,9 +11,9 @@ from questions.models import Question
     sender=Question,
 )
 def update_summary_total(
-        sender,
-        instance,
-        **kwargs,
+    sender,
+    instance,
+    **kwargs,
 ):
     summaries = Summary.objects.filter(
         course=instance.checkpoint.module.course,

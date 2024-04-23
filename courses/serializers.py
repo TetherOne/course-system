@@ -39,22 +39,40 @@ class EnrollmentSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        exclude = "course_password",
+        exclude = ("course_password",)
 
 
 class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
-        fields = "__all__"
+        fields = (
+            "id",
+            "module_name",
+            "course",
+            "status",
+            "created_at",
+        )
 
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = "__all__"
+        fields = (
+            "id",
+            "lesson_name",
+            "description",
+            "module",
+            "video",
+            "status",
+            "created_at",
+        )
 
 
 class LessonOtherFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = LessonOtherFile
-        fields = "__all__"
+        fields = (
+            "id",
+            "lesson",
+            "other_file",
+        )

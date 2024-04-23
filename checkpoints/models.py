@@ -48,6 +48,7 @@ class PassedCheckPoint(models.Model):
         Calculate points for passed checkpoint
         """
         from history.models import HistoryOfPassedAnswer
+
         total_points = 0
         history_records = HistoryOfPassedAnswer.objects.filter(
             student=self.student,
@@ -98,18 +99,21 @@ class Summary(models.Model):
 
     def calculate_total_points(self):
         from questions.models import Question
+
         total_points = 0
         checkpoints = CheckPoint.objects.filter(
             module__course=self.course,
         )
         for checkpoint in checkpoints:
-            total_points += Question.objects.filter(
-                checkpoint=checkpoint,
-            ).aggregate(
-                total_points=Sum('max_points'),
-            )['total_points'] or 0
+            total_points += (
+                Question.objects.filter(
+                    checkpoint=checkpoint,
+                ).aggregate(
+                    total_points=Sum("max_points"),
+                )["total_points"]
+                or 0
+            )
         self.total = total_points
-
 
     def calculate_current_points(self):
         """
@@ -121,9 +125,10 @@ class Summary(models.Model):
             checkpoint__module__course=self.course,
         )
         if passed_checkpoints.exists():
-            current_points = passed_checkpoints.aggregate(
-                total_points=Sum('points')
-            )['total_points'] or 0
+            current_points = (
+                passed_checkpoints.aggregate(total_points=Sum("points"))["total_points"]
+                or 0
+            )
         self.current_points = current_points
 
     def save(self, *args, **kwargs):

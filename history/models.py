@@ -4,12 +4,12 @@ from django.db import models
 class HistoryOfPassedAnswer(models.Model):
 
     student = models.ForeignKey(
-        'profiles.StudentProfile',
+        "profiles.StudentProfile",
         on_delete=models.SET_NULL,
         null=True,
     )
     checkpoint = models.ForeignKey(
-        'checkpoints.CheckPoint',
+        "checkpoints.CheckPoint",
         on_delete=models.SET_NULL,
         null=True,
     )
