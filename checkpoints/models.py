@@ -60,7 +60,7 @@ class PassedCheckPoint(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Create Summary for student
+        Create Summary for student.
         """
         self.calculate_points()
         super().save(*args, **kwargs)
@@ -110,10 +110,26 @@ class Summary(models.Model):
             )['total_points'] or 0
         self.total = total_points
 
+
+    def calculate_current_points(self):
+        """
+        Calculate current points for the student in the course.
+        """
+        current_points = 0
+        passed_checkpoints = PassedCheckPoint.objects.filter(
+            student=self.student,
+            checkpoint__module__course=self.course,
+        )
+        if passed_checkpoints.exists():
+            current_points = passed_checkpoints.aggregate(
+                total_points=Sum('points')
+            )['total_points'] or 0
+        self.current_points = current_points
+
     def save(self, *args, **kwargs):
         """
-        Calculate total points for Summary
-        in course
+        Calculate total points and current points for Summary.
         """
         self.calculate_total_points()
+        self.calculate_current_points()
         super().save(*args, **kwargs)
