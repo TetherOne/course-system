@@ -1,3 +1,5 @@
+from django.db.models import Sum
+
 from profiles.models import StudentProfile
 
 from courses.models import Module
@@ -75,5 +77,20 @@ class Summary(models.Model):
     grade = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def calculate_total_points(self):
+        from questions.models import Question
+        total_points = 0
+        checkpoints = CheckPoint.objects.filter(
+            module__course=self.course,
+        )
+        for checkpoint in checkpoints:
+            total_points += Question.objects.filter(
+                checkpoint=checkpoint,
+            ).aggregate(
+                total_points=Sum('max_points'),
+            )['total_points'] or 0
+        self.total = total_points
+
     def save(self, *args, **kwargs):
+        self.calculate_total_points()
         super().save(*args, **kwargs)
