@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import axios from 'axios'; // Временно???
+
 import {Question} from '#src/models';
 
 import {ref, Ref} from 'vue';
@@ -83,10 +85,33 @@ async function send() {
         for (const question of questions.value) {
             await API.sendQuestionChoice(user.id, question.id, question.chosenAnswer, id.value);
         }
+
+        // Временно????
+        const score = getScore();
+        await axios.post(API.passedCheckpoints, {
+            student: user.id,
+            checkpoint: id.value,
+            points: score
+        });
+        // Временно ???
+
         router.go();
     } catch (error) {
         toast.value.showError(`Не удалось отправить результат:\n${error}`);
     }
+}
+
+function getScore() {
+    let score = 0;
+    for (const question of questions.value) {
+        for (const answer of question.answers) {
+            if (answer.is_correct && answer.id === question.chosenAnswer) {
+                score += question.max_points;
+                break;
+            }
+        }
+    }
+    return score;
 }
 
 async function setGrade() {
