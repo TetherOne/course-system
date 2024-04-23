@@ -26,7 +26,7 @@ export enum Role {
 
 export const useUserStore = defineStore('user', () => {
     const id: Ref<number> = ref(1);
-    const role: Ref<Role> = ref(Role.Teacher);
+    const role: Ref<Role> = ref(Role.Student);
 
     const surname: Ref<string> = ref('');
     const name: Ref<string> = ref('');
