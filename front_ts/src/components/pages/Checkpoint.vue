@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import axios from 'axios'; // Временно???
 
-import {Question} from '#src/models';
+import { PassedCheckpoint, Question } from '#src/models';
 
 import {ref, Ref} from 'vue';
 
@@ -87,11 +87,10 @@ async function send() {
         }
 
         // Временно????
-        const score = getScore();
         await axios.post(API.passedCheckpoints, {
             student: user.id,
             checkpoint: id.value,
-            points: score
+            points: 0
         });
         // Временно ???
 
@@ -101,31 +100,27 @@ async function send() {
     }
 }
 
-function getScore() {
-    let score = 0;
-    for (const question of questions.value) {
-        for (const answer of question.answers) {
-            if (answer.is_correct && answer.id === question.chosenAnswer) {
-                score += question.max_points;
-                break;
-            }
-        }
-    }
-    return score;
-}
-
 async function setGrade() {
     const passedCheckpoints = await API.studentPassedCheckpoints(user.id);
-    const thisCheckpoint = passedCheckpoints.filter(checkpoint => checkpoint.id === id.value)[0];
-    grade.value = thisCheckpoint.grade;
+    let thisCheckpoint: PassedCheckpoint;
+    for (const passedCheckpoint of passedCheckpoints) {
+        if (passedCheckpoint.checkpoint === id.value) {
+            thisCheckpoint = passedCheckpoint;
+            break;
+        }
+    }
+    grade.value = thisCheckpoint.grade ?? 'Не выставлено';
 }
 
 async function passedByStudent() {
     try {
         const passedCheckpoints = await API.studentPassedCheckpoints(user.id);
-        return passedCheckpoints.some(checkpoint => {
-            return checkpoint.id === id.value;
-        });
+        for (const passedCheckpoint of passedCheckpoints) {
+            if (passedCheckpoint.checkpoint === id.value) {
+                return true;
+            }
+        }
+        return false;
     } catch (error) {
         toast.value.showWarn(`Не удалось установить результат КТ:\n${error}\nПрохождение недоступно`);
         return true;

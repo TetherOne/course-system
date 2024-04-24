@@ -9,6 +9,9 @@ import {
     Ref
 } from 'vue';
 
+import { useRouter } from 'vue-router';
+
+import { useUserStore } from '../../store';
 import API from '#src/classes/api';
 
 import {
@@ -31,7 +34,12 @@ interface Props {
 }
 
 
+
+const router = useRouter();
+
 const props = defineProps<Props>();
+
+const user = useUserStore();
 
 const name = ref('{module_name}');
 const lessons: Ref<Lesson[]> = ref([]);
@@ -73,6 +81,15 @@ async function loadModule() {
     }
 }
 
+async function addLesson() {
+    try {
+        await API.addLesson(newLesson.value.name, newLesson.value.description, props.id);
+        router.go();
+    } catch (error) {
+        toast.value.showError(`Не удалось добавить модуль:\n${error}`);
+    }
+}
+
 async function addCheckpoint() {
 
 }
@@ -86,8 +103,8 @@ loadModule();
         <div class="flexRow alignCenter">
             <div id="moduleName">Модуль {{ index }}. {{name }}</div>
             <div class="spacer"></div>
-            <Button @click="newLesson.dialogVisible = true">Доб. урок</Button>
-            <Button @click="newCheckpoint.dialogVisible = true">Доб. КТ</Button>
+            <Button v-if="user.isTeacher" @click="newLesson.dialogVisible = true">Доб. урок</Button>
+            <Button v-if="user.isTeacher" @click="newCheckpoint.dialogVisible = true">Доб. КТ</Button>
         </div>
         <div class="group">Уроки</div>
         <div class="flexColumn sub">
@@ -108,7 +125,6 @@ loadModule();
         <div class="flexColumn">
             <InputText v-model="newLesson.name" placeholder="Название урока"/>
             <Textarea v-model="newLesson.description" rows="5" cols="30" placeholder="Описание урока" autoResize/>
-            <FileUpload mode="basic" url="/uploads"/>
             <div class="flexRow justifyEnd">
                 <Button severity="danger" @click="newLesson.dialogVisible = false">Отмена</Button>
                 <Button @click="addLesson">Добавить</Button>

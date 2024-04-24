@@ -87,6 +87,19 @@ export default class API {
         return (await axios.get(`${API.courses}${id}`, API.standardConfig)).data;
     }
 
+    static async courseStudents(id: number) {
+        const config = structuredClone(API.standardConfig);
+        config.params.course = id;
+        const enrollments = (await axios.get(API.enrollments, config)).data;
+
+        const students: Student[] = [];
+        for (const enrollment of enrollments) {
+            students.push(await API.student(enrollment.student));
+        }
+
+        return students;
+    }
+
     static async courseModules(id: number): Promise<Module[]> {
         const config = structuredClone(API.standardConfig);
         config.params.course = id;
@@ -140,6 +153,17 @@ export default class API {
         return (await axios.get(`${API.lessons}${id}`, API.standardConfig)).data;
     }
 
+    static async addLesson(name: string, description: string, moduleId: number) {
+        if (description === '') {
+            description = null;
+        }
+        await axios.post(API.lessons, {
+            lesson_name: name,
+            description: description,
+            module: moduleId
+        });
+    }
+
     static async getLessonFiles(id: number): Promise<LessonFile[]> {
         const config = structuredClone(API.standardConfig);
         config.params.lesson = id;
@@ -156,6 +180,22 @@ export default class API {
         config.params.student = id;
 
         return (await axios.get(API.passedCheckpoints, config)).data;
+    }
+
+    static async studentScore(studentId: number, checkpointId: number) {
+        const config = structuredClone(API.standardConfig);
+        config.params.student = studentId;
+        config.params.checkpoint = checkpointId;
+
+        const checkpoints = (await axios.get(API.passedCheckpoints, config)).data;
+        if (checkpoints.length > 0) {
+            if (checkpoints[0].grade === null) {
+                return '-';
+            }
+            return checkpoints[0].grade;
+        } else {
+            return '-';
+        }
     }
 
 
