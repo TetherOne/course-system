@@ -48,10 +48,29 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeacherProfile
-        fields = "__all__"
+        fields = (
+            "id",
+            "name",
+            "surname",
+            "father_name",
+            "faculty",
+            "avatar",
+            "created_at",
+            "user",
+        )
 
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentProfile
-        fields = "__all__"
+        fields = (
+            "id",
+            "name",
+            "surname",
+            "father_name",
+            "faculty",
+            "group",
+            "avatar",
+            "created_at",
+            "user",
+        )

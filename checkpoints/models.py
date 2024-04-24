@@ -24,7 +24,6 @@ class CheckPoint(models.Model):
 
 class PassedCheckPoint(models.Model):
 
-    id = models.AutoField(primary_key=True)
     student = models.ForeignKey(
         StudentProfile,
         on_delete=models.SET_NULL,
@@ -79,7 +78,6 @@ class PassedCheckPoint(models.Model):
 
 class Summary(models.Model):
 
-    id = models.AutoField(primary_key=True)
     student = models.ForeignKey(
         StudentProfile,
         on_delete=models.SET_NULL,
