@@ -1,6 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 
-from profiles.premissions import IsOwnerOrReadOnly
+from profiles.permissions import IsOwnerOrReadOnly
 from profiles.serializers import UserRegistrationSerializer
 from profiles.serializers import TeacherSerializer
 from profiles.serializers import StudentSerializer
