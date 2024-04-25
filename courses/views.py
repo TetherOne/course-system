@@ -1,5 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 
+from courses.permissions import IsOwnerOrReadOnly
 from courses.serializers import LessonOtherFileSerializer
 from courses.serializers import EnrollmentSerializer
 from courses.serializers import LessonSerializer
@@ -50,6 +51,7 @@ class CourseViewSet(ModelViewSet):
         DjangoFilterBackend,
         OrderingFilter,
     ]
+    permission_classes = [IsOwnerOrReadOnly]
     filterset_fields = ["teacher_profile"]
     ordering_fields = ["created_at"]
 

@@ -1,10 +1,10 @@
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
 class IsOwnerOrReadOnly(BasePermission):
 
     def has_permission(self, request, view):
-        if request.method in ["GET", "HEAD", "OPTIONS"]:
+        if request.method in SAFE_METHODS:
             return request.user.is_authenticated
         return True
 
