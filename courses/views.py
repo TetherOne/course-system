@@ -19,6 +19,30 @@ from courses.models import Course
 from courses.models import Module
 
 
+class BasePermissionViewSet(ModelViewSet):
+    """
+    Base ViewSet class with access rights checked upon creation.
+    """
+    def create(self, request, *args, **kwargs):
+        if not request.user.is_authenticated or not hasattr(
+            request.user,
+            "teacher_profile",
+        ):
+            return Response(
+                {"detail": "У вас нет прав доступа для создания объекта."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        if request.user.teacher_profile.id != request.data.get(
+            "teacher_profile",
+        ):
+            return Response(
+                {"detail": "Вы можете создать объект только для себя."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        return super().create(request, *args, **kwargs)
+
+
 class EnrollmentViewSet(ModelViewSet):
 
     queryset = Enrollment.objects.prefetch_related(
@@ -43,7 +67,7 @@ class EnrollmentViewSet(ModelViewSet):
         return context
 
 
-class CourseViewSet(ModelViewSet):
+class CourseViewSet(BasePermissionViewSet):
 
     queryset = Course.objects.prefetch_related(
         "teacher_profile",
@@ -57,32 +81,8 @@ class CourseViewSet(ModelViewSet):
     filterset_fields = ["teacher_profile"]
     ordering_fields = ["created_at"]
 
-    def create(self, request, *args, **kwargs):
-        if not request.user.is_authenticated or not hasattr(
-            request.user,
-            "teacher_profile",
-        ):
-            return Response(
-                {"detail": "У вас нет прав доступа для создания курса."},
-                status=status.HTTP_403_FORBIDDEN,
-            )
 
-        if request.user.teacher_profile.id != request.data.get(
-            "teacher_profile",
-        ):
-            return Response(
-                {"detail": "Вы можете создать курс только для себя."},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-
-        return super().create(
-            request,
-            *args,
-            **kwargs,
-        )
-
-
-class ModuleViewSet(ModelViewSet):
+class ModuleViewSet(BasePermissionViewSet):
 
     queryset = Module.objects.prefetch_related(
         "course",
@@ -95,7 +95,7 @@ class ModuleViewSet(ModelViewSet):
     ]
 
 
-class LessonViewSet(ModelViewSet):
+class LessonViewSet(BasePermissionViewSet):
 
     queryset = Lesson.objects.prefetch_related(
         "module",
@@ -105,7 +105,7 @@ class LessonViewSet(ModelViewSet):
     filterset_fields = ["module"]
 
 
-class LessonOtherFileViewSet(ModelViewSet):
+class LessonOtherFileViewSet(BasePermissionViewSet):
 
     queryset = LessonOtherFile.objects.prefetch_related(
         "lesson",
