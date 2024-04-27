@@ -1,4 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status
+from rest_framework.response import Response
 
 from courses.permissions import IsOwnerOrReadOnly
 from courses.serializers import LessonOtherFileSerializer
@@ -54,6 +56,30 @@ class CourseViewSet(ModelViewSet):
     permission_classes = [IsOwnerOrReadOnly]
     filterset_fields = ["teacher_profile"]
     ordering_fields = ["created_at"]
+
+    def create(self, request, *args, **kwargs):
+        if not request.user.is_authenticated or not hasattr(
+            request.user,
+            "teacher_profile",
+        ):
+            return Response(
+                {"detail": "У вас нет прав доступа для создания курса."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        if request.user.teacher_profile.id != request.data.get(
+            "teacher_profile",
+        ):
+            return Response(
+                {"detail": "Вы можете создать курс только для себя."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        return super().create(
+            request,
+            *args,
+            **kwargs,
+        )
 
 
 class ModuleViewSet(ModelViewSet):
