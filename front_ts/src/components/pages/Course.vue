@@ -14,11 +14,11 @@ import {
     useRouter
 } from 'vue-router';
 
-import {teacherPath} from '#src/router';
+import { teacherPath } from '#src/router';
 import API from '#src/classes/api';
-import {buildFullName} from '#src/functions';
+import { buildFullName } from '#src/functions';
 
-import {Module} from '#src/models';
+import { Module } from '#src/models';
 
 import Fieldset from 'primevue/fieldset';
 import ModuleComponent from '#elements/Module';
@@ -26,7 +26,10 @@ import Divider from 'primevue/divider';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
 import ToastMessage from '#elements/ToastMessage';
+
 
 
 const user = useUserStore();
@@ -50,6 +53,12 @@ const newModule = ref({
     name: ''
 });
 
+const scoreTable = ref({
+    visible: false,
+    students: []
+});
+const checkpoints = ref([]);
+
 
 async function loadCourse() {
     try {
@@ -71,6 +80,24 @@ async function loadCourse() {
     }
 }
 
+async function loadStudentsScores() {
+    scoreTable.value.students = await API.courseStudents(id.value);
+
+    for (const module of modules.value) {
+        const moduleCheckpoints = await API.moduleCheckpoints(module.id);
+        for (const checkpoint of moduleCheckpoints) {
+            checkpoints.value.push(checkpoint.id);
+        }
+    }
+
+    for (const student of scoreTable.value.students) {
+        student.grades = [];
+        for (const checkpointId of checkpoints.value) {
+            student.grades.push(await API.studentScore(student.id, checkpointId));
+        }
+    }
+}
+
 async function addModule() {
     if (newModule.name === '') {
         toast.value.showWarn('Поле "Название" обязательно', 'Пропущено поле');
@@ -86,7 +113,15 @@ async function addModule() {
 }
 
 
-loadCourse();
+async function loadAllData() {
+    await loadCourse();
+
+    if (user.isTeacher) {
+        await loadStudentsScores();
+    }
+}
+
+loadAllData();
 </script>
 
 <template>
@@ -96,10 +131,13 @@ loadCourse();
             <router-link :to="teacherLink">{{ teacherFullName }}</router-link>
         </div>
         <Divider/>
+        <div>{{ description }}</div>
+        <Divider/>
         <div class="flexRow alignCenter">
-            <div>{{ description }}</div>
-            <div class="spacer"></div>
-            <Button v-if="user.role === Role.Teacher" @click="newModule.dialogVisible = true">Добавить модуль</Button>
+            <Button v-if="user.isTeacher" @click="scoreTable.visible = true" icon="pi pi-table"
+                    v-tooltip="'Зачётная таблица'"/>
+            <Button v-if="user.isTeacher" @click="newModule.dialogVisible = true" icon="pi pi-plus"
+                    v-tooltip="'Добавить модуль'"/>
         </div>
         <Divider/>
         <div class="flexColumn" v-for="(module, moduleIndex) in modules">
@@ -118,6 +156,18 @@ loadCourse();
         </div>
     </Dialog>
     <ToastMessage ref="toast"/>
+    <Dialog v-model:visible="scoreTable.visible">
+        <table>
+            <tr>
+                <th>Студент</th>
+                <th v-for="(checkpointId, i) in checkpoints">КТ {{ i + 1 }}</th>
+            </tr>
+            <tr v-for="student in scoreTable.students">
+                <td>{{ student.surname }} {{ student.name }} {{ student.father_name }}</td>
+                <td v-for="grade in student.grades">{{ grade }}</td>
+            </tr>
+        </table>
+    </Dialog>
 </template>
 
 <style scoped lang="scss">
@@ -126,5 +176,14 @@ loadCourse();
 
 .p-fieldset {
     width: 60vw;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 5px;
 }
 </style>

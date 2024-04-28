@@ -16,7 +16,7 @@ import {
 
 import API from '#src/classes/api';
 import ToastMessage from '#elements/ToastMessage';
-import {shortenName} from '#src/functions';
+import { shortenName } from '#src/functions';
 
 import {
     useRoute,
@@ -34,6 +34,7 @@ import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
+
 
 
 interface Props {
