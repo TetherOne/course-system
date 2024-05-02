@@ -1,4 +1,8 @@
 from django.db import models
+from datetime import datetime
+
+
+start = datetime.now()
 
 
 class HistoryOfPassedAnswer(models.Model):
