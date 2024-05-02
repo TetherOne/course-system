@@ -2,7 +2,7 @@ from profiles.models import StudentProfile
 
 from courses.models import Module
 
-from django.db.models import Sum
+from django.db.models import Sum, Max
 
 from django.db import models
 
@@ -49,10 +49,14 @@ class PassedCheckPoint(models.Model):
         from history.models import HistoryOfPassedAnswer
 
         total_points = 0
-        history_records = HistoryOfPassedAnswer.objects.filter(
-            student=self.student,
-            checkpoint=self.checkpoint,
-        ).order_by('question', '-attempt_number').distinct('question')
+        history_records = (
+            HistoryOfPassedAnswer.objects.filter(
+                student=self.student,
+                checkpoint=self.checkpoint,
+            )
+            .order_by("question", "-attempt_number")
+            .distinct("question")
+        )
         for passed_question in history_records:
             total_points += passed_question.points
         self.points = total_points
@@ -117,15 +121,28 @@ class Summary(models.Model):
         Calculate current points for the student in the course.
         """
         current_points = 0
-        passed_checkpoints = PassedCheckPoint.objects.filter(
-            student=self.student,
-            checkpoint__module__course=self.course,
-        )
-        if passed_checkpoints.exists():
-            current_points = (
-                passed_checkpoints.aggregate(total_points=Sum("points"))["total_points"]
-                or 0
+        latest_passed_checkpoints = (
+            PassedCheckPoint.objects.filter(
+                student=self.student,
+                checkpoint__module__course=self.course,
             )
+            .values(
+                "checkpoint__module",
+            )
+            .annotate(
+                max_created_at=Max("created_at"),
+            )
+        )
+
+        for module_checkpoint in latest_passed_checkpoints:
+            latest_checkpoint = PassedCheckPoint.objects.filter(
+                student=self.student,
+                checkpoint__module=module_checkpoint["checkpoint__module"],
+                created_at=module_checkpoint["max_created_at"],
+            ).first()
+
+            current_points += latest_checkpoint.points if latest_checkpoint else 0
+
         self.current_points = current_points
 
     def save(self, *args, **kwargs):
