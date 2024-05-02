@@ -141,7 +141,7 @@ async function prepare() {
 
 
 loadCheckpoint();
-prepare();
+// prepare();
 </script>
 
 <template>
