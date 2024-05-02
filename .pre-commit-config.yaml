@@ -1,7 +1,12 @@
 repos:
   - repo: "https://github.com/pre-commit/pre-commit-hooks"
     rev: "v4.5.0"
-    hooks: []
+    hooks:
+      - id: check-yaml
+      - id: trailing-whitespace
+      - id: double-quote-string-fixer
+      - id: debug-statements
+      - id: check-added-large-files
 
   - repo: "https://github.com/psf/black"
     rev: "stable"
