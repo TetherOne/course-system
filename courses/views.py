@@ -23,6 +23,7 @@ class BasePermissionViewSet(ModelViewSet):
     """
     Base ViewSet class with access rights checked upon creation.
     """
+
     def create(self, request, *args, **kwargs):
         if not request.user.is_authenticated or not hasattr(
             request.user,
