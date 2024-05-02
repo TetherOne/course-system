@@ -39,7 +39,7 @@ class HistoryOfPassedAnswer(models.Model):
             student=self.student,
             checkpoint=self.checkpoint,
             question=self.question,
-        ).order_by('-attempt_number')
+        ).order_by("-attempt_number")
         if previous_attempts.exists():
             self.attempt_number = previous_attempts.first().attempt_number + 1
         else:
