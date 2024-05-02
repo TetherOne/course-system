@@ -23,6 +23,7 @@ class HistoryOfPassedAnswer(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
+    attempt_number = models.IntegerField(default=1)
     is_correct = models.BooleanField(default=False)
     points = models.IntegerField(default=0)
 
@@ -33,4 +34,15 @@ class HistoryOfPassedAnswer(models.Model):
         else:
             self.is_correct = False
             self.points = 0
+
+        previous_attempts = HistoryOfPassedAnswer.objects.filter(
+            student=self.student,
+            checkpoint=self.checkpoint,
+            question=self.question,
+        ).order_by('-attempt_number')
+        if previous_attempts.exists():
+            self.attempt_number = previous_attempts.first().attempt_number + 1
+        else:
+            self.attempt_number = 1
+
         super().save(*args, **kwargs)
