@@ -18,6 +18,10 @@ class CheckPoint(models.Model):
     title = models.TextField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = "контрольный точка"
+        verbose_name_plural = "контрольные точки"
+
     def __str__(self):
         return f"{self.title}"
 
@@ -41,6 +45,10 @@ class PassedCheckPoint(models.Model):
     status = models.CharField(max_length=255, blank=True, null=True)
     grade = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "пройденная контрольная точка"
+        verbose_name_plural = "пройденные контрольные точки"
 
     def calculate_points(self):
         """
@@ -97,6 +105,10 @@ class Summary(models.Model):
     total = models.IntegerField(default=0)
     grade = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "зачетная таблица"
+        verbose_name_plural = "зачетные таблицы"
 
     def calculate_total_points(self):
         from questions.models import Question
