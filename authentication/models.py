@@ -9,3 +9,7 @@ class CustomUser(AbstractUser):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
+
+    class Meta:
+        verbose_name = "пользователь"
+        verbose_name_plural = "пользователи"
