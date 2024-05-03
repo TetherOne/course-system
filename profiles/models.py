@@ -21,6 +21,10 @@ class TeacherProfile(models.Model):
         related_name="teacher_profile",
     )
 
+    class Meta:
+        verbose_name = "профиль преподавателя"
+        verbose_name_plural = "профили преподавателей"
+
     def __str__(self):
         return f"{self.surname}, {self.faculty}"
 
@@ -43,6 +47,10 @@ class StudentProfile(models.Model):
         on_delete=models.CASCADE,
         related_name="student_profile",
     )
+
+    class Meta:
+        verbose_name = "профиль студента"
+        verbose_name_plural = "профили студентов"
 
     def __str__(self):
         return f"{self.surname}, {self.faculty}, {self.group}"
