@@ -26,6 +26,8 @@ class Enrollment(models.Model):
             "student",
             "course",
         )
+        verbose_name = "связь студента и курса"
+        verbose_name_plural = "связь студентов и курсов"
 
 
 class Course(models.Model):
@@ -46,6 +48,10 @@ class Course(models.Model):
         blank=True,
     )
     course_password = models.CharField(max_length=50, default="", blank=True)
+
+    class Meta:
+        verbose_name = "курс"
+        verbose_name_plural = "курсы"
 
     def __str__(self):
         return f"{self.course_name}"
@@ -91,6 +97,10 @@ class Lesson(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=True)
 
+    class Meta:
+        verbose_name = "урок"
+        verbose_name_plural = "уроки"
+
     def __str__(self):
         return f"{self.lesson_name}"
 
@@ -126,6 +136,10 @@ class LessonOtherFile(models.Model):
         blank=True,
     )
 
+    class Meta:
+        verbose_name = "дополнительный файл"
+        verbose_name_plural = "дополнительные файлы"
+
 
 class Module(models.Model):
 
@@ -137,6 +151,10 @@ class Module(models.Model):
         related_name="modules",
     )
     status = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "модуль"
+        verbose_name_plural = "модули"
 
     def __str__(self):
         return f"{self.module_name}"
