@@ -27,6 +27,10 @@ class HistoryOfPassedAnswer(models.Model):
     is_correct = models.BooleanField(default=False)
     points = models.IntegerField(default=0)
 
+    class Meta:
+        verbose_name = "история прохождения вопроса"
+        verbose_name_plural = "история прохождения вопросов"
+
     def save(self, *args, **kwargs):
         if self.selected_answer and self.selected_answer.is_correct:
             self.is_correct = True
