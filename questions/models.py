@@ -1,3 +1,5 @@
+from django.utils.translation import gettext_lazy as _
+
 from checkpoints.models import CheckPoint
 
 from django.db import models
@@ -14,6 +16,10 @@ class Question(models.Model):
     )
     question_text = models.CharField(max_length=255)
     max_points = models.IntegerField()
+
+    class Meta:
+        verbose_name = _("вопрос")
+        verbose_name_plural = _("вопросы")
 
     def __str__(self):
         return f"{self.question_text}"
@@ -32,6 +38,13 @@ class Answer(models.Model):
         blank=True,
     )
     is_correct = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _("ответ")
+        verbose_name_plural = _("ответы")
+
+    def __str__(self):
+        return f"{self.answer_text}"
 
 
 def answer_file_directory_path(
@@ -62,6 +75,10 @@ class AnswerFile(models.Model):
         upload_to=answer_file_directory_path,
         blank=True,
     )
+
+    class Meta:
+        verbose_name = _("файл ответа")
+        verbose_name_plural = _("файлы ответов")
 
 
 def question_file_directory_path(
@@ -95,3 +112,7 @@ class QuestionFile(models.Model):
         upload_to=question_file_directory_path,
         blank=True,
     )
+
+    class Meta:
+        verbose_name = _("файл вопроса")
+        verbose_name_plural = _("файлы вопросов")
