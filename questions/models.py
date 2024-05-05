@@ -2,7 +2,10 @@ from django.utils.translation import gettext_lazy as _
 
 from checkpoints.models import CheckPoint
 
+from django.db.models import Manager
 from django.db import models
+
+from typing import TYPE_CHECKING
 
 import re
 
@@ -20,6 +23,9 @@ class Question(models.Model):
     class Meta:
         verbose_name = _("вопрос")
         verbose_name_plural = _("вопросы")
+
+    if TYPE_CHECKING:
+        objects: Manager
 
     def __str__(self):
         return f"{self.question_text}"
@@ -42,6 +48,9 @@ class Answer(models.Model):
     class Meta:
         verbose_name = _("ответ")
         verbose_name_plural = _("ответы")
+
+    if TYPE_CHECKING:
+        objects: Manager
 
     def __str__(self):
         return f"{self.answer_text}"
