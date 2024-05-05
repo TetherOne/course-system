@@ -21,6 +21,7 @@ class CheckPoint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        db_table = "checkpoints"
         verbose_name = "контрольный точка"
         verbose_name_plural = "контрольные точки"
 
@@ -52,6 +53,7 @@ class PassedCheckPoint(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        db_table = "passed_checkpoints"
         verbose_name = "пройденная контрольная точка"
         verbose_name_plural = "пройденные контрольные точки"
 
@@ -115,6 +117,7 @@ class Summary(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        db_table = "summaries"
         verbose_name = "зачетная таблица"
         verbose_name_plural = "зачетные таблицы"
 
