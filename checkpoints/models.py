@@ -1,8 +1,10 @@
+from typing import TYPE_CHECKING
+
 from profiles.models import StudentProfile
 
 from courses.models import Module
 
-from django.db.models import Sum, Max
+from django.db.models import Sum, Max, Manager
 
 from django.db import models
 
@@ -21,6 +23,9 @@ class CheckPoint(models.Model):
     class Meta:
         verbose_name = "контрольный точка"
         verbose_name_plural = "контрольные точки"
+
+    if TYPE_CHECKING:
+        objects: Manager
 
     def __str__(self):
         return f"{self.title}"
@@ -49,6 +54,9 @@ class PassedCheckPoint(models.Model):
     class Meta:
         verbose_name = "пройденная контрольная точка"
         verbose_name_plural = "пройденные контрольные точки"
+
+    if TYPE_CHECKING:
+        objects: Manager
 
     def calculate_points(self):
         """
@@ -109,6 +117,9 @@ class Summary(models.Model):
     class Meta:
         verbose_name = "зачетная таблица"
         verbose_name_plural = "зачетные таблицы"
+
+    if TYPE_CHECKING:
+        objects: Manager
 
     def calculate_total_points(self):
         from questions.models import Question
