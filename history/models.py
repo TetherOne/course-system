@@ -31,6 +31,7 @@ class HistoryOfPassedAnswer(models.Model):
     points = models.IntegerField(default=0)
 
     class Meta:
+        db_table = "history_of_passed_answers"
         verbose_name = "история прохождения вопроса"
         verbose_name_plural = "история прохождения вопросов"
 
