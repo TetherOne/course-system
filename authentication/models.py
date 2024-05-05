@@ -9,11 +9,13 @@ from django.db import models
 class CustomUser(AbstractUser):
 
     email = models.EmailField(unique=True)
+    username = models.CharField(max_length=30, unique=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
     class Meta:
+        db_table = "users"
         verbose_name = "пользователь"
         verbose_name_plural = "пользователи"
 
