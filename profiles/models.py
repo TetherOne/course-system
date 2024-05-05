@@ -25,6 +25,7 @@ class TeacherProfile(models.Model):
     )
 
     class Meta:
+        db_table = "teacher_profiles"
         verbose_name = "профиль преподавателя"
         verbose_name_plural = "профили преподавателей"
 
@@ -55,6 +56,7 @@ class StudentProfile(models.Model):
     )
 
     class Meta:
+        db_table = "student_profiles"
         verbose_name = "профиль студента"
         verbose_name_plural = "профили студентов"
 
