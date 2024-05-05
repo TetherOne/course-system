@@ -1,4 +1,7 @@
+from typing import TYPE_CHECKING
+
 from django.db import models
+from django.db.models import Manager
 
 
 class HistoryOfPassedAnswer(models.Model):
@@ -30,6 +33,9 @@ class HistoryOfPassedAnswer(models.Model):
     class Meta:
         verbose_name = "история прохождения вопроса"
         verbose_name_plural = "история прохождения вопросов"
+
+    if TYPE_CHECKING:
+        objects: Manager
 
     def save(self, *args, **kwargs):
         if self.selected_answer and self.selected_answer.is_correct:
