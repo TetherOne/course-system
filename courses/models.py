@@ -1,6 +1,9 @@
 from profiles.models import TeacherProfile
 
+from django.db.models import Manager
 from django.db import models
+
+from typing import TYPE_CHECKING
 
 import uuid
 
@@ -29,6 +32,9 @@ class Enrollment(models.Model):
         verbose_name = "связь студента и курса"
         verbose_name_plural = "связь студентов и курсов"
 
+    if TYPE_CHECKING:
+        objects: Manager
+
 
 class Course(models.Model):
 
@@ -52,6 +58,9 @@ class Course(models.Model):
     class Meta:
         verbose_name = "курс"
         verbose_name_plural = "курсы"
+
+    if TYPE_CHECKING:
+        objects: Manager
 
     def __str__(self):
         return f"{self.course_name}"
@@ -101,6 +110,9 @@ class Lesson(models.Model):
         verbose_name = "урок"
         verbose_name_plural = "уроки"
 
+    if TYPE_CHECKING:
+        objects: Manager
+
     def __str__(self):
         return f"{self.lesson_name}"
 
@@ -136,6 +148,9 @@ class LessonOtherFile(models.Model):
         blank=True,
     )
 
+    if TYPE_CHECKING:
+        objects: Manager
+
     class Meta:
         verbose_name = "дополнительный файл"
         verbose_name_plural = "дополнительные файлы"
@@ -155,6 +170,9 @@ class Module(models.Model):
     class Meta:
         verbose_name = "модуль"
         verbose_name_plural = "модули"
+
+    if TYPE_CHECKING:
+        objects: Manager
 
     def __str__(self):
         return f"{self.module_name}"
