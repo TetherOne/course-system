@@ -1,10 +1,10 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status
 from rest_framework.response import Response
+from rest_framework import status
 
-from courses.permissions import IsOwnerOrReadOnly
 from courses.serializers import LessonOtherFileSerializer
 from courses.serializers import EnrollmentSerializer
+from courses.permissions import IsOwnerOrReadOnly
 from courses.serializers import LessonSerializer
 from courses.serializers import CourseSerializer
 from courses.serializers import ModuleSerializer
