@@ -1,4 +1,7 @@
+from typing import TYPE_CHECKING
+
 from django.db import models
+from django.db.models import Manager
 
 from authentication.models import CustomUser
 
@@ -24,6 +27,9 @@ class TeacherProfile(models.Model):
     class Meta:
         verbose_name = "профиль преподавателя"
         verbose_name_plural = "профили преподавателей"
+
+    if TYPE_CHECKING:
+        objects: Manager
 
     def __str__(self):
         return f"{self.surname}, {self.faculty}"
@@ -51,6 +57,9 @@ class StudentProfile(models.Model):
     class Meta:
         verbose_name = "профиль студента"
         verbose_name_plural = "профили студентов"
+
+    if TYPE_CHECKING:
+        objects: Manager
 
     def __str__(self):
         return f"{self.surname}, {self.faculty}, {self.group}"
