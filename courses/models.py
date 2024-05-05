@@ -25,6 +25,7 @@ class Enrollment(models.Model):
     enrollment_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        db_table = "enrollments"
         unique_together = (
             "student",
             "course",
@@ -56,6 +57,7 @@ class Course(models.Model):
     course_password = models.CharField(max_length=50, default="", blank=True)
 
     class Meta:
+        db_table = "courses"
         verbose_name = "курс"
         verbose_name_plural = "курсы"
 
@@ -107,6 +109,7 @@ class Lesson(models.Model):
     status = models.BooleanField(default=True)
 
     class Meta:
+        db_table = "lessons"
         verbose_name = "урок"
         verbose_name_plural = "уроки"
 
@@ -152,6 +155,7 @@ class LessonOtherFile(models.Model):
         objects: Manager
 
     class Meta:
+        db_table = "lesson_other_files"
         verbose_name = "дополнительный файл"
         verbose_name_plural = "дополнительные файлы"
 
@@ -168,6 +172,7 @@ class Module(models.Model):
     status = models.BooleanField(default=True)
 
     class Meta:
+        db_table = "modules"
         verbose_name = "модуль"
         verbose_name_plural = "модули"
 
