@@ -21,6 +21,7 @@ class Question(models.Model):
     max_points = models.IntegerField()
 
     class Meta:
+        db_table = "questions"
         verbose_name = _("вопрос")
         verbose_name_plural = _("вопросы")
 
@@ -46,6 +47,7 @@ class Answer(models.Model):
     is_correct = models.BooleanField(default=False)
 
     class Meta:
+        db_table = "answers"
         verbose_name = _("ответ")
         verbose_name_plural = _("ответы")
 
@@ -86,6 +88,7 @@ class AnswerFile(models.Model):
     )
 
     class Meta:
+        db_table = "answer_files"
         verbose_name = _("файл ответа")
         verbose_name_plural = _("файлы ответов")
 
@@ -123,5 +126,6 @@ class QuestionFile(models.Model):
     )
 
     class Meta:
+        db_table = "question_files"
         verbose_name = _("файл вопроса")
         verbose_name_plural = _("файлы вопросов")
