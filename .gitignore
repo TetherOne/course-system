@@ -27,3 +27,5 @@ idea/
 .env/
 /.env/
 /.env
+/front_ts/.vite/
+/front_ts/dist/
