@@ -92,7 +92,7 @@ class ModuleViewSet(BasePermissionViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = [
         "course",
-        "module_name",
+        "name",
     ]
 
 
