@@ -59,7 +59,7 @@ class LessonSerializer(serializers.ModelSerializer):
         model = Lesson
         fields = (
             "id",
-            "lesson_name",
+            "name",
             "description",
             "module",
             "video",

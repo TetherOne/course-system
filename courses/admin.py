@@ -88,7 +88,7 @@ class LessonAdmin(admin.ModelAdmin):
     ]
     list_display = (
         "id",
-        "lesson_name",
+        "name",
         "course_name",
         "module",
         "created_at",
