@@ -16,9 +16,10 @@ class Question(models.Model):
         CheckPoint,
         on_delete=models.CASCADE,
         related_name="questions",
+        verbose_name=_("контрольная точка"),
     )
-    question_text = models.CharField(max_length=255)
-    max_points = models.IntegerField()
+    question_text = models.CharField(_("текст вопроса"), max_length=255)
+    max_points = models.IntegerField(_("максимальный балл"))
 
     class Meta:
         db_table = "questions"
@@ -38,13 +39,15 @@ class Answer(models.Model):
         Question,
         on_delete=models.CASCADE,
         related_name="answers",
+        verbose_name=_("вопрос"),
     )
     answer_text = models.CharField(
+        _("текст ответа"),
         null=True,
         max_length=1000,
         blank=True,
     )
-    is_correct = models.BooleanField(default=False)
+    is_correct = models.BooleanField(_("верно ли"), default=False)
 
     class Meta:
         db_table = "answers"
@@ -80,8 +83,10 @@ class AnswerFile(models.Model):
         Answer,
         on_delete=models.CASCADE,
         related_name="answer_files",
+        verbose_name=_("ответ"),
     )
     answer_file = models.FileField(
+        _("файл с ответом"),
         null=True,
         upload_to=answer_file_directory_path,
         blank=True,
@@ -118,8 +123,10 @@ class QuestionFile(models.Model):
         Question,
         on_delete=models.CASCADE,
         related_name="question_images",
+        verbose_name=_("вопрос"),
     )
     question_file = models.FileField(
+        _("файл с вопросом"),
         null=True,
         upload_to=question_file_directory_path,
         blank=True,
