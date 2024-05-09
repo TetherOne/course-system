@@ -27,3 +27,10 @@ idea/
 .env/
 /.env/
 /.env
+
+/front_ts/.vite/
+/front_ts/dist/
+
+/front/.idea/
+/front/.vscode/
+/front/node_modules/
