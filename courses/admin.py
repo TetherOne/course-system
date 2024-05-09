@@ -61,15 +61,15 @@ class ModuleAdmin(admin.ModelAdmin):
     ]
     list_display = (
         "id",
-        "module_name",
+        "name",
         "created_at",
         "course_name",
     )
     list_display_links = (
         "id",
-        "module_name",
+        "name",
     )
-    search_fields = ("module_name",)
+    search_fields = ("name",)
     list_per_page = 10
 
     def course_name(self, obj):
