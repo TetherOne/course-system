@@ -47,7 +47,7 @@ class ModuleSerializer(serializers.ModelSerializer):
         model = Module
         fields = (
             "id",
-            "module_name",
+            "name",
             "course",
             "status",
             "created_at",

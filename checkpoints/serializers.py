@@ -17,7 +17,7 @@ class CheckPointSerializer(serializers.ModelSerializer):
             "id",
             "questions",
             "checkpoint_number",
-            "title",
+            "name",
             "created_at",
             "module",
         )
