@@ -1,3 +1,5 @@
+from django.utils.translation import gettext_lazy as _
+
 from profiles.models import TeacherProfile
 
 from django.db.models import Manager
@@ -16,13 +18,15 @@ class Enrollment(models.Model):
         "profiles.StudentProfile",
         on_delete=models.CASCADE,
         related_name="enrollments",
+        verbose_name=_("студент"),
     )
     course = models.ForeignKey(
         "Course",
         on_delete=models.CASCADE,
         related_name="enrollments",
+        verbose_name=_("курс"),
     )
-    enrollment_date = models.DateTimeField(auto_now_add=True)
+    enrollment_date = models.DateTimeField(_("дата зачисления"), auto_now_add=True)
 
     class Meta:
         db_table = "enrollments"
@@ -39,22 +43,30 @@ class Enrollment(models.Model):
 
 class Course(models.Model):
 
-    course_name = models.CharField(max_length=100, blank=True, null=True)
-    description = models.TextField(max_length=10000, blank=True, null=True)
-    status = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    course_name = models.CharField(
+        _("название курса"), max_length=100, blank=True, null=True
+    )
+    description = models.TextField(
+        _("описание"), max_length=10000, blank=True, null=True
+    )
+    status = models.BooleanField(_("статус"), default=True)
+    created_at = models.DateTimeField(_("дата создания"), auto_now_add=True)
     teacher_profile = models.ForeignKey(
         TeacherProfile,
         on_delete=models.SET_NULL,
         null=True,
         related_name="courses",
+        verbose_name=_("профиль преподавателя"),
     )
     image = models.ImageField(
+        _("изображение"),
         null=True,
         upload_to="courses/",
         blank=True,
     )
-    course_password = models.CharField(max_length=50, default="", blank=True)
+    course_password = models.CharField(
+        _("пароль курса"), max_length=50, default="", blank=True
+    )
 
     class Meta:
         db_table = "courses"
@@ -93,20 +105,26 @@ def lesson_video_directory_path(
 
 class Lesson(models.Model):
 
-    lesson_name = models.CharField(max_length=100, blank=True, null=True)
-    description = models.TextField(max_length=10000, blank=True, null=True)
+    lesson_name = models.CharField(
+        _("название урока"), max_length=100, blank=True, null=True
+    )
+    description = models.TextField(
+        _("описание"), max_length=10000, blank=True, null=True
+    )
     module = models.ForeignKey(
         "Module",
         on_delete=models.CASCADE,
         related_name="videos",
+        verbose_name=_("модуль"),
     )
     video = models.FileField(
+        _("видео"),
         null=True,
         upload_to=lesson_video_directory_path,
         blank=True,
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    status = models.BooleanField(default=True)
+    created_at = models.DateTimeField(_("дата создания"), auto_now_add=True)
+    status = models.BooleanField(_("статус"), default=True)
 
     class Meta:
         db_table = "lessons"
@@ -144,8 +162,10 @@ class LessonOtherFile(models.Model):
         Lesson,
         on_delete=models.CASCADE,
         related_name="other_files",
+        verbose_name=_("урок"),
     )
     other_file = models.FileField(
+        _("дополнительный файл"),
         null=True,
         upload_to=other_file_directory_path,
         blank=True,
@@ -162,14 +182,15 @@ class LessonOtherFile(models.Model):
 
 class Module(models.Model):
 
-    module_name = models.CharField(max_length=100, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(_("название"), max_length=100, blank=True, null=True)
+    created_at = models.DateTimeField(_("дата создания"), auto_now_add=True)
     course = models.ForeignKey(
         "Course",
         on_delete=models.CASCADE,
         related_name="modules",
+        verbose_name=_("курс"),
     )
-    status = models.BooleanField(default=True)
+    status = models.BooleanField(_("статус"), default=True)
 
     class Meta:
         db_table = "modules"
@@ -180,4 +201,4 @@ class Module(models.Model):
         objects: Manager
 
     def __str__(self):
-        return f"{self.module_name}"
+        return f"{self.name}"
