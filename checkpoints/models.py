@@ -1,3 +1,5 @@
+from django.utils.translation import gettext_lazy as _
+
 from typing import TYPE_CHECKING
 
 from profiles.models import StudentProfile
@@ -11,14 +13,15 @@ from django.db import models
 
 class CheckPoint(models.Model):
 
-    checkpoint_number = models.IntegerField()
+    checkpoint_number = models.IntegerField(_("номер контрольной точки"))
     module = models.ForeignKey(
         Module,
         on_delete=models.CASCADE,
         related_name="checkpoint",
+        verbose_name=_("модуль"),
     )
-    title = models.TextField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
+    name = models.TextField(_("название"), max_length=255)
+    created_at = models.DateTimeField(_("дата создания"), auto_now_add=True)
 
     class Meta:
         db_table = "checkpoints"
@@ -29,7 +32,7 @@ class CheckPoint(models.Model):
         objects: Manager
 
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.name}"
 
 
 class PassedCheckPoint(models.Model):
@@ -39,18 +42,20 @@ class PassedCheckPoint(models.Model):
         on_delete=models.SET_NULL,
         related_name="passed_checkpoints",
         null=True,
+        verbose_name=_("студент"),
     )
     checkpoint = models.ForeignKey(
         CheckPoint,
         on_delete=models.SET_NULL,
         related_name="passed_checkpoints",
         null=True,
+        verbose_name=_("контрольная точка"),
     )
-    points = models.IntegerField()
-    percent = models.FloatField(blank=True, null=True)
-    status = models.CharField(max_length=255, blank=True, null=True)
-    grade = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    points = models.IntegerField(_("баллы"))
+    percent = models.FloatField(_("процент"), blank=True, null=True)
+    status = models.CharField(_("статус"), max_length=255, blank=True, null=True)
+    grade = models.CharField(_("оценка"), max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(_("дата создания"), auto_now_add=True)
 
     class Meta:
         db_table = "passed_checkpoints"
@@ -104,17 +109,19 @@ class Summary(models.Model):
         on_delete=models.SET_NULL,
         related_name="summaries",
         null=True,
+        verbose_name=_("студент"),
     )
     course = models.ForeignKey(
         "courses.Course",
         on_delete=models.SET_NULL,
         related_name="summaries",
         null=True,
+        verbose_name=_("курс"),
     )
-    current_points = models.IntegerField(default=0, editable=False)
-    total = models.IntegerField(default=0)
-    grade = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    current_points = models.IntegerField(_("текущие баллы"), default=0, editable=False)
+    total = models.IntegerField(_("итог"), default=0)
+    grade = models.CharField(_("оценка"), max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(_("дата создания"), auto_now_add=True)
 
     class Meta:
         db_table = "summaries"
