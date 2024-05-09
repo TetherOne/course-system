@@ -19,12 +19,12 @@ class CheckPointAdmin(admin.ModelAdmin):
     ]
     list_display = (
         "id",
-        "title",
+        "name",
         "course_name",
         "module_name",
     )
-    list_display_links = "id", "title"
-    search_fields = ("title",)
+    list_display_links = "id", "name"
+    search_fields = ("name",)
     list_filter = ("module__course__course_name",)
     ordering = ("id",)
 
