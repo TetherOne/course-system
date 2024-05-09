@@ -44,10 +44,16 @@ class Enrollment(models.Model):
 class Course(models.Model):
 
     course_name = models.CharField(
-        _("название курса"), max_length=100, blank=True, null=True
+        _("название курса"),
+        max_length=100,
+        blank=True,
+        null=True,
     )
     description = models.TextField(
-        _("описание"), max_length=10000, blank=True, null=True
+        _("описание"),
+        max_length=10000,
+        blank=True,
+        null=True,
     )
     status = models.BooleanField(_("статус"), default=True)
     created_at = models.DateTimeField(_("дата создания"), auto_now_add=True)
@@ -65,7 +71,10 @@ class Course(models.Model):
         blank=True,
     )
     course_password = models.CharField(
-        _("пароль курса"), max_length=50, default="", blank=True
+        _("пароль курса"),
+        max_length=50,
+        default="",
+        blank=True,
     )
 
     class Meta:
@@ -105,11 +114,17 @@ def lesson_video_directory_path(
 
 class Lesson(models.Model):
 
-    lesson_name = models.CharField(
-        _("название урока"), max_length=100, blank=True, null=True
+    name = models.CharField(
+        _("название"),
+        max_length=100,
+        blank=True,
+        null=True,
     )
     description = models.TextField(
-        _("описание"), max_length=10000, blank=True, null=True
+        _("описание"),
+        max_length=10000,
+        blank=True,
+        null=True,
     )
     module = models.ForeignKey(
         "Module",
@@ -135,7 +150,7 @@ class Lesson(models.Model):
         objects: Manager
 
     def __str__(self):
-        return f"{self.lesson_name}"
+        return f"{self.name}"
 
 
 def other_file_directory_path(
