@@ -25,6 +25,7 @@ export default defineConfig({
             '#src': '/src',
             '#enums': '/src/enums.ts',
             '#models': '/src/models.ts',
+            '#types': '/src/types.ts',
             '#classes': '/src/classes',
             '#store': '/src/store.ts',
             '#router': '/src/router.ts',
@@ -32,5 +33,10 @@ export default defineConfig({
             '#pages': '/src/components/pages',
             '#elements': '/src/components/elements'
         }
+    },
+    build: {
+        outDir: './../templates',
+        assetsDir: 'static',
+        emptyOutDir: true
     }
 });
