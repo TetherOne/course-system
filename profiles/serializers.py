@@ -56,6 +56,7 @@ class TeacherSerializer(serializers.ModelSerializer):
             "faculty",
             "avatar",
             "created_at",
+            "is_teacher",
             "user",
         )
 
@@ -71,6 +72,7 @@ class StudentSerializer(serializers.ModelSerializer):
             "faculty",
             "group",
             "avatar",
+            "is_teacher",
             "created_at",
             "user",
         )

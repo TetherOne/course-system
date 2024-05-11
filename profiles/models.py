@@ -27,6 +27,7 @@ class TeacherProfile(models.Model):
         related_name="teacher_profile",
         verbose_name=_("пользователь"),
     )
+    is_teacher = models.BooleanField(default=True)
 
     class Meta:
         db_table = "teacher_profiles"
@@ -54,6 +55,7 @@ class StudentProfile(models.Model):
         blank=True,
     )
     created_at = models.DateTimeField(_("дата создания"), auto_now_add=True)
+    is_teacher = models.BooleanField(default=False)
     user = models.OneToOneField(
         CustomUser,
         on_delete=models.CASCADE,
