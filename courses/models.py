@@ -1,6 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 
-from courses.utils import lesson_video_directory_path
+from courses.utils import lesson_video_directory_path, other_file_directory_path
 from profiles.models import TeacherProfile
 
 from django.db.models import Manager
@@ -137,24 +137,6 @@ class Lesson(models.Model):
 
     def __str__(self):
         return f"{self.name}"
-
-
-def other_file_directory_path(
-    instance: "LessonOtherFile",
-    filename: str,
-) -> str:
-    """
-    For saving additional course files
-    """
-    valid_filename = re.sub(
-        r"[\\/*?:\"<>|]",
-        "_",
-        instance.lesson.lesson_name,
-    )
-    return (
-        f"lessons/{instance.lesson.module.course.course_name}/"
-        f"{valid_filename}/{filename}"
-    )
 
 
 class LessonOtherFile(models.Model):
