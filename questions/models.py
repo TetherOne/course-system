@@ -1,3 +1,6 @@
+from questions.utils import question_file_directory_path
+from questions.utils import answer_file_directory_path
+
 from django.utils.translation import gettext_lazy as _
 
 from checkpoints.models import CheckPoint
@@ -6,8 +9,6 @@ from django.db.models import Manager
 from django.db import models
 
 from typing import TYPE_CHECKING
-
-import re
 
 
 class Question(models.Model):
@@ -61,22 +62,6 @@ class Answer(models.Model):
         return f"{self.answer_text}"
 
 
-def answer_file_directory_path(
-    instance: "AnswerFile",
-    filename: str,
-) -> str:
-    """
-    For saving files that the student
-    attached to the answer to the question
-    """
-    valid_filename = re.sub(
-        r"[\\/*?:\"<>|]",
-        "_",
-        instance.answer.question.checkpoint.title,
-    )
-    return f"answers/{valid_filename}/{filename}"
-
-
 class AnswerFile(models.Model):
 
     answer = models.ForeignKey(
@@ -96,25 +81,6 @@ class AnswerFile(models.Model):
         db_table = "answer_files"
         verbose_name = _("файл ответа")
         verbose_name_plural = _("файлы ответов")
-
-
-def question_file_directory_path(
-    instance: "QuestionFile",
-    filename: str,
-) -> str:
-    """
-    For saving files that the teacher
-    attached to the question
-    """
-    valid_filename = re.sub(
-        r"[\\/*?:\"<>|]",
-        "_",
-        instance.question.question_text,
-    )
-    return (
-        f"questions/{instance.question.checkpoint.title}/"
-        f"{valid_filename}/{filename}"
-    )
 
 
 class QuestionFile(models.Model):
