@@ -11,7 +11,7 @@ const storeName: string = 'user';
 
 // DEV
 const userId: number = 1;
-const userRole: Role = Role.Teacher;
+const userRole: Role = Role.Student;
 // DEV
 
 const useUserStore = defineStore(storeName, () => {

@@ -69,11 +69,11 @@ class PassedCheckPoint(models.Model):
         """
         Calculate points for the passed checkpoint based on the last attempt for each question.
         """
-        from history.models import HistoryOfPassedAnswer
+        from history.models import HistoryOfSelectedAnswer
 
         total_points = 0
         history_records = (
-            HistoryOfPassedAnswer.objects.filter(
+            HistoryOfSelectedAnswer.objects.filter(
                 student=self.student,
                 checkpoint=self.checkpoint,
             )

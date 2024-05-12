@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
-from history.models import HistoryOfPassedAnswer
+from history.models import HistoryOfSelectedAnswer
 
 
-class HistoryOfPassedAnswerSerializer(serializers.ModelSerializer):
+class HistoryOfSelectedAnswerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = HistoryOfPassedAnswer
+        model = HistoryOfSelectedAnswer
         fields = (
             "id",
             "student",

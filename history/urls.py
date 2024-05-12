@@ -1,4 +1,4 @@
-from history.views import HistoryOfPassedAnswerViewSet
+from history.views import HistoryOfSelectedAnswerViewSet
 
 from rest_framework.routers import DefaultRouter
 
@@ -14,7 +14,7 @@ routers = DefaultRouter()
 
 routers.register(
     "history-of-passed-answers",
-    HistoryOfPassedAnswerViewSet,
+    HistoryOfSelectedAnswerViewSet,
 )
 
 

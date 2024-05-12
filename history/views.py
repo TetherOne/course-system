@@ -1,4 +1,4 @@
-from history.serializers import HistoryOfPassedAnswerSerializer
+from history.serializers import HistoryOfSelectedAnswerSerializer
 
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAdminUser
 
 from rest_framework.viewsets import ModelViewSet
 
-from history.models import HistoryOfPassedAnswer
+from history.models import HistoryOfSelectedAnswer
 
 
 class PermissionViewSet(ModelViewSet):
@@ -27,15 +27,15 @@ class PermissionViewSet(ModelViewSet):
         ]
 
 
-class HistoryOfPassedAnswerViewSet(PermissionViewSet, ModelViewSet):
+class HistoryOfSelectedAnswerViewSet(PermissionViewSet, ModelViewSet):
 
-    queryset = HistoryOfPassedAnswer.objects.prefetch_related(
+    queryset = HistoryOfSelectedAnswer.objects.prefetch_related(
         "student",
         "checkpoint",
         "question",
         "selected_answer",
     ).all()
-    serializer_class = HistoryOfPassedAnswerSerializer
+    serializer_class = HistoryOfSelectedAnswerSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = [
         "student",

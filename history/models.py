@@ -6,7 +6,7 @@ from django.db import models
 from typing import TYPE_CHECKING
 
 
-class HistoryOfPassedAnswer(models.Model):
+class HistoryOfSelectedAnswer(models.Model):
 
     student = models.ForeignKey(
         "profiles.StudentProfile",
@@ -37,9 +37,9 @@ class HistoryOfPassedAnswer(models.Model):
     points = models.IntegerField(_("баллы"), default=0)
 
     class Meta:
-        db_table = "history_of_passed_answers"
-        verbose_name = "история прохождения вопроса"
-        verbose_name_plural = "история прохождения вопросов"
+        db_table = "history_of_selected_answers"
+        verbose_name = "история выбора ответа"
+        verbose_name_plural = "история выбора ответов"
 
     if TYPE_CHECKING:
         objects: Manager
@@ -52,7 +52,7 @@ class HistoryOfPassedAnswer(models.Model):
             self.is_correct = False
             self.points = 0
 
-        previous_attempts = HistoryOfPassedAnswer.objects.filter(
+        previous_attempts = HistoryOfSelectedAnswer.objects.filter(
             student=self.student,
             checkpoint=self.checkpoint,
             question=self.question,

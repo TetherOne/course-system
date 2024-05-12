@@ -1,10 +1,10 @@
-from history.models import HistoryOfPassedAnswer
+from history.models import HistoryOfSelectedAnswer
 
 from django.contrib import admin
 
 
-@admin.register(HistoryOfPassedAnswer)
-class HistoryOfPassedAnswerAdmin(admin.ModelAdmin):
+@admin.register(HistoryOfSelectedAnswer)
+class HistoryOfSelectedAnswerAdmin(admin.ModelAdmin):
 
     list_display = (
         "student",
