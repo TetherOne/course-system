@@ -1,7 +1,5 @@
 import re
 
-from celery import shared_task
-
 
 def answer_file_directory_path(
     instance: "AnswerFile",
