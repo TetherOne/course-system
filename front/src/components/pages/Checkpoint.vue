@@ -70,7 +70,7 @@ async function start() {
         data.value = new Checkpoint(await getCheckpoint(parseInt(<string>route.params.id)));
         await data.value.loadQuestions();
     } catch (error) {
-        toast.value.showError(`${error}`, 'Ошибка загрузки КТ');
+        toast.value.showError(`${error}`, 'Error loading KT');
     }
 
     if (user.isStudent) {
@@ -85,21 +85,20 @@ async function start() {
                 return false;
             })) {
                 passedByCurrentStudent.value = true;
-                passable.value = false;
             } else {
                 passedByCurrentStudent.value = false;
             }
         } catch (error) {
             toast.value.showWarn(
-                `Прохождение КТ недоступно. Дополнительные сведения:\n${error}`,
-                'Ошибка загрузки результата'
+                `Checkpoint completion is unavailable. Additional information:\n${error}`,
+                'Error loading result'
             );
-            passable.value = false;
         }
-    } else {
-        passable.value = false;
     }
+
+    passable.value = true;
 }
+
 
 function allQuestionsAnswered() {
     for (const question of data.value.questions) {
