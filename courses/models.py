@@ -1,5 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 
+from courses.utils import lesson_video_directory_path
 from profiles.models import TeacherProfile
 
 from django.db.models import Manager
@@ -95,21 +96,6 @@ class Course(models.Model):
         if not self.course_password:
             self.course_password = str(uuid.uuid4())[:8].replace("-", "")
         super().save(*args, **kwargs)
-
-
-def lesson_video_directory_path(
-    instance: "LessonVideo",
-    filename: str,
-) -> str:
-    """
-    For saving course videos
-    """
-    valid_filename = re.sub(
-        r"[\\/*?:\"<>|]",
-        "_",
-        instance.lesson_name,
-    )
-    return f"lessons/{instance.module.course.course_name}/{valid_filename}/{filename}"
 
 
 class Lesson(models.Model):
