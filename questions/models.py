@@ -1,5 +1,5 @@
-from questions.tasks import question_file_directory_path
-from questions.tasks import answer_file_directory_path
+from questions.utils import question_file_directory_path
+from questions.utils import answer_file_directory_path
 
 from django.utils.translation import gettext_lazy as _
 
