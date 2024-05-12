@@ -1,6 +1,8 @@
 from django.utils.translation import gettext_lazy as _
 
-from courses.utils import lesson_video_directory_path, other_file_directory_path
+from courses.utils import lesson_video_directory_path
+from courses.utils import other_file_directory_path
+
 from profiles.models import TeacherProfile
 
 from django.db.models import Manager
@@ -9,8 +11,6 @@ from django.db import models
 from typing import TYPE_CHECKING
 
 import uuid
-
-import re
 
 
 class Enrollment(models.Model):
