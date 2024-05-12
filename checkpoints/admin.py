@@ -26,7 +26,6 @@ class CheckPointAdmin(admin.ModelAdmin):
     list_display_links = "id", "name"
     search_fields = ("name",)
     list_filter = ("module__course__course_name",)
-    ordering = ("id",)
 
     def module_name(self, obj):
         return getattr(
@@ -72,7 +71,6 @@ class PassedCheckPointAdmin(admin.ModelAdmin):
         "student",
         "checkpoint",
     )
-    ordering = ("id",)
     list_per_page = 10
 
 

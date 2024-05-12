@@ -26,8 +26,4 @@ class CustomUserAdmin(UserAdmin):
         "first_name",
         "last_name",
     )
-    ordering = (
-        "id",
-        "username",
-        "email",
-    )
+    ordering = ("-id",)

@@ -35,7 +35,6 @@ class QuestionAdmin(admin.ModelAdmin):
     )
     search_fields = ("question_text",)
     list_filter = ("checkpoint__module__course__course_name",)
-    ordering = ("id",)
     list_per_page = 10
     readonly_fields = (
         "module_name",
@@ -86,5 +85,4 @@ class AnswerAdmin(admin.ModelAdmin):
     )
     search_fields = ("question__question_text",)
     list_filter = ("question__checkpoint__module__course__course_name",)
-    ordering = ("id",)
-    list_per_page = 10
+    list_per_page = 30

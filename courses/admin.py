@@ -34,7 +34,6 @@ class CourseAdmin(admin.ModelAdmin):
     )
     search_fields = ("course_name",)
     list_filter = ("teacher_profile",)
-    ordering = ("id",)
     list_per_page = 10
 
     def get_queryset(self, request):
@@ -96,7 +95,6 @@ class LessonAdmin(admin.ModelAdmin):
     )
     list_display_links = ("id",)
     search_fields = ("description",)
-    ordering = ("id",)
     list_per_page = 10
 
     def display_lesson(self, obj):

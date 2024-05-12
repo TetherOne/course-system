@@ -29,7 +29,6 @@ class TeacherProfileAdmin(admin.ModelAdmin):
         "father_name",
         "faculty",
     )
-    ordering = ("id",)
     list_per_page = 10
 
 
@@ -61,5 +60,4 @@ class StudentProfileAdmin(admin.ModelAdmin):
         "faculty",
         "group",
     )
-    ordering = ("id",)
     list_per_page = 10
