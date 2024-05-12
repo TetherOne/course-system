@@ -37,6 +37,12 @@ export type Course = Model & {
     teacher_profile: number
 }
 
+export type Module = Model & {
+    name: string,
+    course: number,
+    status: true
+}
+
 export type Enrollment = Omit<Model, 'created_at'> & {
     enrollment_date: string,
     student: number,

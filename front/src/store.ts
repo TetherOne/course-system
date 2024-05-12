@@ -1,27 +1,21 @@
-import {
-    defineStore
-} from 'pinia';
+import { defineStore } from 'pinia';
 
 import {
-    Ref,
-    ref,
+    computed,
     ComputedRef,
-    computed
+    Ref,
+    ref
 } from 'vue';
 
-import {
-    Role
-} from '#enums';
+import { Role } from '#enums';
 
 import {
+    CurrentUser,
     Student,
-    Teacher,
-    CurrentUser
+    Teacher
 } from '#types';
 
-import {
-    getCurrentUser
-} from '#requests';
+import { getCurrentUser } from '#requests';
 
 
 
@@ -62,6 +56,14 @@ const useUserStore = defineStore(name, () => {
     const fullName: ComputedRef<string> = computed((): string => {
         const fatherName_: string = fatherName.value ?? '';
         return `${surname.value} ${name.value} ${fatherName_}`;
+    });
+
+    const isStudent: ComputedRef<boolean> = computed((): boolean => {
+        return role.value === Role.Student;
+    });
+
+    const isTeacher: ComputedRef<boolean> = computed((): boolean => {
+        return role.value === Role.Teacher;
     });
 
 
@@ -113,6 +115,9 @@ const useUserStore = defineStore(name, () => {
         hasAvatar,
         firstLetterOfName,
         fullName,
+
+        isStudent,
+        isTeacher,
 
         signedIn,
         loadData,

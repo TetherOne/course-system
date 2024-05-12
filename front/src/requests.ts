@@ -6,6 +6,7 @@ import {
 import {
     Teacher,
     Course,
+    Module,
     Enrollment,
     CurrentUser
 } from '#types';
@@ -25,6 +26,7 @@ const teachersURL: string = `${userAppURL}/teachers/`;
 const courseAppURL: string = `${API_URL}/courseapp`;
 
 const coursesURL: string = `${courseAppURL}/courses/`;
+const modulesURL: string = `${courseAppURL}/modules/`;
 const enrollmentsURL: string = `${courseAppURL}/enrollments/`;
 
 const authAppURL: string = `${API_URL}/authapp`;
@@ -68,8 +70,14 @@ export async function getCourse(id: number): Promise<Course> {
     return (await axios.get(URL, standardConfig)).data;
 }
 
+export async function getCourseModules(id: number): Promise<Module[]> {
+    const config: AxiosRequestConfig = structuredClone(standardConfig);
+    config.params.course = id;
+    return (await axios.get(modulesURL, config)).data;
+}
+
 export async function signIn(username: string, password: string): Promise<any> {
-    const data: any = {
+    const data = {
         csrfmiddlewaretoken: getCSRF_token(),
         username: username,
         password: password
