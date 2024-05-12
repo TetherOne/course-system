@@ -24,9 +24,8 @@ export default defineConfig({
         alias: {
             '#src': '/src',
             '#enums': '/src/enums.ts',
-            '#models': '/src/models.ts',
             '#types': '/src/types.ts',
-            '#classes': '/src/classes',
+            '#functions': '/src/functions.ts',
             '#store': '/src/store.ts',
             '#router': '/src/router.ts',
             '#requests': '/src/requests.ts',

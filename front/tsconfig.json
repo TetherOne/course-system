@@ -23,14 +23,13 @@
         "noFallthroughCasesInSwitch": true,
         "paths": {
             "#src/*": [
-                "./src/*.scss",
                 "./src/*.ts",
-                "./src/*.vue"
+                "./src/*.vue",
+                "./src/*.scss"
             ],
             "#enums": ["./src/enums.ts"],
-            "#models": ["./src/models.ts"],
             "#types": ["./src/types.ts"],
-            "#classes/*": ["./src/classes/*.ts"],
+            "#functions": ["./src/functions.ts"],
             "#store": ["./src/store.ts"],
             "#router": ["./src/router.ts"],
             "#requests": ["./src/requests.ts"],

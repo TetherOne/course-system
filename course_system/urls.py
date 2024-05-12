@@ -21,12 +21,13 @@ from django.conf import settings
 from django.contrib import admin
 
 from django.urls import include
-from django.urls import path
+from django.urls import path, re_path
 
 import debug_toolbar
 
 import mimetypes
 
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -36,7 +37,8 @@ urlpatterns = [
     path("api/questionapp/", include("questions.urls")),
     path("api/checkpointapp/", include("checkpoints.urls")),
     path("api/history/", include("history.urls")),
-]
+    re_path('.*', TemplateView.as_view(template_name='index.html'))
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 urlpatterns.extend(
     static(

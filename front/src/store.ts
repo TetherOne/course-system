@@ -1,67 +1,122 @@
-import { defineStore } from 'pinia';
+import {
+    defineStore
+} from 'pinia';
 
-import { computed, ComputedRef, ref, Ref } from 'vue';
+import {
+    Ref,
+    ref,
+    ComputedRef,
+    computed
+} from 'vue';
 
-import { Role } from '#enums';
-import Course from '#classes/Course';
+import {
+    Role
+} from '#enums';
+
+import {
+    Student,
+    Teacher,
+    CurrentUser
+} from '#types';
+
+import {
+    getCurrentUser
+} from '#requests';
 
 
 
-const storeName: string = 'user';
+const name: string = 'user';
 
-// DEV
-const userId: number = 1;
-const userRole: Role = Role.Student;
-// DEV
-
-const useUserStore = defineStore(storeName, () => {
-    const id: Ref<number> = ref(userId);
-    const role: Ref<Role> = ref(userRole);
+const useUserStore = defineStore(name, () => {
+    const id: Ref<number> = ref(0);
+    const role: Ref<Role> = ref(Role.Guest);
 
     const surname: Ref<string> = ref('');
     const name: Ref<string> = ref('');
-    const fatherName: Ref<string | undefined> = ref('');
+    const fatherName: Ref<string | null> = ref('');
 
-    const university: Ref<string> = ref('');
     const faculty: Ref<string> = ref('');
-    const group: Ref<string> = ref('');
+    const group: Ref<string | undefined> = ref('');
 
-    const avatar: Ref<string | undefined> = ref('');
-    const courses: Ref<Course[]> = ref([]);
+    const avatar: Ref<string | null> = ref('');
 
-    const fullName: ComputedRef<string> = computed(() => {
-        return `${surname.value} ${name.value} ${fatherName.value ?? ''}`;
+    const profileLink: Ref<string> = computed((): string => {
+        switch (role.value) {
+            case Role.Student:
+                return '/student';
+            case Role.Teacher:
+                return `/teacher/${id.value}`;
+            default:
+                return '';
+        }
     });
 
-    const isStudent: ComputedRef<boolean> = computed(() => {
-        return role.value === Role.Student;
+    const hasAvatar: ComputedRef<boolean> = computed((): boolean => {
+        return !!avatar.value;
     });
 
-    const isTeacher: ComputedRef<boolean> = computed(() => {
-        return role.value === Role.Teacher;
+    const firstLetterOfName: ComputedRef<string> = computed((): string => {
+        return name.value.slice(0, 1);
     });
 
-    function hasCourse(id: number): boolean {
-        return courses.value.some((course) => {
-            return course.id === id;
-        });
+    const fullName: ComputedRef<string> = computed((): string => {
+        const fatherName_: string = fatherName.value ?? '';
+        return `${surname.value} ${name.value} ${fatherName_}`;
+    });
+
+
+
+    async function signedIn(): Promise<boolean> {
+        const data: CurrentUser = await getCurrentUser();
+        return !!data.id;
     }
+
+    async function loadData(): Promise<void> {
+        const data: Student | Teacher = (await getCurrentUser()).user_profile;
+
+        id.value = data.id;
+        role.value = data.is_teacher ? Role.Teacher : Role.Student;
+
+        surname.value = data.surname;
+        name.value = data.name;
+        fatherName.value = data.father_name;
+
+        faculty.value = data.faculty;
+
+        if ('group' in data) {
+            group.value = data.group;
+        }
+
+        avatar.value = data.avatar;
+    }
+
+    async function getId(): Promise<number> {
+        return (await getCurrentUser()).user_profile.id;
+    }
+
+
 
     return {
         id,
         role,
+
         surname,
         name,
         fatherName,
-        university,
+
         faculty,
         group,
+
         avatar,
-        courses,
+
+        profileLink,
+        hasAvatar,
+        firstLetterOfName,
         fullName,
-        isStudent,
-        isTeacher,
-        hasCourse
+
+        signedIn,
+        loadData,
+        getId
     };
 });
 
