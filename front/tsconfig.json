@@ -29,6 +29,7 @@
             ],
             "#enums": ["./src/enums.ts"],
             "#models": ["./src/models.ts"],
+            "#types": ["./src/types.ts"],
             "#classes/*": ["./src/classes/*.ts"],
             "#store": ["./src/store.ts"],
             "#router": ["./src/router.ts"],
