@@ -1,25 +1,18 @@
 <script setup lang="ts">
-import {
-    provide
-} from 'vue';
+import { provide } from 'vue';
 
 import {
     Router,
     useRouter
 } from 'vue-router';
 
-import {
-    useToast
-} from 'primevue/usetoast';
-
-import {
-    ToastServiceMethods
-} from 'primevue/toastservice';
-
+import { useToast } from 'primevue/usetoast';
+import { ToastServiceMethods } from 'primevue/toastservice';
 import Toast from 'primevue/toast';
 
 import {
-    PopUpType, Role
+    PopUpType,
+    Role
 } from '#enums';
 
 import useUserStore from '#store';

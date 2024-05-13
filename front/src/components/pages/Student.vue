@@ -51,7 +51,7 @@ start();
         <Header/>
         <div class="block width60 flexColumn">
             <div class="flexRow alignCenter">
-                <UserAvatar size="xlarge"/>
+                <UserAvatar :path="user.avatar" size="xlarge"/>
                 <div>
                     {{ user.fullName }}
                 </div>

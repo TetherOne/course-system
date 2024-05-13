@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import {
     Ref,
-    ref
+    ref,
+    inject
 } from 'vue';
 
 import {
@@ -10,30 +11,37 @@ import {
 } from 'vue-router';
 
 import Card from 'primevue/card';
+import ScrollPanel from 'primevue/scrollpanel';
 import Accordion from 'primevue/accordion';
 import AccordionTab from 'primevue/accordiontab';
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
+import InputText from 'primevue/inputtext';
 
 import {
+    PopUp,
     Course,
     Module
 } from '#types';
 
 import Header from '#elements/Header';
+import ModuleComponent from '#elements/Module';
 
 import useUserStore from '#store';
 
 import {
     getCourse,
     getCourseModules,
-    getTeacher
+    getTeacher,
+    addModule
 } from '#requests';
 
-import {
-    buildFullName
-} from '#functions';
-import ScrollPanel from 'primevue/scrollpanel';
+import { buildFullName } from '#functions';
+import router from '#router';
 
 
+
+const showWarn: PopUp = <PopUp>inject('warnPopUp');
 
 const user = useUserStore();
 
@@ -46,6 +54,11 @@ const image: Ref<string> = ref('');
 const modules: Ref<Module[]> = ref([]);
 const teacherId: Ref<number> = ref(0);
 const teacherFullName: Ref<string> = ref('');
+
+const newModule = ref({
+    dialogVisible: false,
+    name: ''
+});
 
 
 
@@ -62,6 +75,22 @@ async function start() {
         teacherFullName.value = buildFullName(await getTeacher(teacherId.value));
     } catch (error) {
 
+    }
+}
+
+async function handleAddingModule(): Promise<void> {
+    const data = newModule.value;
+
+    if (!data.name) {
+        showWarn('', 'Вы должны ввести название');
+        return;
+    }
+
+    try {
+        await addModule(data.name, id.value, true);
+        router.go(0);
+    } catch (error) {
+        alert(error);
     }
 }
 
@@ -100,11 +129,24 @@ start();
             </Card>
             <Accordion>
                 <AccordionTab v-for="(module, i) in modules" :header="`${i + 1}. ${module.name}`">
-
+                    <ModuleComponent :module="module"/>
                 </AccordionTab>
             </Accordion>
+            <div v-if="!modules.length">
+                Пока нет модулей...
+            </div>
+            <Button v-if="user.isTeacher" icon="pi pi-plus" rounded text @click="newModule.dialogVisible = true"/>
         </div>
     </div>
+    <Dialog v-model:visible="newModule.dialogVisible" modal header="Новый модуль">
+        <div class="flexColumn">
+            <InputText v-model="newModule.name" placeholder="Название модуля"/>
+            <div class="flexRow justifyEnd">
+                <Button label="Отмена" severity="danger" @click="newModule.dialogVisible = false"/>
+                <Button label="Добавить" @click="handleAddingModule"/>
+            </div>
+        </div>
+    </Dialog>
 </template>
 
 <style scoped lang="scss">

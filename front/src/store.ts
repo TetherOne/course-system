@@ -96,6 +96,11 @@ const useUserStore = defineStore(name, () => {
         return (await getCurrentUser()).user_profile.id;
     }
 
+    async function getRole(): Promise<Role> {
+        const isTeacher: boolean = (await getCurrentUser()).user_profile.is_teacher;
+        return isTeacher ? Role.Teacher : Role.Student;
+    }
+
 
 
     return {
@@ -121,7 +126,8 @@ const useUserStore = defineStore(name, () => {
 
         signedIn,
         loadData,
-        getId
+        getId,
+        getRole
     };
 });
 

@@ -43,10 +43,52 @@ export type Module = Model & {
     status: true
 }
 
+export type Lesson = Model & {
+    name: string,
+    description: string | null,
+    module: number,
+    video: string | null,
+    status: boolean
+}
+
+export type LessonFile = Model & {
+    lesson: number,
+    other_file: string
+}
+
 export type Enrollment = Omit<Model, 'created_at'> & {
     enrollment_date: string,
     student: number,
     course: number
+}
+
+export type Checkpoint = Model & {
+    questions: Question[],
+    checkpoint_number: number,
+    name: string,
+    module: number
+}
+
+export type PassedCheckpoint = Model & {
+    student: number,
+    checkpoint: number,
+    points: number,
+    percent: number,
+    status: string,
+    grade: string
+}
+
+export type Question = Model & {
+    answers: Answer[],
+    question_text: string,
+    max_points: number,
+    checkpoint: number,
+    chosenAnswer: number | null
+}
+
+export type Answer = Model & {
+    answer_text: string,
+    question: number
 }
 
 export type CurrentUser = User & {
