@@ -45,21 +45,16 @@ class HistoryOfSelectedAnswer(models.Model):
         objects: Manager
 
     def save(self, *args, **kwargs):
-        if self.selected_answer and self.selected_answer.is_correct:
-            self.is_correct = True
-            self.points = self.question.max_points
-        else:
-            self.is_correct = False
-            self.points = 0
+        from history.utils import determine_attempt_number
+        from history.utils import calculate_points
 
-        previous_attempts = HistoryOfSelectedAnswer.objects.filter(
-            student=self.student,
-            checkpoint=self.checkpoint,
-            question=self.question,
-        ).order_by("-attempt_number")
-        if previous_attempts.exists():
-            self.attempt_number = previous_attempts.first().attempt_number + 1
-        else:
-            self.attempt_number = 1
-
+        self.points = calculate_points(
+            self.selected_answer,
+            self.question,
+        )
+        self.attempt_number = determine_attempt_number(
+            self.student,
+            self.checkpoint,
+            self.question,
+        )
         super().save(*args, **kwargs)
