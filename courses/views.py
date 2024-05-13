@@ -68,7 +68,7 @@ class EnrollmentViewSet(ModelViewSet):
         return context
 
 
-class CourseViewSet(BasePermissionViewSet):
+class CourseViewSet(ModelViewSet):
 
     queryset = Course.objects.prefetch_related(
         "teacher_profile",
@@ -83,7 +83,7 @@ class CourseViewSet(BasePermissionViewSet):
     ordering_fields = ["created_at"]
 
 
-class ModuleViewSet(BasePermissionViewSet):
+class ModuleViewSet(ModelViewSet):
 
     queryset = Module.objects.prefetch_related(
         "course",
@@ -96,7 +96,7 @@ class ModuleViewSet(BasePermissionViewSet):
     ]
 
 
-class LessonViewSet(BasePermissionViewSet):
+class LessonViewSet(ModelViewSet):
 
     queryset = Lesson.objects.prefetch_related(
         "module",
@@ -106,7 +106,7 @@ class LessonViewSet(BasePermissionViewSet):
     filterset_fields = ["module"]
 
 
-class LessonOtherFileViewSet(BasePermissionViewSet):
+class LessonOtherFileViewSet(ModelViewSet):
 
     queryset = LessonOtherFile.objects.prefetch_related(
         "lesson",

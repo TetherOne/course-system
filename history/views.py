@@ -27,7 +27,7 @@ class PermissionViewSet(ModelViewSet):
         ]
 
 
-class HistoryOfSelectedAnswerViewSet(PermissionViewSet, ModelViewSet):
+class HistoryOfSelectedAnswerViewSet(ModelViewSet):
 
     queryset = HistoryOfSelectedAnswer.objects.prefetch_related(
         "student",
