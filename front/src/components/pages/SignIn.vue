@@ -5,9 +5,7 @@ import {
     inject
 } from 'vue';
 
-import {
-    AxiosError
-} from 'axios';
+import { AxiosError } from 'axios';
 
 import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
@@ -24,9 +22,7 @@ import {
 
 import useUserStore from '#store';
 
-import {
-    signIn as signInRequest
-} from '#requests';
+import { signIn as signInRequest } from '#requests';
 
 
 

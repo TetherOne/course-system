@@ -1,31 +1,36 @@
 <script setup lang="ts">
 import {
     Ref,
-    ref
+    ref,
+    inject
 } from 'vue';
 
 import {
     RouteLocationNormalizedLoaded,
-    Router,
     useRoute,
+    Router,
     useRouter
 } from 'vue-router';
 
-import {
-    PassedCheckpoint
-} from '#models';
-
-import useUserStore from '#store';
-
-import { useConfirm } from 'primevue/useconfirm';
+// import { AxiosError } from 'axios';
 
 import Divider from 'primevue/divider';
-import Card from 'primevue/card';
 import RadioButton from 'primevue/radiobutton';
 import Button from 'primevue/button';
 import ConfirmDialog from 'primevue/confirmdialog';
 
-import Checkpoint from '#classes/Checkpoint';
+import { useConfirm } from 'primevue/useconfirm';
+
+import { Role } from '#enums';
+
+import {
+    PopUp,
+    Checkpoint,
+    PassedCheckpoint,
+    Question
+} from '#types';
+
+import Header from '#elements/Header';
 
 import {
     getCheckpoint,
@@ -34,123 +39,96 @@ import {
     sendQuestionChoice
 } from '#requests';
 
-import ToastMessage from '#elements/ToastMessage';
+import useUserStore from '#store';
 
 
-
-type Grade = '2' | '3' | '4' | '5';
-
-
-
-const user = useUserStore();
 
 const router: Router = useRouter();
 const route: RouteLocationNormalizedLoaded = useRoute();
-const toast: Ref<any> = ref(null);
-const confirm = useConfirm();
 
-const data: Ref<Checkpoint> = ref(<Checkpoint>{});
+const id: Ref<number> = ref(parseInt(<string>route.params.id));
+const name: Ref<string> = ref('');
+const questions: Ref<Question[]> = ref([]);
 
 const passable: Ref<boolean> = ref(true);
 const passedByCurrentStudent: Ref<boolean> = ref(false);
+const grade: Ref<string | null> = ref(null);
 
-const studentResult: Ref<PassedCheckpoint> = ref(<PassedCheckpoint>{});
+const user = useUserStore();
 
-const colors = {
-    '2': 'danger',
-    '3': 'warning',
-    '4': 'info',
-    '5': 'success'
-};
+const confirm = useConfirm();
+
+const showWarn: PopUp = <PopUp>inject('warnPopUp');
 
 
 
-async function start() {
+async function start(): Promise<void> {
     try {
-        data.value = new Checkpoint(await getCheckpoint(parseInt(<string>route.params.id)));
-        await data.value.loadQuestions();
+        const checkpoint: Checkpoint = await getCheckpoint(id.value);
+
+        name.value = checkpoint.name;
+        questions.value = checkpoint.questions;
     } catch (error) {
-        toast.value.showError(`${error}`, 'Error loading KT');
+        // const err: AxiosError = <AxiosError>error;
+        // switch (err.response?.status) {
+        //     case 403:
+        //
+        // }
     }
 
-    if (user.isStudent) {
-        try {
-            const studentPassedCheckpoints: PassedCheckpoint[] = await getStudentPassedCheckpoints(user.id);
+    for (const question of questions.value) {
+        question.chosenAnswer = null;
+    }
 
-            if (studentPassedCheckpoints.find((passedCheckpoint) => {
-                if (passedCheckpoint.checkpoint === data.value.id) {
-                    studentResult.value = passedCheckpoint;
-                    return true;
-                }
-                return false;
-            })) {
+    if (await user.getRole() === Role.Student) {
+        const studentPassedCheckpoints: PassedCheckpoint[] = await getStudentPassedCheckpoints(await user.getId());
+
+        for (const passedCheckpoint of studentPassedCheckpoints) {
+            if (passedCheckpoint.checkpoint === id.value) {
                 passedByCurrentStudent.value = true;
-            } else {
-                passedByCurrentStudent.value = false;
+                passable.value = false;
+                grade.value = passedCheckpoint.grade;
+                break;
             }
-        } catch (error) {
-            toast.value.showWarn(
-                `Checkpoint completion is unavailable. Additional information:\n${error}`,
-                'Error loading result'
-            );
         }
+    } else {
+        passable.value = false;
     }
-
-    passable.value = true;
 }
 
-
-function allQuestionsAnswered() {
-    for (const question of data.value.questions) {
+async function handleCompletion(): Promise<void> {
+    for (const question of questions.value) {
         if (!question.chosenAnswer) {
-            return false;
+            showWarn('Не так быстро', 'Вы должны ответить на все вопросы');
+            return;
         }
-    }
-    return true;
-}
-
-function getUnansweredQuestions() {
-    const questions: string[] = [];
-    for (const question of data.value.questions) {
-        if (!question.chosenAnswer) {
-            questions.push(question.text);
-        }
-    }
-    return questions;
-}
-
-function handleCompletion() {
-    if (!allQuestionsAnswered()) {
-        const list: string[] = getUnansweredQuestions();
-        const warnText: string = `Нет ответа на:\n${list.join('\n')}`;
-        toast.value.showWarn(warnText, 'Вы должны ответить на все вопросы');
-        return;
     }
 
     confirm.require({
-        message: 'Вы уверены, что хотите отправить ответы?',
-        header: 'Завершение КТ',
+        message: 'Вы уверены, что хотите завершить КТ?',
+        header: 'Отправка результата',
         icon: 'pi pi-exclamation-triangle',
-        rejectClass: 'p-button-secondary p-button-outlined',
+        rejectClass: 'p-button-secondary',
         rejectLabel: 'Отмена',
-        acceptLabel: 'Отправить',
+        acceptClass: 'p-button-danger',
+        acceptLabel: 'Завершить',
         accept() {
             sendResult();
         }
     });
 }
 
-async function sendResult() {
+async function sendResult(): Promise<void> {
     try {
-        for (const question of data.value.questions) {
-            await sendQuestionChoice(user.id, question.id, <number>question.chosenAnswer, data.value.id);
+        for (const question of questions.value) {
+            await sendQuestionChoice(user.id, question.id, <number>question.chosenAnswer, id.value);
         }
 
-        await sendPassedCheckpoint(user.id, data.value.id, 0);
+        await sendPassedCheckpoint(user.id, id.value, 0);
 
         router.go(0);
     } catch (error) {
-        toast.value.showError(`${error}`, 'Ошибка отправки результата');
+        await router.push({ name: 'error' });
     }
 }
 
@@ -160,55 +138,43 @@ start();
 </script>
 
 <template>
-    <div class="flexColumn container">
-        <div class="alignSelfCenter">{{ data.name }}</div>
-        <div v-if="passedByCurrentStudent" class="flexRow alignCenter">
-            <div>Вы уже прошли данную КТ. Ваша оценка:</div>
-            <Badge
-                v-if="studentResult.grade"
-                :value="studentResult.grade"
-                :severity="colors[<Grade>studentResult.grade]"
-            />
-            <div v-else>
-                ещё не выставлено
+    <div class="flexColumn alignCenter">
+        <Header/>
+        <div class="block width60 flexColumn">
+            <div class="alignSelfCenter upper">
+                КТ "{{ name }}"
             </div>
-        </div>
-        <div v-for="(question, i) in data.questions" :key="question.id">
             <Divider/>
-            <Card>
-                <template #title>
-                    {{ i + 1 }}. {{ question.text }}
-                </template>
-                <template #content>
-                    <div class="flexColumn sub">
+            <div v-if="passedByCurrentStudent">
+                <div>
+                    Вы уже прошли эту КТ. Ваша оценка: {{ grade }}
+                </div>
+                <Divider/>
+            </div>
+            <div class="flexColumn">
+                <div v-for="question in questions" :key="question.id" class="flexColumn">
+                    <div class="upper">
+                        {{ question.question_text }}
+                    </div>
+                    <div class="sub flexColumn">
                         <div v-for="answer in question.answers" :key="answer.id" class="flexRow alignCenter">
-                            <RadioButton
-                                v-model="question.chosenAnswer"
-                                :inputId="answer.id + ''"
-                                :value="answer.id"
-                                :disabled="!passable"
+                            <RadioButton v-model="question.chosenAnswer" :inputId="`${answer.id}`" :value="answer.id"
+                                         :disabled="!passable"
                             />
-                            <label :for="answer.id + ''">{{ answer.text }}</label>
+                            <label :for="`${answer.id}`">
+                                {{ answer.answer_text }}
+                            </label>
                         </div>
                     </div>
-                </template>
-            </Card>
+                </div>
+            </div>
+            <Divider/>
+            <Button label="Отправить" severity="danger" class="alignSelfCenter" @click="handleCompletion" :disabled="!passable"/>
+            <ConfirmDialog/>
         </div>
-        <Divider/>
-        <Button
-            class="alignSelfCenter"
-            icon="pi pi-check"
-            label="Отправить"
-            @click="handleCompletion"
-            :disabled="!passable"
-        />
-        <ConfirmDialog/>
     </div>
-    <ToastMessage ref="toast"/>
 </template>
 
-<style scoped lang="scss">
-.container {
-    min-width: 35vw;
-}
+<style scoped>
+
 </style>

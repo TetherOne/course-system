@@ -11,6 +11,9 @@ import ResetPassword from '#pages/ResetPassword';
 import Settings from '#pages/Settings';
 import Student from '#pages/Student';
 import Teacher from '#pages/Teacher';
+import Course from '#pages/Course';
+import Lesson from '#pages/Lesson';
+import Checkpoint from '#pages/Checkpoint';
 import Error from '#pages/Error';
 import NotFound from '#pages/NotFound';
 
@@ -40,6 +43,18 @@ const routes: RouteRecordRaw[] = [{
     name: 'teacher',
     path: '/teacher/:id',
     component: Teacher
+}, {
+    name: 'course',
+    path: '/course/:id',
+    component: Course
+}, {
+    name: 'lesson',
+    path: '/lesson/:id',
+    component: Lesson
+}, {
+    name: 'checkpoint',
+    path: '/checkpoint/:id',
+    component: Checkpoint
 }, {
     name: 'error',
     path: '/error',

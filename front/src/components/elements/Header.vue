@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import {
-    AxiosError
-} from 'axios';
+import { AxiosError } from 'axios';
 
 import {
     Ref,
@@ -14,24 +12,18 @@ import {
     useRouter
 } from 'vue-router';
 
-import {
-    MenuItem
-} from 'primevue/menuitem';
+import { MenuItem } from 'primevue/menuitem';
 
 import Button from 'primevue/button';
 import Menu from 'primevue/menu';
 
-import {
-    PopUp
-} from '#types';
+import { PopUp } from '#types';
 
 import useUserStore from '#store';
 
 import UserAvatar from '#elements/UserAvatar';
 
-import {
-    signOut
-} from '#requests';
+import { signOut } from '#requests';
 
 
 
@@ -77,7 +69,7 @@ function toggleMenu(event: Event): void {
         </router-link>
         <div class="spacer"/>
         <Button @click="toggleMenu" outlined>
-            <UserAvatar size="normal"/>
+            <UserAvatar :path="user.avatar" size="normal"/>
             <i class="pi pi-angle-down"/>
         </Button>
         <Menu :model="menuItems" ref="menu" popup/>
