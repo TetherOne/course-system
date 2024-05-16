@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { inject } from 'vue';
+
 import Header from '#elements/Header';
 import CourseCard from '#elements/CourseCard';
 import Accordion from 'primevue/accordion';
@@ -6,11 +8,16 @@ import AccordionTab from 'primevue/accordiontab';
 import ModuleComponent from '#elements/Module';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
+import InputGroup from 'primevue/inputgroup';
+import InputGroupAddon from 'primevue/inputgroupaddon';
+import InputText from 'primevue/inputtext';
 
 import {
     useRoute,
     RouteLocationNormalizedLoaded
 } from 'vue-router';
+
+import { PopUp } from '#types';
 
 import {
     courseApp,
@@ -41,6 +48,9 @@ import { AxiosError } from 'axios';
 
 
 
+const showSuccess: PopUp = inject('showSuccess') as PopUp;
+const showError: PopUp = inject('showError') as PopUp;
+
 const route: RouteLocationNormalizedLoaded = useRoute();
 
 const id: Ref<number> = ref(parseInt(route.params.id as string));
@@ -58,6 +68,12 @@ const studentsGradesVisible: Ref<boolean> = ref(false);
 
 const checkpoints: Ref<Checkpoint[]> = ref([]);
 
+const newModule = ref({
+    visible: false,
+    btnWasPressed: false,
+    name: ''
+});
+
 
 
 try {
@@ -66,7 +82,7 @@ try {
 
     if (user.isStudent) {
         teacherFullName.value = buildFullName(await userApp.teacher(course.value.teacher_profile));
-        studentGrades.value = await userApp.studentGradesInCourse(user.id, id.value)
+        studentGrades.value = await userApp.studentGradesInCourse(user.id, id.value);
     } else {
         checkpoints.value = await courseApp.courseCheckpoints(id.value);
         const students: Student[] = await courseApp.courseStudents(id.value);
@@ -91,6 +107,23 @@ try {
 function showStudentGrades(): void {
     studentGradesVisible.value = true;
 }
+
+async function onAddModule(): Promise<void> {
+    newModule.value.btnWasPressed = true;
+
+    if (!newModule.value.name) {
+        showError('Имя модуля обязательно');
+        return;
+    }
+
+    try {
+        modules.value.push(await courseApp.addModule(newModule.value.name, id.value));
+        newModule.value.visible = false;
+        showSuccess('Модуль добавлен');
+    } catch (error) {
+        handleRequestError(error as AxiosError);
+    }
+}
 </script>
 
 <template>
@@ -109,6 +142,7 @@ function showStudentGrades(): void {
                 </div>
                 <Button v-if="user.isStudent" label="Оценки" text @click="showStudentGrades"/>
                 <Button v-else label="Успеваемость студентов" text @click="studentsGradesVisible = true"/>
+                <Button v-if="user.isTeacher" label="Добавить модуль" text @click="newModule.visible=true"/>
             </div>
             <Accordion>
                 <AccordionTab v-for="(module, i) in modules" :key="module.id" :header="`${i + 1}. ${module.name}`">
@@ -121,7 +155,7 @@ function showStudentGrades(): void {
         <div class="flexColumn">
             <div v-for="grade in studentGrades" class="flexRow alignEnd">
                 <div class="h1">
-                   {{ grade.number }}. {{ grade.name }}
+                    {{ grade.number }}. {{ grade.name }}
                 </div>
                 <div>
                     Оценка {{ grade.grade }}
@@ -146,6 +180,21 @@ function showStudentGrades(): void {
                 </td>
             </tr>
         </table>
+    </Dialog>
+    <Dialog v-model:visible="newModule.visible" modal header="Новый модуль">
+        <label for="name">Название</label>
+        <InputGroup>
+            <InputGroupAddon>
+                <i class="pi pi-file"/>
+            </InputGroupAddon>
+            <InputText v-model="newModule.name" id="name" aria-describedby="name-help"
+                       :invalid="newModule.btnWasPressed&&!newModule.name"/>
+        </InputGroup>
+        <small id="name-help">Введите название модуля</small>
+        <template #footer>
+            <Button label="Отмена" severity="danger" @click="newModule.visible=false"/>
+            <Button label="Добавить" @click="onAddModule"/>
+        </template>
     </Dialog>
 </template>
 

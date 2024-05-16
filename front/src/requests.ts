@@ -45,6 +45,7 @@ const questionsChoicesHistoryURL: string = `${historyURL}/history-of-passed-answ
 const authAppURL: string = `${API_URL}/authapp`;
 
 const signInURL: string = `${authAppURL}/login/`;
+// const signUpURL: string = `${authAppURL}/register/`;
 const signOutURL: string = `${authAppURL}/logout/`;
 const currentUserURL: string = `${authAppURL}/current-user/`;
 
@@ -189,6 +190,14 @@ export const courseApp = {
         config.params.module = id;
         return (await axios.get(checkpointsURL, config)).data;
     },
+    async addModule(name: string, course: number): Promise<Module> {
+        return (await axios.postForm(modulesURL, {
+            name,
+            course,
+            status: true,
+            csrfmiddlewaretoken: getCSRF_token()
+        })).data;
+    },
     async lesson(id: number): Promise<Lesson> {
         return await getEntity(lessonsURL, id);
     },
@@ -196,6 +205,16 @@ export const courseApp = {
         const config: AxiosRequestConfig = structuredClone(standardConfig);
         config.params.lesson = id;
         return (await axios.get(lessonsFilesURL, config)).data;
+    },
+    async addLesson(name: string, module: number): Promise<Lesson> {
+        return (await axios.postForm(lessonsURL, {
+            name,
+            description: '',
+            module,
+            video: '',
+            status: true,
+            csrfmiddlewaretoken: getCSRF_token()
+        })).data;
     }
 };
 
@@ -237,6 +256,16 @@ export const authApp = {
             csrfmiddlewaretoken: getCSRF_token()
         });
     },
+    // async signUp(username: string, email: string, password1: string, is_teacher: boolean): Promise<any> {
+    //     return (await axios.postForm(signUpURL, {
+    //         username,
+    //         email,
+    //         password1,
+    //         is_teacher,
+    //         csrfmiddlewaretoken: getCSRF_token(),
+    //         'g-recaptcha-response':
+    //     })).data;
+    // },
     async signOut(): Promise<void> {
         await axios.get(signOutURL);
     },

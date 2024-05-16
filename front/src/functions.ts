@@ -12,6 +12,11 @@ export function getCSRF_token(): string {
     return input.value;
 }
 
+export function getCaptcha(): string {
+    const input: HTMLTextAreaElement = document.querySelector('textarea') as HTMLTextAreaElement;
+    return input.value;
+}
+
 export function handleRequestError(error: AxiosError): void {
     console.log(error);
 }
