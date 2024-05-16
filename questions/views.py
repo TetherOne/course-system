@@ -16,9 +16,9 @@ class QuestionViewSet(ModelViewSet):
         "checkpoint",
     ).all()
     serializer_class = QuestionSerializer
-    permission_classes = [IsTeacherOwner | IsStudentEnrollment]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["checkpoint"]
+    permission_classes = [IsTeacherOwner | IsStudentEnrollment]
 
 
 class AnswerViewSet(ModelViewSet):
@@ -27,6 +27,6 @@ class AnswerViewSet(ModelViewSet):
         "question",
     ).all()
     serializer_class = AnswerSerializer
-    permission_classes = [IsTeacherOwner | IsStudentEnrollment]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["question"]
+    permission_classes = [IsTeacherOwner | IsStudentEnrollment]

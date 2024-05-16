@@ -27,15 +27,15 @@ class TeacherProfileViewSet(ModelViewSet):
 
     queryset = TeacherProfile.objects.select_related("user").all()
     serializer_class = TeacherSerializer
-    permission_classes = [IsOwnerOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["user"]
+    permission_classes = [IsOwnerOrReadOnly]
 
 
 class StudentProfileViewSet(ModelViewSet):
 
     queryset = StudentProfile.objects.select_related("user").all()
     serializer_class = StudentSerializer
-    permission_classes = [IsOwnerOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["user"]
+    permission_classes = [IsOwnerOrReadOnly]
