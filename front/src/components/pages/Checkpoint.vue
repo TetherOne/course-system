@@ -6,11 +6,17 @@ import RadioButton from 'primevue/radiobutton';
 import Button from 'primevue/button';
 import Badge from 'primevue/badge';
 import ConfirmDialog from 'primevue/confirmdialog';
+import InputGroup from 'primevue/inputgroup';
+import InputGroupAddon from 'primevue/inputgroupaddon';
+import InputText from 'primevue/inputtext';
+import InputNumber from 'primevue/inputnumber';
+
 import { useConfirm } from 'primevue/useconfirm';
 
 import {
     userApp,
     checkpointApp,
+    questionApp,
     history
 } from '#requests';
 
@@ -48,7 +54,9 @@ const questions: Ref<Question[]> = ref([]);
 
 const user = useUserStore();
 
+const showSuccess: PopUp = inject('showSuccess') as PopUp;
 const showWarn: PopUp = inject('showWarn') as PopUp;
+const showError: PopUp = inject('showError') as PopUp;
 
 const confirm = useConfirm();
 
@@ -62,6 +70,27 @@ const colors = {
     4: 'info',
     5: 'success'
 };
+
+const questionMaker = ref({
+    seen: false,
+    text: '',
+    value: 1,
+    answers: [] as {
+        text: string,
+        isCorrect?: boolean
+    }[],
+    indexOfRightAnswer: -1,
+    addAnswer() {
+        this.answers.push({ text: `Вопрос ${this.answers.length + 1}` });
+    },
+    reset() {
+        this.seen = false;
+        this.text = '';
+        this.value = 1;
+        this.answers = [];
+        this.indexOfRightAnswer = -1;
+    }
+});
 
 
 
@@ -82,6 +111,8 @@ try {
         } else {
             passable.value = false;
         }
+    } else {
+        passable.value = false;
     }
 } catch (error) {
     handleRequestError(error as AxiosError);
@@ -117,6 +148,58 @@ async function onComplete(): Promise<void> {
         }
     });
 }
+
+function showQuestionMaker(): void {
+    questionMaker.value.reset();
+    questionMaker.value.seen = true;
+}
+
+async function handleAddingQuestion(): Promise<void> {
+    const questionValid = (): boolean => {
+        if (!questionMaker.value.text) {
+            return false;
+        }
+
+        if (questionMaker.value.indexOfRightAnswer === -1) {
+            return false;
+        }
+
+        for (const answer of questionMaker.value.answers) {
+            if (!answer.text) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    if (!questionValid()) {
+        showError('Проверьте правильность введённых данных и повторите попытку', 'Недостаточно информации');
+        return;
+    }
+
+    try {
+        const question: Question = await questionApp.addQuestion(questionMaker.value.text, questionMaker.value.value, id.value);
+
+        questionMaker.value.answers.forEach((answer, i) => {
+            answer.isCorrect = i === questionMaker.value.indexOfRightAnswer;
+        });
+
+        for (const answer of questionMaker.value.answers) {
+            question.answers.push(await questionApp.addAnswer(
+                answer.text,
+                answer.isCorrect as boolean,
+                question.id
+            ));
+        }
+
+        questions.value.push(question);
+        questionMaker.value.reset();
+        showSuccess('Вопрос успешно добавлен');
+    } catch (error) {
+        handleRequestError(error as AxiosError);
+    }
+}
 </script>
 
 <template>
@@ -151,6 +234,42 @@ async function onComplete(): Promise<void> {
                     </template>
                 </Card>
             </div>
+            <Button v-if="user.isTeacher" label="Добавить вопрос" @click="showQuestionMaker" :disabled="questionMaker.seen"/>
+            <div v-if="questionMaker.seen" class="flexColumn">
+                <div class="flexRow alignCenter">
+                    <div>
+                        Текст вопроса
+                    </div>
+                    <InputGroup>
+                        <InputGroupAddon>
+                            <i class="pi pi-question"/>
+                        </InputGroupAddon>
+                        <InputText v-model="questionMaker.text" :invalid="!questionMaker.text"/>
+                    </InputGroup>
+                </div>
+                <div class="flexRow alignCenter">
+                    <div>
+                        Кол-во баллов
+                    </div>
+                    <InputNumber v-model="questionMaker.value" :min="1"/>
+                </div>
+                <div class="flexColumn">
+                    <div class="flexRow alignCenter">
+                        <div>
+                            Ответы
+                        </div>
+                        <Button icon="pi pi-plus" text @click="questionMaker.addAnswer()"/>
+                    </div>
+                    <div class="sub flexColumn">
+                        <div v-for="(answer, i) in questionMaker.answers" :key="i" class="flexRow alignCenter">
+                            <RadioButton v-model="questionMaker.indexOfRightAnswer" :value="i" v-tooltip="'Нажмите, чтобы отметить ответ правильным'"/>
+                            <InputText v-model="answer.text" :invalid="!answer.text"/>
+                        </div>
+                    </div>
+                </div>
+                <Button label="Сохранить" @click="handleAddingQuestion"/>
+            </div>
+            <Divider/>
             <Button label="Завершить" severity="danger" class="alignSelfCenter" @click="onComplete"
                     :disabled="!passable"/>
         </div>

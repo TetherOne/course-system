@@ -8,9 +8,11 @@ import {
     Module,
     Lesson,
     LessonFile,
+    Enrollment,
     Checkpoint,
     PassedCheckpoint,
-    Enrollment,
+    Question,
+    Answer,
     QuestionChoice,
     CurrentUser
 } from '#types';
@@ -39,6 +41,11 @@ const checkpointAppURL: string = `${API_URL}/checkpointapp`;
 const checkpointsURL: string = `${checkpointAppURL}/checkpoints/`;
 const passedCheckpointsURL: string = `${checkpointAppURL}/passed-checkpoints/`;
 
+const questionAppURL: string = `${API_URL}/questionapp`;
+
+const questionsURL: string = `${questionAppURL}/questions/`;
+const answersURL: string = `${questionAppURL}/answers/`;
+
 const historyURL: string = `${API_URL}/history`;
 const questionsChoicesHistoryURL: string = `${historyURL}/history-of-passed-answers/`;
 
@@ -56,6 +63,12 @@ const standardConfig: AxiosRequestConfig = {
 };
 
 
+
+function getHeadersWithCSRF_token() {
+    return {
+        'X-CSRFTOKEN': getCSRF_token()
+    };
+}
 
 async function getEntity(URL: string, id: number): Promise<any> {
     return (await axios.get(`${URL}${id}/`, standardConfig)).data;
@@ -222,6 +235,11 @@ export const courseApp = {
             status: true,
             csrfmiddlewaretoken: getCSRF_token()
         })).data;
+    },
+    async updateLesson(id: number, updated: Partial<Lesson>): Promise<Lesson> {
+        const config: AxiosRequestConfig = structuredClone(standardConfig);
+        config.headers = getHeadersWithCSRF_token();
+        return (await axios.patchForm(`${lessonsURL}${id}/`, updated, config)).data;
     }
 };
 
@@ -246,6 +264,25 @@ export const checkpointApp = {
         })).data;
     }
 };
+
+export const questionApp = {
+    async addQuestion(question_text: string, max_points: number, checkpoint: number): Promise<Question> {
+        return (await axios.postForm(questionsURL, {
+            question_text,
+            max_points,
+            checkpoint,
+            csrfmiddlewaretoken: getCSRF_token()
+        })).data;
+    },
+    async addAnswer(answer_text: string, is_correct: boolean, question: number): Promise<Answer> {
+        return (await axios.postForm(answersURL, {
+            answer_text,
+            is_correct,
+            question,
+            csrfmiddlewaretoken: getCSRF_token()
+        })).data;
+    }
+}
 
 export const history = {
     async sendQuestionChoice(student: number, question: number, selected_answer: number, checkpoint: number): Promise<QuestionChoice> {

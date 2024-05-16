@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
 import Button from 'primevue/button';
 
@@ -19,7 +19,7 @@ import hljs from 'highlight.js';
 import Header from '#elements/Header';
 import Divider from 'primevue/divider';
 
-import { courseApp, lessonsURL, } from '#requests';
+import { courseApp } from '#requests';
 
 import { handleRequestError } from '#functions';
 
@@ -38,6 +38,8 @@ import {
     RouteLocationNormalizedLoaded
 } from 'vue-router';
 
+import '#src/atom-one-dark.css';
+
 import useUserStore from '#store';
 
 import {
@@ -45,8 +47,6 @@ import {
     Lesson,
     LessonFile
 } from '#types';
-
-import { getCSRF_token } from '#functions';
 
 
 
@@ -123,12 +123,8 @@ function openEditor(): void {
 
 async function onUpdateLesson(): Promise<void> {
     try {
-        await axios.patchForm(`${lessonsURL}${id.value}/`, {
+        await courseApp.updateLesson(id.value, {
             description: editor.value.data
-        }, {
-            headers: {
-                'X-CSRFTOKEN': getCSRF_token()
-            }
         });
         showSuccess('Документ изменён');
         description.value = editor.value.data;
