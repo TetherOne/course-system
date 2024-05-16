@@ -25,8 +25,6 @@ from django.urls import path, re_path
 
 import debug_toolbar
 
-import mimetypes
-
 from django.views.generic import TemplateView
 
 urlpatterns = [
@@ -46,9 +44,6 @@ urlpatterns.extend(
         document_root=settings.MEDIA_ROOT,
     )
 )
-
-
-mimetypes.add_type("application/javascript", ".js", True)
 
 urlpatterns = [
     path("__debug__/", include(debug_toolbar.urls)),

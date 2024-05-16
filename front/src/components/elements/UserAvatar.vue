@@ -1,21 +1,31 @@
 <script setup lang="ts">
 import Avatar from 'primevue/avatar';
 
-import { AvatarSize } from '#types';
+import {
+    computed,
+    ComputedRef
+} from 'vue';
 
 
 
 interface Props {
-    path: string | null,
-    size: AvatarSize
+    size: 'normal' | 'large' | 'xlarge';
+    avatarPath: string | null;
+    name: string;
 }
 
 
 
 const props = defineProps<Props>();
+
+const attributeName: ComputedRef<string> = computed((): string => props.avatarPath ? 'image' : 'label');
+const attributeValue: ComputedRef<string> = computed((): string => props.avatarPath ? props.avatarPath : props.name.slice(0, 1));
 </script>
 
 <template>
-    <Avatar v-if="path" :image="<string>path" :size="props.size" shape="circle"/>
-    <Avatar v-else icon="pi pi-user" :size="props.size" shape="circle"/>
+    <Avatar :[attributeName]="attributeValue" :size="size"/>
 </template>
+
+<style scoped>
+
+</style>

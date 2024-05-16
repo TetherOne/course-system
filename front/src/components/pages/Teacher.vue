@@ -1,194 +1,85 @@
 <script setup lang="ts">
-import {
-    Ref,
-    ref,
-    inject
-} from 'vue';
+import Header from '#elements/Header';
+import UserAvatar from '#elements/UserAvatar';
+import CoursesList from '#elements/CoursesList';
+
+import { userApp } from '#requests';
+
+import useUserStore from '#store';
 
 import {
-    RouteLocationNormalizedLoaded,
-    useRoute
-} from 'vue-router';
+    handleRequestError,
+    buildFullName
+} from '#functions';
 
-import ScrollPanel from 'primevue/scrollpanel';
-import Divider from 'primevue/divider';
-import Card from 'primevue/card';
-import Button from 'primevue/button';
-import Dialog from 'primevue/dialog';
-import InputGroup from 'primevue/inputgroup';
-import InputGroupAddon from 'primevue/inputgroupaddon';
-import InputText from 'primevue/inputtext';
-import Textarea from 'primevue/textarea';
+import { Role } from '#enums';
 
 import {
-    PopUp,
     Teacher,
     Course
 } from '#types';
 
-import Header from '#elements/Header';
-import UserAvatar from '#elements/UserAvatar';
+import {
+    ref,
+    Ref,
+    computed,
+    ComputedRef
+} from 'vue';
 
 import {
-    getTeacher,
-    getTeacherCourses,
-    addCourse
-} from '#requests';
+    useRoute,
+    RouteLocationNormalizedLoaded
+} from 'vue-router';
 
-import useUserStore from '#store';
-import router from '#router';
+import { AxiosError } from 'axios';
 
 
 
-const showWarn: PopUp = <PopUp>inject('warnPopUp');
-
-const user = useUserStore();
 const route: RouteLocationNormalizedLoaded = useRoute();
 
-const id: Ref<number> = ref(parseInt(<string>route.params.id));
-const surname: Ref<string> = ref('')
-const name: Ref<string> = ref('');
-const fatherName: Ref<string> = ref('');
-const faculty: Ref<string> = ref('');
-const avatar: Ref<string> = ref('');
+const user = useUserStore();
+
+const id: Ref<number> = ref(parseInt(route.params.id as string));
+const teacher: Ref<Teacher> = ref({} as Teacher);
+const teacherFullName: Ref<string> = ref('');
+const title: ComputedRef<string> = computed((): string => user.role === Role.Student ? 'Курсы' : 'Мои курсы');
 const courses: Ref<Course[]> = ref([]);
 
-const newCourse = ref({
-    dialogVisible: false,
-    name: '',
-    description: '',
-    password: ''
-});
 
 
+try {
+    teacher.value = await userApp.teacher(id.value);
+    teacherFullName.value = buildFullName(teacher.value);
+    courses.value = await userApp.teacherCourses(id.value);
 
-async function start(): Promise<void> {
-    try {
-        const teacher: Teacher = await getTeacher(id.value);
-
-        surname.value = teacher.surname;
-        name.value = teacher.name;
-        fatherName.value = teacher.father_name ?? '';
-        faculty.value = teacher.faculty;
-        avatar.value = teacher.avatar ?? '';
-        courses.value = await getTeacherCourses(id.value);
-    } catch (error) {
-
+    if (user.isStudent) {
+        for (const course of courses.value) {
+            course.studentHasIt = await userApp.studentHasCourse(user.id, course.id);
+        }
     }
+} catch (error) {
+    handleRequestError(error as AxiosError)
 }
-
-async function handleAddingCourse(): Promise<void> {
-    const data = newCourse.value;
-
-    if (!data.name || !data.password) {
-        showWarn('Не так быстро', 'Поля "Название" и "Пароль" обязательны');
-        return;
-    }
-
-    try {
-        await addCourse(data.name, data.description, id.value, '', data.password);
-        router.go(0);
-    } catch (error) {
-
-    }
-}
-
-
-
-start();
 </script>
 
 <template>
     <div class="flexColumn alignCenter">
         <Header/>
-        <div class="block width60 flexColumn">
-            <div class="flexRow alignCenter">
-                <UserAvatar :path="avatar" size="xlarge"/>
+        <div class="flexRow alignCenter block wide">
+            <UserAvatar size="xlarge" :avatarPath="teacher.avatar" :name="teacher.name"/>
+            <div class="flexColumn">
                 <div>
-                    {{ surname }} {{ name }} {{ fatherName }}
+                    {{ teacherFullName }}
                 </div>
-            </div>
-            <div>
-                Факультет: {{ faculty }}
-            </div>
-        </div>
-        <div class="block width60 flexColumn">
-            <div class="upper flexRow alignCenter alignSelfCenter">
-                <div v-if="user.isTeacher">
-                    Мои курсы
-                </div>
-                <div v-else>
-                    Курсы
-                </div>
-                <Button icon="pi pi-plus" rounded text @click="newCourse.dialogVisible = true"/>
-            </div>
-            <Divider/>
-            <div class="coursesList flexRow">
-                <Card v-for="course in courses">
-                    <template #header>
-                        <img v-if="course.image" :src="course.image" alt="Аватар курса">
-                        <img v-else src="./../../assets/courseDefaultImage.png" alt="Аватар курса">
-                    </template>
-                    <template #title>
-                        <router-link :to="{ name: 'course', params: { id: course.id } }">
-                            {{ course.course_name }}
-                        </router-link>
-                    </template>
-                    <template #content>
-                        <ScrollPanel v-if="course.description" style="width: 100%; height: 200px;">
-                            {{ course.description }}
-                        </ScrollPanel>
-                        <div v-else>
-                            Пока нет информации о курсе...
-                        </div>
-                    </template>
-                </Card>
-            </div>
-            <div v-if="!courses.length" class="alignSelfCenter">
-                <div v-if="user.isTeacher">
-                    У Вас пока нет курсов...
-                </div>
-                <div v-else>
-                    У этого преподавателя пока нет курсов...
+                <div>
+                    Факультет: {{ teacher.faculty }}
                 </div>
             </div>
         </div>
+        <CoursesList :title="title" :courses="courses"/>
     </div>
-    <Dialog v-model:visible="newCourse.dialogVisible" modal header="Новый курс">
-        <div class="flexColumn">
-            <InputGroup>
-                <InputGroupAddon>
-                    <i class="pi pi-book"/>
-                </InputGroupAddon>
-                <InputText v-model="newCourse.name" required placeholder="Название курса"/>
-            </InputGroup>
-            <Textarea v-model="newCourse.description" autoResize placeholder="Краткое описание курса"/>
-            <InputGroup>
-                <InputGroupAddon>
-                    <i class="pi pi-lock"/>
-                </InputGroupAddon>
-                <InputText v-model="newCourse.password" required placeholder="Пароль курса"/>
-            </InputGroup>
-            <div class="flexRow justifyEnd">
-                <Button label="Отмена" severity="danger" @click="newCourse.dialogVisible = false"/>
-                <Button label="Добавить" @click="handleAddingCourse"/>
-            </div>
-        </div>
-    </Dialog>
 </template>
 
 <style scoped lang="scss">
-.p-card {
-    width: 350px;
-    overflow: hidden;
-}
 
-:deep(.p-card-content) {
-    max-height: 200px;
-}
-
-img {
-    width: 100%;
-    height: auto;
-}
 </style>

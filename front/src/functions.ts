@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios';
+
 import {
     Student,
     Teacher
@@ -6,8 +8,12 @@ import {
 
 
 export function getCSRF_token(): string {
-    const input: HTMLInputElement = <HTMLInputElement>document.querySelector('input');
+    const input: HTMLInputElement = document.querySelector('input') as HTMLInputElement;
     return input.value;
+}
+
+export function handleRequestError(error: AxiosError): void {
+    console.log(error);
 }
 
 export function shortenName(user: Student | Teacher): string {

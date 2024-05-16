@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import {
-    Ref,
-    ref
-} from 'vue';
+import { courseApp } from '#requests';
+
+import { handleRequestError } from '#functions';
 
 import {
     Module,
@@ -11,58 +10,52 @@ import {
 } from '#types';
 
 import {
-    getModuleLessons,
-    getModuleCheckpoints
-} from '#requests';
+    ref,
+    Ref
+} from 'vue';
+
+import { AxiosError } from 'axios';
 
 
 
 interface Props {
-    module: Module
+    module: Module;
 }
 
 
 
 const props = defineProps<Props>();
-
-const id: Ref<number> = ref(props.module.id);
 const lessons: Ref<Lesson[]> = ref([]);
 const checkpoints: Ref<Checkpoint[]> = ref([]);
 
 
 
-async function start() {
-    try {
-        lessons.value = await getModuleLessons(id.value);
-        checkpoints.value = await getModuleCheckpoints(id.value);
-    } catch (error) {
-
-    }
+try {
+    lessons.value = await courseApp.moduleLessons(props.module.id);
+    checkpoints.value = await courseApp.moduleCheckpoints(props.module.id);
+} catch (error) {
+    handleRequestError(error as AxiosError)
 }
-
-
-
-start();
 </script>
 
 <template>
-    <div class="flexColumn sub">
-        <div class="upper">
+    <div class="flexColumn">
+        <div class="h1">
             Уроки
         </div>
         <div class="sub flexColumn">
-            <router-link v-for="lesson in lessons" :to="{ name: 'lesson', params: { id: lesson.id } }">
+            <router-link v-for="lesson in lessons" :key="lesson.id" :to="{ name: 'lesson', params: { id: lesson.id } }">
                 {{ lesson.name }}
             </router-link>
             <div v-if="!lessons.length">
                 Пока нет уроков...
             </div>
         </div>
-        <div class="upper">
+        <div class="h1">
             Контрольные точки
         </div>
         <div class="sub flexColumn">
-            <router-link v-for="checkpoint in checkpoints" :to="{ name: 'checkpoint', params: { id: checkpoint.id } }">
+            <router-link v-for="checkpoint in checkpoints" :key="checkpoint.id" :to="{ name: 'checkpoint', params: { id: checkpoint.id } }">
                 {{ checkpoint.name }}
             </router-link>
             <div v-if="!checkpoints.length">
@@ -71,3 +64,7 @@ start();
         </div>
     </div>
 </template>
+
+<style scoped>
+
+</style>

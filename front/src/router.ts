@@ -1,8 +1,8 @@
 import {
-    Router,
     createRouter,
     RouteRecordRaw,
-    createWebHistory
+    createWebHistory,
+    Router
 } from 'vue-router';
 
 import SignIn from '#pages/SignIn';
@@ -14,8 +14,6 @@ import Teacher from '#pages/Teacher';
 import Course from '#pages/Course';
 import Lesson from '#pages/Lesson';
 import Checkpoint from '#pages/Checkpoint';
-import Error from '#pages/Error';
-import NotFound from '#pages/NotFound';
 
 
 
@@ -55,17 +53,10 @@ const routes: RouteRecordRaw[] = [{
     name: 'checkpoint',
     path: '/checkpoint/:id',
     component: Checkpoint
-}, {
-    name: 'error',
-    path: '/error',
-    component: Error
-}, {
-    path: '/:pathMatch(.*)*',
-    component: NotFound
 }];
 
 const router: Router = createRouter({
-    routes: routes,
+    routes,
     history: createWebHistory()
 });
 

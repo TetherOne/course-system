@@ -1,177 +1,169 @@
 <script setup lang="ts">
-import {
-    Ref,
-    ref,
-    inject
-} from 'vue';
-
-import {
-    RouteLocationNormalizedLoaded,
-    useRoute
-} from 'vue-router';
-
-import Card from 'primevue/card';
-import ScrollPanel from 'primevue/scrollpanel';
+import Header from '#elements/Header';
+import CourseCard from '#elements/CourseCard';
 import Accordion from 'primevue/accordion';
 import AccordionTab from 'primevue/accordiontab';
+import ModuleComponent from '#elements/Module';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
-import InputText from 'primevue/inputtext';
 
 import {
-    PopUp,
-    Course,
-    Module
-} from '#types';
+    useRoute,
+    RouteLocationNormalizedLoaded
+} from 'vue-router';
 
-import Header from '#elements/Header';
-import ModuleComponent from '#elements/Module';
+import {
+    courseApp,
+    userApp
+} from '#requests';
 
 import useUserStore from '#store';
 
 import {
-    getCourse,
-    getCourseModules,
-    getTeacher,
-    addModule
-} from '#requests';
+    ref,
+    Ref
+} from 'vue';
 
-import { buildFullName } from '#functions';
-import router from '#router';
+import {
+    Course,
+    Module,
+    Student,
+    Checkpoint
+} from '#types';
+
+import {
+    shortenName,
+    buildFullName,
+    handleRequestError
+} from '#functions';
+
+import { AxiosError } from 'axios';
 
 
-
-const showWarn: PopUp = <PopUp>inject('warnPopUp');
-
-const user = useUserStore();
 
 const route: RouteLocationNormalizedLoaded = useRoute();
 
-const id: Ref<number> = ref(parseInt(<string>route.params.id));
-const name: Ref<string> = ref('');
-const description: Ref<string> = ref('');
-const image: Ref<string> = ref('');
+const id: Ref<number> = ref(parseInt(route.params.id as string));
+const course: Ref<Course> = ref({} as Course);
 const modules: Ref<Module[]> = ref([]);
-const teacherId: Ref<number> = ref(0);
 const teacherFullName: Ref<string> = ref('');
 
-const newModule = ref({
-    dialogVisible: false,
-    name: ''
-});
+const user = useUserStore();
+
+const studentGrades: Ref<any[]> = ref([]);
+const studentGradesVisible: Ref<boolean> = ref(false);
+
+const studentsGrades: Ref<any[]> = ref([]);
+const studentsGradesVisible: Ref<boolean> = ref(false);
+
+const checkpoints: Ref<Checkpoint[]> = ref([]);
 
 
 
-async function start() {
-    try {
-        const course: Course = await getCourse(id.value);
+try {
+    course.value = await courseApp.course(id.value);
+    modules.value = await courseApp.courseModules(id.value);
 
-        name.value = course.course_name;
-        description.value = course.description ?? '';
-        image.value = course.image ?? '';
-        modules.value = await getCourseModules(id.value);
-
-        teacherId.value = course.teacher_profile;
-        teacherFullName.value = buildFullName(await getTeacher(teacherId.value));
-    } catch (error) {
-
+    if (user.isStudent) {
+        teacherFullName.value = buildFullName(await userApp.teacher(course.value.teacher_profile));
+        studentGrades.value = await userApp.studentGradesInCourse(user.id, id.value)
+    } else {
+        checkpoints.value = await courseApp.courseCheckpoints(id.value);
+        const students: Student[] = await courseApp.courseStudents(id.value);
+        for (const student of students) {
+            const grades: any[] = [];
+            for (const cp of checkpoints.value) {
+                grades.push(await userApp.getStudentGradeOnCheckpoint(student.id, cp.id));
+            }
+            studentsGrades.value.push({
+                student: shortenName(student),
+                group: student.group,
+                grades
+            });
+        }
     }
+} catch (error) {
+    handleRequestError(error as AxiosError);
 }
 
-async function handleAddingModule(): Promise<void> {
-    const data = newModule.value;
 
-    if (!data.name) {
-        showWarn('', 'Вы должны ввести название');
-        return;
-    }
 
-    try {
-        await addModule(data.name, id.value, true);
-        router.go(0);
-    } catch (error) {
-        alert(error);
-    }
+function showStudentGrades(): void {
+    studentGradesVisible.value = true;
 }
-
-
-
-start();
 </script>
 
 <template>
     <div class="flexColumn alignCenter">
         <Header/>
-        <div class="block width60 flexRow alignStart">
-            <Card>
-                <template #header>
-                    <img v-if="image" :src="image" alt="Аватар курса">
-                    <img v-else src="./../../assets/courseDefaultImage.png" alt="Аватар курса">
-                </template>
-                <template #title>
-                    <router-link :to="{ name: 'course', params: { id: id } }">
-                        {{ name }}
-                    </router-link>
-                </template>
-                <template v-if="user.isStudent" #subtitle>
-                    <router-link :to="{ name: 'teacher', params: { id: teacherId } }">
+        <div class="flexRow block wide">
+            <div class="flexColumn">
+                <CourseCard :course="course"/>
+                <div v-if="user.isStudent" class="flexColumn">
+                    <div>
+                        Курс ведёт:
+                    </div>
+                    <router-link :to="{ name: 'teacher', params: { id: course.teacher_profile } }">
                         {{ teacherFullName }}
                     </router-link>
-                </template>
-                <template #content>
-                    <ScrollPanel v-if="description" style="width: 100%; height: 200px;">
-                        {{ description }}
-                    </ScrollPanel>
-                    <div v-else>
-                        Пока нет информации о курсе...
-                    </div>
-                </template>
-            </Card>
+                </div>
+                <Button v-if="user.isStudent" label="Оценки" text @click="showStudentGrades"/>
+                <Button v-else label="Успеваемость студентов" text @click="studentsGradesVisible = true"/>
+            </div>
             <Accordion>
-                <AccordionTab v-for="(module, i) in modules" :header="`${i + 1}. ${module.name}`">
+                <AccordionTab v-for="(module, i) in modules" :key="module.id" :header="`${i + 1}. ${module.name}`">
                     <ModuleComponent :module="module"/>
                 </AccordionTab>
             </Accordion>
-            <div v-if="!modules.length">
-                Пока нет модулей...
-            </div>
-            <Button v-if="user.isTeacher" icon="pi pi-plus" rounded text @click="newModule.dialogVisible = true"/>
         </div>
     </div>
-    <Dialog v-model:visible="newModule.dialogVisible" modal header="Новый модуль">
+    <Dialog v-model:visible="studentGradesVisible" modal header="Оценки">
         <div class="flexColumn">
-            <InputText v-model="newModule.name" placeholder="Название модуля"/>
-            <div class="flexRow justifyEnd">
-                <Button label="Отмена" severity="danger" @click="newModule.dialogVisible = false"/>
-                <Button label="Добавить" @click="handleAddingModule"/>
+            <div v-for="grade in studentGrades" class="flexRow alignEnd">
+                <div class="h1">
+                   {{ grade.number }}. {{ grade.name }}
+                </div>
+                <div>
+                    Оценка {{ grade.grade }}
+                </div>
             </div>
         </div>
+    </Dialog>
+    <Dialog v-model:visible="studentsGradesVisible" modal header="Успеваемость студентов">
+        <table>
+            <tr>
+                <th>Студент</th>
+                <th>Группа</th>
+                <th v-for="cp in checkpoints">
+                    {{ cp.checkpoint_number }}. {{ cp.name }}
+                </th>
+            </tr>
+            <tr v-for="student in studentsGrades">
+                <td>{{ student.student }}</td>
+                <td>{{ student.group }}</td>
+                <td v-for="grade in student.grades">
+                    {{ grade }}
+                </td>
+            </tr>
+        </table>
     </Dialog>
 </template>
 
 <style scoped lang="scss">
-@import './../../style';
-
-.p-card {
-    width: 350px;
-    overflow: hidden;
-}
-
-:deep(.p-card-content) {
-    max-height: 200px;
-}
-
-img {
-    width: 100%;
-    height: auto;
-}
-
 .p-accordion {
-    @extend .flexColumn;
     flex-grow: 1;
 }
 
-.block {
-    gap: 50px;
+:deep(.p-accordion-content) {
+    border-radius: 5px;
+}
+
+table, th, td {
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 5px;
 }
 </style>

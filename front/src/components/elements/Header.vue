@@ -1,59 +1,50 @@
 <script setup lang="ts">
-import { AxiosError } from 'axios';
-
-import {
-    Ref,
-    ref,
-    inject
-} from 'vue';
-
-import {
-    Router,
-    useRouter
-} from 'vue-router';
-
-import { MenuItem } from 'primevue/menuitem';
-
+import UserAvatar from '#elements/UserAvatar';
 import Button from 'primevue/button';
 import Menu from 'primevue/menu';
 
+import { MenuItem } from 'primevue/menuitem';
+
+import {
+    ref,
+    Ref,
+    inject
+} from 'vue';
+
+import { authApp } from '#requests';
+import useUserStore from '#store';
 import { PopUp } from '#types';
 
-import useUserStore from '#store';
-
-import UserAvatar from '#elements/UserAvatar';
-
-import { signOut } from '#requests';
-
+import {
+    useRouter,
+    Router
+} from 'vue-router';
 
 
-const showError: PopUp = <PopUp>inject('errorPopUp');
 
-const user = useUserStore();
-
-const router: Router = useRouter();
-
+const menu: Ref<any> = ref(null);
 const menuItems: Ref<MenuItem[]> = ref([{
     label: 'Настройки',
     icon: 'pi pi-cog',
-    command: (): void => {
-        router.push({ name: 'settings' });
+    async command() {
+        await router.push({ name: 'settings' });
     }
 }, {
     label: 'Выйти',
     icon: 'pi pi-sign-out',
-    command: async (): Promise<void> => {
+    async command() {
         try {
-            await signOut();
+            await authApp.signOut();
             window.location.pathname = '/sign-in';
         } catch (error) {
-            const err: AxiosError = <AxiosError>error;
-            showError('Не удалось выйти', `Код ошибки: ${err.response?.status}`);
+            showError(`${error}`, 'Не удалось выйти');
         }
     }
 }]);
 
-const menu: Ref<any> = ref(null);
+const user = useUserStore();
+const showError: PopUp = inject('showError') as PopUp;
+const router: Router = useRouter();
 
 
 
@@ -63,30 +54,34 @@ function toggleMenu(event: Event): void {
 </script>
 
 <template>
-    <div id="header" class="block flexRow alignCenter alignSelfStretch">
-        <router-link :to="user.profileLink">
+    <div class="block flexRow justifyBetween alignCenter alignSelfStretch">
+        <router-link :to="user.isStudent ? { name: 'student' } : { name: 'teacher', params: { id: user.id } }">
             Scart
         </router-link>
-        <div class="spacer"/>
-        <Button @click="toggleMenu" outlined>
-            <UserAvatar :path="user.avatar" size="normal"/>
+        <Button class="flexRow alignCenter" text rounded @click="toggleMenu">
+            <UserAvatar size="normal" :avatarPath="user.avatar" :name="user.name"/>
             <i class="pi pi-angle-down"/>
         </Button>
-        <Menu :model="menuItems" ref="menu" popup/>
+        <Menu :model="menuItems" popup ref="menu">
+            <template #start>
+                <div class="flexColumn alignCenter">
+                    <UserAvatar size="normal" :avatarPath="user.avatar" :name="user.name"/>
+                    <div>
+                        {{ user.name }} {{ user.surname }}
+                    </div>
+                </div>
+            </template>
+        </Menu>
     </div>
 </template>
 
 <style scoped lang="scss">
 @import './../../style';
 
-#header {
-    padding: 7px;
+.block {
     border: none;
     border-bottom: 1px solid $borderColor;
     border-radius: 0;
-}
-
-Button {
-    padding: 1px;
+    padding: 2px;
 }
 </style>

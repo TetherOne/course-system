@@ -1,20 +1,16 @@
+$alignments: (
+        Start: flex-start,
+        End: flex-end,
+        Center: center,
+        Stretch: stretch,
+        Around: space-around,
+        Between: space-between,
+        Evenly: space-evenly
+);
+
 $primaryColor: var(--primary-color);
 $textColorSecondary: var(--text-color-secondary);
-
-$blockBG_color: #1f2937;
-$borderColor: rgba(255,255,255,.1);
-
-$gap: 10px;
-
-$alignments: (
-    Start: flex-start,
-    End: flex-end,
-    Center: center,
-    Stretch: stretch,
-    Around: space-around,
-    Between: space-between,
-    Evenly: space-evenly
-);
+$borderColor: rgba(255, 255, 255, .1);
 
 body {
     margin: 0;
@@ -22,16 +18,11 @@ body {
     box-sizing: border-box;
 }
 
-.block {
-    background-color: $blockBG_color;
-    border: 1px solid $borderColor;
-    border-radius: 1em;
-    padding: 1em;
-}
-
 .flex {
     display: flex;
-    gap: $gap;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
 .flexRow {
@@ -41,10 +32,6 @@ body {
 .flexColumn {
     @extend .flex;
     flex-direction: column;
-}
-
-.spacer {
-    flex-grow: 1;
 }
 
 @each $alignment, $value in $alignments {
@@ -59,6 +46,48 @@ body {
     }
 }
 
+.block {
+    background-color: #1f2937;
+    border: 1px solid $borderColor;
+    border-radius: 15px;
+    padding: 15px;
+}
+
+.wide {
+    width: 60vw;
+}
+
+.absolutelyCentered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.sub {
+    margin-left: 1rem;
+}
+
+.authBackground {
+    width: 100vw;
+    height: 100vh;
+    background-image: url('./assets/authBackground.png');
+    background-size: cover;
+}
+
+.authForm {
+    @extend .block;
+    padding: 56px;
+    border: none;
+}
+
+.signReverse {
+    color: var(--red-200);
+    &:hover {
+        color: var(--red-400);
+    }
+}
+
 a {
     color: inherit;
     text-decoration: none;
@@ -68,50 +97,22 @@ a {
     }
 }
 
-.upper {
+.secondary {
+    font-size: .9em;
+    color: $textColorSecondary;
+}
+
+.ScartLogo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 150px;
+}
+
+.h1 {
     font-size: 1.2em;
 }
 
-.authWrapper {
-    width: 100vw;
-    height: 100vh;
-    background-image: url('./assets/loginBackground.png');
-    background-size: cover;
-}
-
-.specialPage {
-    width: 100vw;
-    height: 100vh;
-    background-size: cover;
-    color: black;
-
-    #title {
-        font-size: 6em;
-        font-weight: bold;
-    }
-}
-
-.authForm {
-    padding: 56px;
-}
-
-.secondary {
-    color: $textColorSecondary;
-    font-size: .85em;
-    transition: color 300ms;
-    &:hover {
-        color: $primaryColor;
-    }
-}
-
-.width60 {
-    width: 60vw;
-}
-
-.coursesList {
-    flex-wrap: wrap;
-}
-
-.sub {
-    margin-left: 1rem;
+.h2 {
+    font-size: 1.3em;
 }
