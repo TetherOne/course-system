@@ -1,10 +1,28 @@
+import {
+    fileURLToPath,
+    URL
+} from 'node:url';
+
+import { createRequire } from 'node:module';
+
 import { defineConfig } from 'vite';
+
 import vue from '@vitejs/plugin-vue';
+import ckeditor5 from '@ckeditor/vite-plugin-ckeditor5';
+
+
+
+const require = createRequire(import.meta.url);
 
 
 
 export default defineConfig({
-    plugins: [vue()],
+    plugins: [
+        vue(),
+        ckeditor5({
+            theme: require.resolve('@ckeditor/ckeditor5-theme-lark')
+        })
+    ],
     server: {
         host: 'localhost',
         port: 8001,
@@ -22,6 +40,7 @@ export default defineConfig({
             '.vue'
         ],
         alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
             '#src': '/src',
             '#enums': '/src/enums.ts',
             '#types': '/src/types.ts',

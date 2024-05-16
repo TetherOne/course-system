@@ -3,8 +3,6 @@ import {
     App
 } from 'vue';
 
-import AppComponent from '#src/AppComponent';
-
 import {
     createPinia,
     Pinia
@@ -17,6 +15,9 @@ import Tooltip from 'primevue/tooltip';
 import 'primevue/resources/themes/aura-dark-indigo/theme.css';
 import 'primeicons/primeicons.css';
 
+import CKEditor from '@ckeditor/ckeditor5-vue';
+
+import AppComponent from '#src/AppComponent';
 import '#src/style';
 import router from '#router';
 
@@ -32,6 +33,7 @@ app.use(router);
 app.use(PrimeVue);
 app.use(ToastService);
 app.use(ConfirmationService);
+app.use(CKEditor);
 
 app.directive('tooltip', Tooltip);
 

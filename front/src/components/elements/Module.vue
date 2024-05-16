@@ -13,7 +13,10 @@ import { PopUp } from '#types';
 
 import useUserStore from '#store';
 
-import { courseApp } from '#requests';
+import {
+    courseApp,
+    checkpointApp
+} from '#requests';
 
 import { handleRequestError } from '#functions';
 
@@ -86,6 +89,23 @@ async function onAddLesson(): Promise<void> {
         handleRequestError(error as AxiosError);
     }
 }
+
+async function onAddCheckpoint(): Promise<void> {
+    newCheckpoint.value.btnWasPressed = true;
+
+    if (!newCheckpoint.value.name) {
+        showError('Вы должны ввести название КТ, чтобы добавить её!');
+        return;
+    }
+
+    try {
+        checkpoints.value.push(await checkpointApp.addCheckpoint(newCheckpoint.value.name, props.module.id));
+        newCheckpoint.value.dialogVisible = false;
+        showSuccess('КТ добавлена');
+    } catch (error) {
+        handleRequestError(error as AxiosError);
+    }
+}
 </script>
 
 <template>
@@ -133,6 +153,23 @@ async function onAddLesson(): Promise<void> {
         <template #footer>
             <Button label="Отмена" severity="danger" @click="newLesson.dialogVisible=false"/>
             <Button label="Добавить" @click="onAddLesson"/>
+        </template>
+    </Dialog>
+    <Dialog v-model:visible="newCheckpoint.dialogVisible" modal header="Новая КТ">
+        <div class="flexColumn">
+            <label for="name">Название</label>
+            <InputGroup>
+                <InputGroupAddon>
+                    <i class="pi pi-file"/>
+                </InputGroupAddon>
+                <InputText v-model="newCheckpoint.name" id="name" aria-describedby="name-help"
+                           :invalid="newCheckpoint.btnWasPressed&&!newCheckpoint.name"/>
+            </InputGroup>
+            <small id="name-help">Введите название КТ</small>
+        </div>
+        <template #footer>
+            <Button label="Отмена" severity="danger" @click="newCheckpoint.dialogVisible=false"/>
+            <Button label="Добавить" @click="onAddCheckpoint"/>
         </template>
     </Dialog>
 </template>

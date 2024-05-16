@@ -169,6 +169,10 @@ export const courseApp = {
         }
         return checkpoints;
     },
+    async numberOfLastCheckpointInCourse(id: number): Promise<number> {
+        const checkpoints: Checkpoint[] = await this.courseCheckpoints(id);
+        return checkpoints.length;
+    },
     async addCourse(course_name: string, description: string, teacher_profile: number, password: string): Promise<Course> {
         return (await axios.postForm(coursesURL, {
             course_name,
@@ -179,6 +183,9 @@ export const courseApp = {
             password,
             csrfmiddlewaretoken: getCSRF_token()
         })).data;
+    },
+    async module(id: number): Promise<Module> {
+        return await getEntity(modulesURL, id);
     },
     async moduleLessons(id: number): Promise<Lesson[]> {
         const config: AxiosRequestConfig = structuredClone(standardConfig);
@@ -221,6 +228,14 @@ export const courseApp = {
 export const checkpointApp = {
     async checkpoint(id: number): Promise<Checkpoint> {
         return await getEntity(checkpointsURL, id);
+    },
+    async addCheckpoint(name: string, module: number): Promise<Checkpoint> {
+        return (await axios.postForm(checkpointsURL, {
+            name,
+            module,
+            checkpoint_number: await courseApp.numberOfLastCheckpointInCourse((await courseApp.module(module)).course) + 1,
+            csrfmiddlewaretoken: getCSRF_token()
+        })).data;
     },
     async sendResult(student: number, checkpoint: number): Promise<PassedCheckpoint> {
         return (await axios.postForm(passedCheckpointsURL, {

@@ -9,7 +9,11 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^41.4.1",
+        "@ckeditor/ckeditor5-vue": "^5.1.0",
+        "@ckeditor/vite-plugin-ckeditor5": "^0.1.3",
         "axios": "^1.6.8",
+        "highlight.js": "^11.9.0",
         "pinia": "^2.1.7",
         "primeicons": "^7.0.0",
         "primevue": "^3.52.0",

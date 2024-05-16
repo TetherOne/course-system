@@ -1,4 +1,17 @@
 <script setup lang="ts">
+import Button from 'primevue/button';
+
+import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic';
+
+import { Essentials } from '@ckeditor/ckeditor5-essentials';
+import {
+    Bold,
+    Italic
+} from '@ckeditor/ckeditor5-basic-styles';
+import { Link } from '@ckeditor/ckeditor5-link';
+import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
+import { CodeBlock } from '@ckeditor/ckeditor5-code-block';
+
 import Header from '#elements/Header';
 import Divider from 'primevue/divider';
 
@@ -18,6 +31,8 @@ import {
     RouteLocationNormalizedLoaded
 } from 'vue-router';
 
+import useUserStore from '#store';
+
 import {
     Lesson,
     LessonFile
@@ -28,6 +43,34 @@ import { AxiosError } from 'axios';
 
 
 const route: RouteLocationNormalizedLoaded = useRoute();
+
+const user = useUserStore();
+
+const editor = ref({
+    editor: ClassicEditor,
+    visible: false,
+    data: '',
+    config: {
+        plugins: [
+            Essentials,
+            Bold,
+            Italic,
+            Link,
+            Paragraph,
+            CodeBlock
+        ],
+        toolbar: {
+            items: [
+                'bold',
+                'italic',
+                'link',
+                'undo',
+                'redo',
+                'codeBlock'
+            ]
+        }
+    }
+});
 
 const id: Ref<number> = ref(parseInt(route.params.id as string));
 const name: Ref<string> = ref('');
@@ -51,25 +94,30 @@ try {
 } catch (error) {
     handleRequestError(error as AxiosError);
 }
+
+
+
+function openEditor(): void {
+    editor.value.data = description.value;
+    editor.value.visible = true;
+}
 </script>
 
 <template>
     <div class="flexColumn alignCenter">
         <Header/>
         <div class="flexColumn block wide">
-            <div class="h2">
-                {{ name }}
+            <div class="h2 flexRow alignCenter">
+                <div>{{ name }}</div>
+                <Button v-if="user.isTeacher" icon="pi pi-file-edit" text @click="openEditor" :disabled="editor.visible"/>
             </div>
             <Divider/>
-            <div v-if="description">
-                <div>
-                    {{ description }}
-                </div>
-                <Divider/>
+            <div id="editorWrapper">
+                <ckeditor v-if="editor.visible" :editor="editor.editor" v-model="editor.data"
+                          :config="editor.config"/>
             </div>
-            <div v-else>
-                Пока нет информации
-            </div>
+            <div v-if="description&&!editor.visible" v-html="description"/>
+            <Divider v-if="description&&!editor.visible"/>
             <div v-if="videoPath">
                 <video controls width="320" height="240" :src="videoPath"/>
                 <Divider/>
@@ -89,5 +137,9 @@ try {
 <style scoped lang="scss">
 #files {
     flex-wrap: wrap;
+}
+
+#editorWrapper {
+    color: black;
 }
 </style>
