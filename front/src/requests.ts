@@ -30,7 +30,7 @@ const courseAppURL: string = `${API_URL}/courseapp`;
 
 const coursesURL: string = `${courseAppURL}/courses/`;
 const modulesURL: string = `${courseAppURL}/modules/`;
-const lessonsURL: string = `${courseAppURL}/lessons/`;
+export const lessonsURL: string = `${courseAppURL}/lessons/`;
 const lessonsFilesURL: string = `${courseAppURL}/lesson-other-files/`;
 const enrollmentsURL: string = `${courseAppURL}/enrollments/`;
 
