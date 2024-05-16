@@ -168,6 +168,17 @@ export const courseApp = {
         }
         return checkpoints;
     },
+    async addCourse(course_name: string, description: string, teacher_profile: number, password: string): Promise<Course> {
+        return (await axios.postForm(coursesURL, {
+            course_name,
+            description,
+            status: true,
+            teacher_profile,
+            image: '',
+            password,
+            csrfmiddlewaretoken: getCSRF_token()
+        })).data;
+    },
     async moduleLessons(id: number): Promise<Lesson[]> {
         const config: AxiosRequestConfig = structuredClone(standardConfig);
         config.params.module = id;
