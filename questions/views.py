@@ -1,8 +1,10 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
 
+from questions.permissions import IsStudentEnrollment
 from questions.serializers import QuestionSerializer
 from questions.serializers import AnswerSerializer
+from questions.permissions import IsTeacherOwner
 
 from questions.models import Question
 from questions.models import Answer
@@ -14,6 +16,7 @@ class QuestionViewSet(ModelViewSet):
         "checkpoint",
     ).all()
     serializer_class = QuestionSerializer
+    permission_classes = [IsTeacherOwner | IsStudentEnrollment]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["checkpoint"]
 
@@ -24,5 +27,6 @@ class AnswerViewSet(ModelViewSet):
         "question",
     ).all()
     serializer_class = AnswerSerializer
+    permission_classes = [IsTeacherOwner | IsStudentEnrollment]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["question"]
