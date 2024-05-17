@@ -7,11 +7,6 @@ import {
     inject
 } from 'vue';
 
-import {
-    Router,
-    useRouter
-} from 'vue-router';
-
 import { AxiosError } from 'axios';
 
 import Button from 'primevue/button';
@@ -26,7 +21,8 @@ import useUserStore from '#store';
 
 import {
     Notice,
-    ErrorHandler
+    ErrorHandler,
+    PromiseNoParamsNoReturn
 } from '#types';
 
 import { authApp } from '#requests';
@@ -39,8 +35,7 @@ const noticeWarn: Notice = inject('noticeWarn') as Notice;
 const noticeError: Notice = inject('noticeError') as Notice;
 
 const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
-
-const router: Router = useRouter();
+const redirectToUserProfile: PromiseNoParamsNoReturn = inject('redirectToUserProfile') as PromiseNoParamsNoReturn;
 
 if (await authApp.userSignedIn()) {
     await redirectToUserProfile();
@@ -77,14 +72,6 @@ async function onSignIn(): Promise<void> {
         }
     } catch (error) {
         await handleRequestError(error as AxiosError);
-    }
-}
-
-async function redirectToUserProfile(): Promise<void> {
-    if (user.isStudent) {
-        await router.push({ name: 'student' });
-    } else {
-        await router.push({ name: 'teacher', params: { id: user.id } });
     }
 }
 </script>

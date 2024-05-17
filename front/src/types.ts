@@ -117,3 +117,5 @@ export type CurrentUser = Omit<User, 'is_teacher'> & {
 export type Notice = (message: string, title?: string) => void
 
 export type ErrorHandler = (error: AxiosError) => Promise<void>
+
+export type PromiseNoParamsNoReturn = () => Promise<void>

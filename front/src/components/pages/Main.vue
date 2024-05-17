@@ -75,16 +75,34 @@ async function handleRequestError(error: AxiosError): Promise<void> {
     }
 }
 
+function userInAuth(): boolean {
+    return ['signIn', 'signUp', 'resetPassword'].includes(route.name as string);
+}
+
+async function redirectToUserProfile(): Promise<void> {
+    if (user.isStudent) {
+        await router.push({ name: 'student' });
+    } else {
+        await router.push({ name: 'teacher', params: { id: user.id } });
+    }
+}
+
 
 
 if (await authApp.userSignedIn()) {
     await user.loadData();
+    if (userInAuth()) {
+        await redirectToUserProfile();
+    }
+} else if (!userInAuth()) {
+    await router.push({ name: 'signIn' });
 }
 
 provide('noticeSuccess', noticeSuccess);
 provide('noticeWarn', noticeWarn);
 provide('noticeError', noticeError);
 provide('handleRequestError', handleRequestError);
+provide('redirectToUserProfile', redirectToUserProfile);
 </script>
 
 <template>

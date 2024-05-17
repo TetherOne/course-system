@@ -81,6 +81,11 @@ body {
     border: none;
 }
 
+.specialPage {
+    @extend .authBackground;
+    background-image: unset;
+}
+
 .signReverse {
     color: var(--red-200);
     &:hover {
@@ -115,4 +120,8 @@ a {
 
 .h2 {
     font-size: 1.3em;
+}
+
+.veryLargeText {
+    font-size: 8rem;
 }
