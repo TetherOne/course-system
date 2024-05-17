@@ -244,6 +244,14 @@ export const courseApp = {
         const config: AxiosRequestConfig = structuredClone(standardConfig);
         config.headers = getHeadersWithCSRF_token();
         return (await axios.patchForm(`${lessonsURL}${id}/`, updated)).data;
+    },
+    async enroll(student: number, course: number, course_password: string): Promise<Enrollment> {
+        return (await axios.postForm(enrollmentsURL, {
+            student,
+            course,
+            course_password,
+            csrfmiddlewaretoken: getCSRF_token()
+        })).data;
     }
 };
 

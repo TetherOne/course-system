@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { inject } from 'vue';
+import {
+    Ref,
+    ref,
+    inject
+} from 'vue';
 
 import {
     Router,
@@ -14,10 +18,13 @@ import Button from 'primevue/button';
 import Card from 'primevue/card';
 import ScrollPanel from 'primevue/scrollpanel';
 import ConfirmDialog from 'primevue/confirmdialog';
+import Dialog from 'primevue/dialog';
+import InputText from 'primevue/inputtext';
 
 import useUserStore from '#store';
 
 import {
+    Notice,
     ErrorHandler,
     Course
 } from '#types';
@@ -34,10 +41,17 @@ interface Props {
 
 const user = useUserStore();
 
+const noticeSuccess: Notice = inject('noticeSuccess') as Notice;
+const noticeError: Notice = inject('noticeError') as Notice;
+
 const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
+
 const router: Router = useRouter();
 
 const props = defineProps<Props>();
+
+const enrollFormVisible: Ref<boolean> = ref(false);
+const password: Ref<string> = ref('');
 
 const confirm = useConfirm();
 
@@ -66,6 +80,26 @@ async function handleCourseDeletion(): Promise<void> {
         await handleRequestError(error as AxiosError);
     }
 }
+
+async function handleEnrollment(): Promise<void> {
+    if (!password.value) {
+        return;
+    }
+
+    try {
+        await courseApp.enroll(user.id, props.course.id, password.value);
+        props.course.studentHasIt = true;
+        enrollFormVisible.value = false;
+        noticeSuccess('Вы были успешно зачислены на курс');
+    } catch (error) {
+        const err: AxiosError = error as AxiosError;
+        if (err.response?.status === 400) {
+            noticeError('Неверный пароль');
+        } else {
+            await handleRequestError(error as AxiosError);
+        }
+    }
+}
 </script>
 
 <template>
@@ -78,7 +112,8 @@ async function handleCourseDeletion(): Promise<void> {
             <router-link :to="{ name: 'course', params: { id: course.id } }">
                 {{ props.course.course_name }}
             </router-link>
-            <Button v-if="user.isTeacher" icon="pi pi-trash" text v-tooltip="'Удалить курс'" @click="confirmCourseDeletion"/>
+            <Button v-if="user.isTeacher" icon="pi pi-trash" text v-tooltip="'Удалить курс'"
+                    @click="confirmCourseDeletion"/>
         </template>
         <template v-if="course.teacherShortName" #subtitle>
             <router-link :to="{ name: 'teacher', params: { id: course.teacher_profile } }">
@@ -95,10 +130,21 @@ async function handleCourseDeletion(): Promise<void> {
         </template>
         <template v-if="course.studentHasIt !== undefined" #footer>
             <Button v-if="course.studentHasIt" icon="pi pi-check" v-tooltip="'Вы зачислены на этот курс'" text/>
-            <Button v-else icon="pi pi-user-plus" text v-tooltip="'Ввести пароль для зачисления'"/>
+            <Button v-else icon="pi pi-user-plus" text v-tooltip="'Ввести пароль для зачисления'"
+                    @click="enrollFormVisible=true"/>
         </template>
     </Card>
     <ConfirmDialog/>
+    <Dialog v-model:visible="enrollFormVisible" modal header="Зачисление на курс">
+        <div class="flexColumn alignStretch">
+            <div>Для доступа к курсу введите пароль</div>
+            <InputText v-model="password" :invalid="!password"/>
+        </div>
+        <template #footer>
+            <Button label="Отмена" severity="danger" outlined @click="password='';enrollFormVisible=false;"/>
+            <Button label="Отправить" severity="success" @click="handleEnrollment"/>
+        </template>
+    </Dialog>
 </template>
 
 <style scoped lang="scss">
@@ -123,5 +169,9 @@ async function handleCourseDeletion(): Promise<void> {
 img {
     width: 100%;
     height: auto;
+}
+
+:deep(.p-dialog-content) {
+    width: 200px;
 }
 </style>

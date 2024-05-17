@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import {
-    Router,
-    useRouter
-} from 'vue-router';
+import { inject } from 'vue';
 
 import Button from 'primevue/button';
 
+import { PromiseNoParamsNoReturn } from '#types';
 
 
-const router: Router = useRouter();
+
+const redirect: PromiseNoParamsNoReturn = inject('redirectToUserProfile') as PromiseNoParamsNoReturn;
 </script>
 
 <template>
@@ -20,7 +19,7 @@ const router: Router = useRouter();
             <div>
                 Здесь ничего нет. Как Вы сюда попали?
             </div>
-            <Button label="Назад" icon="pi pi-arrow-left" @click="router.go(-1)"/>
+            <Button label="В профиль" icon="pi pi-arrow-left" @click="redirect"/>
         </div>
     </div>
 </template>
