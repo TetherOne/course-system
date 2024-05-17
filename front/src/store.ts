@@ -1,15 +1,13 @@
 import {
-    defineStore
-} from 'pinia';
-
-import {
-    ref,
     Ref,
+    ComputedRef,
+    ref,
     computed,
-    ComputedRef
 } from 'vue';
 
-import { authApp } from '#requests';
+import {
+    defineStore
+} from 'pinia';
 
 import { Role } from '#enums';
 
@@ -19,6 +17,8 @@ import {
 } from '#types';
 
 import { buildFullName } from '#functions';
+
+import { authApp } from '#requests';
 
 
 

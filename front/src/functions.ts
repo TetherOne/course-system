@@ -1,5 +1,3 @@
-import { AxiosError } from 'axios';
-
 import {
     Student,
     Teacher
@@ -15,10 +13,6 @@ export function getCSRF_token(): string {
 export function getCaptcha(): string {
     const input: HTMLTextAreaElement = document.querySelector('textarea') as HTMLTextAreaElement;
     return input.value;
-}
-
-export function handleRequestError(error: AxiosError): void {
-    console.log(error);
 }
 
 export function shortenName(user: Student | Teacher): string {

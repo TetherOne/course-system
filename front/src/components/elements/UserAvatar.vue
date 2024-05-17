@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Avatar from 'primevue/avatar';
-
 import {
-    computed,
-    ComputedRef
+    ComputedRef,
+    computed
 } from 'vue';
+
+import Avatar from 'primevue/avatar';
 
 
 
@@ -25,7 +25,3 @@ const attributeValue: ComputedRef<string> = computed((): string => props.avatarP
 <template>
     <Avatar :[attributeName]="attributeValue" :size="size"/>
 </template>
-
-<style scoped>
-
-</style>

@@ -1,26 +1,33 @@
 <script setup lang="ts">
-import UserAvatar from '#elements/UserAvatar';
-import Button from 'primevue/button';
-import Menu from 'primevue/menu';
-
-import { MenuItem } from 'primevue/menuitem';
-
 import {
-    ref,
     Ref,
+    ref,
     inject
 } from 'vue';
-
-import { authApp } from '#requests';
-import useUserStore from '#store';
-import { PopUp } from '#types';
 
 import {
     useRouter,
     Router
 } from 'vue-router';
 
+import { MenuItem } from 'primevue/menuitem';
 
+import Button from 'primevue/button';
+import Menu from 'primevue/menu';
+
+import useUserStore from '#store';
+import { Notice } from '#types';
+
+import { authApp } from '#requests';
+
+import UserAvatar from '#elements/UserAvatar';
+
+
+
+const user = useUserStore();
+
+const noticeError: Notice = inject('noticeError') as Notice;
+const router: Router = useRouter();
 
 const menu: Ref<any> = ref(null);
 const menuItems: Ref<MenuItem[]> = ref([{
@@ -37,14 +44,10 @@ const menuItems: Ref<MenuItem[]> = ref([{
             await authApp.signOut();
             window.location.pathname = '/sign-in';
         } catch (error) {
-            showError(`${error}`, 'Не удалось выйти');
+            noticeError(`${error}`, 'Не удалось выйти');
         }
     }
 }]);
-
-const user = useUserStore();
-const showError: PopUp = inject('showError') as PopUp;
-const router: Router = useRouter();
 
 
 

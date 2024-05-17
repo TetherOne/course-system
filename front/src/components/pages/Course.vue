@@ -1,37 +1,32 @@
 <script setup lang="ts">
-import { inject } from 'vue';
+import {
+    Ref,
+    ref,
+    inject
+} from 'vue';
 
-import Header from '#elements/Header';
-import CourseCard from '#elements/CourseCard';
-import Accordion from 'primevue/accordion';
-import AccordionTab from 'primevue/accordiontab';
-import ModuleComponent from '#elements/Module';
+import {
+    RouteLocationNormalizedLoaded,
+    useRoute
+} from 'vue-router';
+
+import { AxiosError } from 'axios';
+
 import Button from 'primevue/button';
-import Dialog from 'primevue/dialog';
 import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
 import InputText from 'primevue/inputtext';
+import Accordion from 'primevue/accordion';
+import AccordionTab from 'primevue/accordiontab';
+import Dialog from 'primevue/dialog';
 
-import {
-    useRoute,
-    RouteLocationNormalizedLoaded
-} from 'vue-router';
 
-import { PopUp } from '#types';
-
-import {
-    courseApp,
-    userApp
-} from '#requests';
 
 import useUserStore from '#store';
 
 import {
-    ref,
-    Ref
-} from 'vue';
-
-import {
+    Notice,
+    ErrorHandler,
     Course,
     Module,
     Student,
@@ -40,16 +35,26 @@ import {
 
 import {
     shortenName,
-    buildFullName,
-    handleRequestError
+    buildFullName
 } from '#functions';
 
-import { AxiosError } from 'axios';
+import {
+    courseApp,
+    userApp
+} from '#requests';
+
+import Header from '#elements/Header';
+import CourseCard from '#elements/CourseCard';
+import ModuleComponent from '#elements/Module';
 
 
 
-const showSuccess: PopUp = inject('showSuccess') as PopUp;
-const showError: PopUp = inject('showError') as PopUp;
+const user = useUserStore();
+
+const noticeSuccess: Notice = inject('noticeSuccess') as Notice;
+const noticeError: Notice = inject('noticeError') as Notice;
+
+const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
 
 const route: RouteLocationNormalizedLoaded = useRoute();
 
@@ -57,8 +62,6 @@ const id: Ref<number> = ref(parseInt(route.params.id as string));
 const course: Ref<Course> = ref({} as Course);
 const modules: Ref<Module[]> = ref([]);
 const teacherFullName: Ref<string> = ref('');
-
-const user = useUserStore();
 
 const studentGrades: Ref<any[]> = ref([]);
 const studentGradesVisible: Ref<boolean> = ref(false);
@@ -73,6 +76,29 @@ const newModule = ref({
     btnWasPressed: false,
     name: ''
 });
+
+
+
+function showStudentGrades(): void {
+    studentGradesVisible.value = true;
+}
+
+async function onAddModule(): Promise<void> {
+    newModule.value.btnWasPressed = true;
+
+    if (!newModule.value.name) {
+        noticeError('Имя модуля обязательно');
+        return;
+    }
+
+    try {
+        modules.value.push(await courseApp.addModule(newModule.value.name, id.value));
+        newModule.value.visible = false;
+        noticeSuccess('Модуль добавлен');
+    } catch (error) {
+        await handleRequestError(error as AxiosError);
+    }
+}
 
 
 
@@ -99,30 +125,7 @@ try {
         }
     }
 } catch (error) {
-    handleRequestError(error as AxiosError);
-}
-
-
-
-function showStudentGrades(): void {
-    studentGradesVisible.value = true;
-}
-
-async function onAddModule(): Promise<void> {
-    newModule.value.btnWasPressed = true;
-
-    if (!newModule.value.name) {
-        showError('Имя модуля обязательно');
-        return;
-    }
-
-    try {
-        modules.value.push(await courseApp.addModule(newModule.value.name, id.value));
-        newModule.value.visible = false;
-        showSuccess('Модуль добавлен');
-    } catch (error) {
-        handleRequestError(error as AxiosError);
-    }
+    await handleRequestError(error as AxiosError);
 }
 </script>
 

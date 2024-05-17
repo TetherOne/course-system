@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 
 import {
     Student,
@@ -239,7 +238,7 @@ export const courseApp = {
     async updateLesson(id: number, updated: Partial<Lesson>): Promise<Lesson> {
         const config: AxiosRequestConfig = structuredClone(standardConfig);
         config.headers = getHeadersWithCSRF_token();
-        return (await axios.patchForm(`${lessonsURL}${id}/`, updated, config)).data;
+        return (await axios.patchForm(`${lessonsURL}${id}/`, updated)).data;
     }
 };
 

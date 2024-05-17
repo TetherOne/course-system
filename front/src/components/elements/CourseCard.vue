@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import Button from 'primevue/button';
 import Card from 'primevue/card';
 import ScrollPanel from 'primevue/scrollpanel';
-import Button from 'primevue/button';
 
 import { Course } from '#types';
 

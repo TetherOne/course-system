@@ -1,29 +1,10 @@
 <script setup lang="ts">
-import Header from '#elements/Header';
-import UserAvatar from '#elements/UserAvatar';
-import CoursesList from '#elements/CoursesList';
-
-import { userApp } from '#requests';
-
-import useUserStore from '#store';
-
 import {
-    handleRequestError,
-    buildFullName
-} from '#functions';
-
-import { Role } from '#enums';
-
-import {
-    Teacher,
-    Course
-} from '#types';
-
-import {
-    ref,
     Ref,
+    ComputedRef,
+    ref,
     computed,
-    ComputedRef
+    inject
 } from 'vue';
 
 import {
@@ -33,11 +14,31 @@ import {
 
 import { AxiosError } from 'axios';
 
+import useUserStore from '#store';
+
+import { Role } from '#enums';
+
+import {
+    ErrorHandler,
+    Teacher,
+    Course
+} from '#types';
+
+import { buildFullName } from '#functions';
+
+import { userApp } from '#requests';
+
+import Header from '#elements/Header';
+import UserAvatar from '#elements/UserAvatar';
+import CoursesList from '#elements/CoursesList';
 
 
-const route: RouteLocationNormalizedLoaded = useRoute();
 
 const user = useUserStore();
+
+const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
+
+const route: RouteLocationNormalizedLoaded = useRoute();
 
 const id: Ref<number> = ref(parseInt(route.params.id as string));
 const teacher: Ref<Teacher> = ref({} as Teacher);
@@ -58,7 +59,7 @@ try {
         }
     }
 } catch (error) {
-    handleRequestError(error as AxiosError)
+    await handleRequestError(error as AxiosError)
 }
 </script>
 
@@ -79,7 +80,3 @@ try {
         <CoursesList :title="title" :courses="courses"/>
     </div>
 </template>
-
-<style scoped lang="scss">
-
-</style>

@@ -1,26 +1,40 @@
 <script setup lang="ts">
+import { provide } from 'vue';
+
+import {
+    Router,
+    RouteLocationNormalizedLoaded,
+    useRouter,
+    useRoute
+} from 'vue-router';
+
+import { AxiosError } from 'axios';
+
+import { ToastServiceMethods } from 'primevue/toastservice';
+import { useToast } from 'primevue/usetoast';
+
+import Toast from 'primevue/toast';
+
+import { PopUpType } from '#enums';
+import useUserStore from '#store';
+
 import UserSkeleton from '#pages/UserSkeleton';
 import CourseSkeleton from '#pages/CourseSkeleton';
 
-import useUserStore from '#store';
-
-import {
-    useRoute,
-    RouteLocationNormalizedLoaded
-} from 'vue-router';
-
 import { authApp } from '#requests';
 
-import { useToast } from 'primevue/usetoast';
-import Toast from 'primevue/toast';
-import { ToastServiceMethods } from 'primevue/toastservice';
-import { PopUpType } from '#enums';
-
-import { provide } from 'vue';
 
 
+const user = useUserStore();
 
-function showPopUp(type: PopUpType, message: string, title: string): void {
+const toast: ToastServiceMethods = useToast();
+
+const router: Router = useRouter();
+const route: RouteLocationNormalizedLoaded = useRoute();
+
+
+
+function notice(type: PopUpType, message: string, title: string): void {
     toast.add({
         severity: type,
         summary: title,
@@ -29,34 +43,48 @@ function showPopUp(type: PopUpType, message: string, title: string): void {
     });
 }
 
-function showSuccess(message: string, title: string = 'Успех'): void {
-    showPopUp(PopUpType.Success, message, title);
+function noticeSuccess(message: string, title: string = 'Успех'): void {
+    notice(PopUpType.Success, message, title);
 }
 
-function showWarn(message: string, title: string = 'Внимание'): void {
-    showPopUp(PopUpType.Warn, message, title);
+function noticeWarn(message: string, title: string = 'Внимание'): void {
+    notice(PopUpType.Warn, message, title);
 }
 
-function showError(message: string, title: string = 'Ошибка'): void {
-    showPopUp(PopUpType.Error, message, title);
+function noticeError(message: string, title: string = 'Ошибка'): void {
+    notice(PopUpType.Error, message, title);
+}
+
+async function handleRequestError(error: AxiosError): Promise<void> {
+    switch (error.response?.status) {
+        case 403:
+            await router.push({ name: 'forbidden' });
+            break;
+        case 404:
+            await router.push({ name: 'notFound' });
+            break;
+        default:
+            await router.push({
+                name: 'error',
+                query: {
+                    code: error.response?.status,
+                    message: error.request?.responseText
+                }
+            });
+            break;
+    }
 }
 
 
-
-const user = useUserStore();
 
 if (await authApp.userSignedIn()) {
     await user.loadData();
 }
 
-const route: RouteLocationNormalizedLoaded = useRoute();
-const toast: ToastServiceMethods = useToast();
-
-
-
-provide('showSuccess', showSuccess);
-provide('showWarn', showWarn);
-provide('showError', showError);
+provide('noticeSuccess', noticeSuccess);
+provide('noticeWarn', noticeWarn);
+provide('noticeError', noticeError);
+provide('handleRequestError', handleRequestError);
 </script>
 
 <template>

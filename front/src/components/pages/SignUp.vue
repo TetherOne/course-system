@@ -14,10 +14,10 @@ import InputSwitch from 'primevue/inputswitch';
 import Button from 'primevue/button';
 import Divider from 'primevue/divider';
 
-import { AxiosError } from 'axios';
+// import { AxiosError } from 'axios';
 
 // import { authApp } from '#requests';
-import { handleRequestError } from '#functions';
+// import { handleRequestError } from '#functions';
 
 
 
@@ -68,7 +68,7 @@ async function onSignUp(): Promise<void> {
         // const data = await authApp.signUp(username.value, email.value, password.value, isTeacher.value);
         // console.log(data);
     } catch (error) {
-        handleRequestError(error as AxiosError);
+        // handleRequestError(error as AxiosError);
     }
 }
 </script>
@@ -119,7 +119,3 @@ async function onSignUp(): Promise<void> {
         </div>
     </div>
 </template>
-
-<style scoped>
-
-</style>

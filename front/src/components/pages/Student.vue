@@ -1,29 +1,35 @@
 <script setup lang="ts">
+import {
+    Ref,
+    ref,
+    inject
+} from 'vue';
+
+import { AxiosError } from 'axios';
+
+import useUserStore from '#store';
+
+import {
+    ErrorHandler,
+    Course
+} from '#types';
+
+import { shortenName } from '#functions';
+
+import { userApp } from '#requests';
+
 import Header from '#elements/Header';
 import UserAvatar from '#elements/UserAvatar';
 import CoursesList from '#elements/CoursesList';
 
-import { userApp } from '#requests';
-
-import {
-    ref,
-    Ref
-} from 'vue';
-
-import { Course } from '#types';
-import useUserStore from '#store';
-
-import {
-    shortenName,
-    handleRequestError
-} from '#functions';
-
-import { AxiosError } from 'axios';
 
 
+
+const user = useUserStore();
+
+const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
 
 const courses: Ref<Course[]> = ref([]);
-const user = useUserStore();
 
 
 
@@ -33,7 +39,7 @@ try {
         course.teacherShortName = shortenName(await userApp.teacher(course.teacher_profile));
     }
 } catch (error) {
-    handleRequestError(error as AxiosError);
+    await handleRequestError(error as AxiosError);
 }
 </script>
 

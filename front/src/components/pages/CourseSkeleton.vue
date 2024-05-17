@@ -22,7 +22,3 @@ import Skeleton from 'primevue/skeleton';
         </div>
     </div>
 </template>
-
-<style scoped>
-
-</style>

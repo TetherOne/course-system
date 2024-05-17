@@ -1,69 +1,45 @@
 <script setup lang="ts">
-import { authApp } from '#requests';
-
-import InputGroup from 'primevue/inputgroup';
-import InputGroupAddon from 'primevue/inputgroupaddon';
-import InputText from 'primevue/inputtext';
-import Password from 'primevue/password';
-import InputSwitch from 'primevue/inputswitch';
-import Button from 'primevue/button';
-import Divider from 'primevue/divider';
-
 import {
-    ref,
     Ref,
-    computed,
     ComputedRef,
+    ref,
+    computed,
     inject
 } from 'vue';
-
-import { PopUp } from '#types';
-
-import { handleRequestError } from '#functions';
-
-import { AxiosError } from 'axios';
-import useUserStore from '#store';
 
 import {
     Router,
     useRouter
 } from 'vue-router';
 
+import { AxiosError } from 'axios';
 
+import Button from 'primevue/button';
+import InputGroup from 'primevue/inputgroup';
+import InputGroupAddon from 'primevue/inputgroupaddon';
+import InputText from 'primevue/inputtext';
+import Password from 'primevue/password';
+import InputSwitch from 'primevue/inputswitch';
+import Divider from 'primevue/divider';
 
-async function onSignIn(): Promise<void> {
-    btnWasPressed.value = true;
+import useUserStore from '#store';
 
-    if (emailInvalid.value || passwordInvalid.value) {
-        showWarn('Заполните оба поля для входа');
-        return;
-    }
+import {
+    Notice,
+    ErrorHandler
+} from '#types';
 
-    try {
-        await authApp.signIn(email.value, password.value);
-
-        if (await authApp.userSignedIn()) {
-            await user.loadData();
-            await redirectToUserProfile();
-        } else {
-            showError('Проверьте правильность введённых данных и повторите попытку', 'Не удалось войти');
-        }
-    } catch (error) {
-        handleRequestError(error as AxiosError);
-    }
-}
-
-async function redirectToUserProfile(): Promise<void> {
-    if (user.isStudent) {
-        await router.push({ name: 'student' });
-    } else {
-        await router.push({ name: 'teacher', params: { id: user.id } });
-    }
-}
+import { authApp } from '#requests';
 
 
 
 const user = useUserStore();
+
+const noticeWarn: Notice = inject('noticeWarn') as Notice;
+const noticeError: Notice = inject('noticeError') as Notice;
+
+const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
+
 const router: Router = useRouter();
 
 if (await authApp.userSignedIn()) {
@@ -80,8 +56,37 @@ const btnWasPressed: Ref<boolean> = ref(false);
 const emailInvalid: ComputedRef<boolean> = computed((): boolean => btnWasPressed.value && !email.value);
 const passwordInvalid: ComputedRef<boolean> = computed((): boolean => btnWasPressed.value && !password.value);
 
-const showWarn: PopUp = inject('showWarn') as PopUp;
-const showError: PopUp = inject('showError') as PopUp;
+
+
+async function onSignIn(): Promise<void> {
+    btnWasPressed.value = true;
+
+    if (emailInvalid.value || passwordInvalid.value) {
+        noticeWarn('Заполните оба поля для входа');
+        return;
+    }
+
+    try {
+        await authApp.signIn(email.value, password.value);
+
+        if (await authApp.userSignedIn()) {
+            await user.loadData();
+            await redirectToUserProfile();
+        } else {
+            noticeError('Проверьте правильность введённых данных и повторите попытку', 'Не удалось войти');
+        }
+    } catch (error) {
+        await handleRequestError(error as AxiosError);
+    }
+}
+
+async function redirectToUserProfile(): Promise<void> {
+    if (user.isStudent) {
+        await router.push({ name: 'student' });
+    } else {
+        await router.push({ name: 'teacher', params: { id: user.id } });
+    }
+}
 </script>
 
 <template>

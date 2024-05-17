@@ -1,27 +1,30 @@
 <script setup lang="ts">
-import Divider from 'primevue/divider';
-import CourseCard from '#elements/CourseCard';
-import Button from 'primevue/button';
-import Dialog from 'primevue/dialog';
-import InputText from 'primevue/inputtext';
-import Textarea from 'primevue/textarea';
-
-import { courseApp } from '#requests';
-
-import {
-    Course,
-    PopUp
-} from '#types';
-
 import {
     ref,
     computed,
     ComputedRef,
     inject
 } from 'vue';
-import { handleRequestError } from '#functions';
+
 import { AxiosError } from 'axios';
+
+import InputText from 'primevue/inputtext';
+import Textarea from 'primevue/textarea';
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
+import Divider from 'primevue/divider';
+
 import useUserStore from '#store';
+
+import {
+    Notice,
+    ErrorHandler,
+    Course
+} from '#types';
+
+import { courseApp } from '#requests';
+
+import CourseCard from '#elements/CourseCard';
 
 
 
@@ -32,7 +35,11 @@ interface Props {
 
 
 
+const user = useUserStore();
 const props = defineProps<Props>();
+
+const noticeError: Notice = inject('noticeError') as Notice;
+const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
 
 const newCourse = ref({
     dialogVisible: false,
@@ -45,17 +52,13 @@ const newCourse = ref({
 const newCourseNameInvalid: ComputedRef<boolean> = computed((): boolean => newCourse.value.btnWasPressed && !newCourse.value.name);
 const newCoursePasswordInvalid: ComputedRef<boolean> = computed((): boolean => newCourse.value.btnWasPressed && !newCourse.value.password);
 
-const showError: PopUp = inject('showError') as PopUp;
-
-const user = useUserStore();
-
 
 
 async function onAddCourse(): Promise<void> {
     newCourse.value.btnWasPressed = true;
 
     if (newCourseNameInvalid.value || newCoursePasswordInvalid.value) {
-        showError('Поля "Название" и "Пароль" обязательны для заполнения');
+        noticeError('Поля "Название" и "Пароль" обязательны для заполнения');
         return;
     }
 
@@ -97,7 +100,7 @@ async function onAddCourse(): Promise<void> {
     </Dialog>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 #cards {
     flex-wrap: wrap;
 }

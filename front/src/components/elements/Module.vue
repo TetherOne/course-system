@@ -1,37 +1,33 @@
 <script setup lang="ts">
 import {
+    Ref,
+    ref,
     inject
 } from 'vue';
 
+import { AxiosError } from 'axios';
+
 import Button from 'primevue/button';
-import Dialog from 'primevue/dialog';
 import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
 import InputText from 'primevue/inputtext';
+import Dialog from 'primevue/dialog';
 
-import { PopUp } from '#types';
 
 import useUserStore from '#store';
 
 import {
-    courseApp,
-    checkpointApp
-} from '#requests';
-
-import { handleRequestError } from '#functions';
-
-import {
+    Notice,
+    ErrorHandler,
     Module,
     Lesson,
     Checkpoint
 } from '#types';
 
 import {
-    ref,
-    Ref
-} from 'vue';
-
-import { AxiosError } from 'axios';
+    courseApp,
+    checkpointApp
+} from '#requests';
 
 
 
@@ -43,8 +39,9 @@ interface Props {
 
 const user = useUserStore();
 
-const showSuccess: PopUp = inject('showSuccess') as PopUp;
-const showError: PopUp = inject('showError') as PopUp;
+const noticeSuccess: Notice = inject('noticeSuccess') as Notice;
+const noticeError: Notice = inject('noticeError') as Notice;
+const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
 
 const props = defineProps<Props>();
 const lessons: Ref<Lesson[]> = ref([]);
@@ -64,29 +61,20 @@ const newCheckpoint = ref({
 
 
 
-try {
-    lessons.value = await courseApp.moduleLessons(props.module.id);
-    checkpoints.value = await courseApp.moduleCheckpoints(props.module.id);
-} catch (error) {
-    handleRequestError(error as AxiosError);
-}
-
-
-
 async function onAddLesson(): Promise<void> {
     newLesson.value.btnWasPressed = true;
 
     if (!newLesson.value.name) {
-        showError('Вы должны ввести название урока, чтобы добавить его!');
+        noticeError('Вы должны ввести название урока, чтобы добавить его!');
         return;
     }
 
     try {
         lessons.value.push(await courseApp.addLesson(newLesson.value.name, props.module.id));
         newLesson.value.dialogVisible = false;
-        showSuccess('Урок добавлен');
+        noticeSuccess('Урок добавлен');
     } catch (error) {
-        handleRequestError(error as AxiosError);
+        await handleRequestError(error as AxiosError);
     }
 }
 
@@ -94,17 +82,26 @@ async function onAddCheckpoint(): Promise<void> {
     newCheckpoint.value.btnWasPressed = true;
 
     if (!newCheckpoint.value.name) {
-        showError('Вы должны ввести название КТ, чтобы добавить её!');
+        noticeError('Вы должны ввести название КТ, чтобы добавить её!');
         return;
     }
 
     try {
         checkpoints.value.push(await checkpointApp.addCheckpoint(newCheckpoint.value.name, props.module.id));
         newCheckpoint.value.dialogVisible = false;
-        showSuccess('КТ добавлена');
+        noticeSuccess('КТ добавлена');
     } catch (error) {
-        handleRequestError(error as AxiosError);
+        await handleRequestError(error as AxiosError);
     }
+}
+
+
+
+try {
+    lessons.value = await courseApp.moduleLessons(props.module.id);
+    checkpoints.value = await courseApp.moduleCheckpoints(props.module.id);
+} catch (error) {
+    handleRequestError(error as AxiosError);
 }
 </script>
 
@@ -173,7 +170,3 @@ async function onAddCheckpoint(): Promise<void> {
         </template>
     </Dialog>
 </template>
-
-<style scoped>
-
-</style>

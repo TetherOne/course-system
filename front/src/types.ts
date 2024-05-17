@@ -1,3 +1,7 @@
+import { AxiosError } from 'axios';
+
+
+
 type Model = {
     id: number
     created_at: string
@@ -110,4 +114,6 @@ export type CurrentUser = Omit<User, 'is_teacher'> & {
     user_profile: Student | Teacher
 }
 
-export type PopUp = (message: string, title?: string) => void
+export type Notice = (message: string, title?: string) => void
+
+export type ErrorHandler = (error: AxiosError) => Promise<void>

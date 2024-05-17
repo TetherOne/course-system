@@ -1,17 +1,38 @@
 <script setup lang="ts">
-import Header from '#elements/Header';
-import Divider from 'primevue/divider';
-import Card from 'primevue/card';
-import RadioButton from 'primevue/radiobutton';
+import {
+    Ref,
+    ref,
+    inject
+} from 'vue';
+
+import {
+    RouteLocationNormalizedLoaded,
+    useRoute
+} from 'vue-router';
+
+import { AxiosError } from 'axios';
+
+import { useConfirm } from 'primevue/useconfirm';
+
 import Button from 'primevue/button';
-import Badge from 'primevue/badge';
-import ConfirmDialog from 'primevue/confirmdialog';
 import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
 import InputText from 'primevue/inputtext';
 import InputNumber from 'primevue/inputnumber';
+import Card from 'primevue/card';
+import RadioButton from 'primevue/radiobutton';
+import Divider from 'primevue/divider';
+import Badge from 'primevue/badge';
+import ConfirmDialog from 'primevue/confirmdialog';
 
-import { useConfirm } from 'primevue/useconfirm';
+import useUserStore from '#store';
+
+import {
+    Notice,
+    ErrorHandler,
+    Checkpoint,
+    Question
+} from '#types';
 
 import {
     userApp,
@@ -20,30 +41,19 @@ import {
     history
 } from '#requests';
 
-import useUserStore from '#store';
-
-import {
-    Checkpoint,
-    Question,
-    PopUp
-} from '#types';
-
-import { handleRequestError } from '#functions';
-
-import {
-    ref,
-    Ref,
-    inject
-} from 'vue';
-
-import {
-    useRoute,
-    RouteLocationNormalizedLoaded
-} from 'vue-router';
-
-import { AxiosError } from 'axios';
+import Header from '#elements/Header';
 
 
+
+const user = useUserStore();
+
+const confirm = useConfirm();
+
+const noticeSuccess: Notice = inject('noticeSuccess') as Notice;
+const noticeWarn: Notice = inject('noticeWarn') as Notice;
+const noticeError: Notice = inject('noticeError') as Notice;
+
+const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
 
 const route: RouteLocationNormalizedLoaded = useRoute();
 
@@ -51,14 +61,6 @@ const id: Ref<number> = ref(parseInt(route.params.id as string));
 const name: Ref<string> = ref('');
 const number: Ref<number> = ref(0);
 const questions: Ref<Question[]> = ref([]);
-
-const user = useUserStore();
-
-const showSuccess: PopUp = inject('showSuccess') as PopUp;
-const showWarn: PopUp = inject('showWarn') as PopUp;
-const showError: PopUp = inject('showError') as PopUp;
-
-const confirm = useConfirm();
 
 const passable: Ref<boolean> = ref(true);
 const passedByCurrentStudent: Ref<boolean> = ref(false);
@@ -94,36 +96,10 @@ const questionMaker = ref({
 
 
 
-try {
-    const checkpoint: Checkpoint = await checkpointApp.checkpoint(id.value);
-
-    name.value = checkpoint.name;
-    number.value = checkpoint.checkpoint_number;
-    questions.value = checkpoint.questions;
-
-    if (user.isStudent) {
-        const res: number | '-' = await userApp.getStudentGradeOnCheckpoint(user.id, id.value);
-
-        if (res !== '-') {
-            passedByCurrentStudent.value = true;
-            passable.value = false;
-            grade.value = res;
-        } else {
-            passable.value = false;
-        }
-    } else {
-        passable.value = false;
-    }
-} catch (error) {
-    handleRequestError(error as AxiosError);
-}
-
-
-
 async function onComplete(): Promise<void> {
     for (const question of questions.value) {
         if (!question.chosenAnswer) {
-            showWarn('Вы должны ответить на все вопросы', 'Не так быстро');
+            noticeWarn('Вы должны ответить на все вопросы', 'Не так быстро');
             return;
         }
     }
@@ -143,7 +119,7 @@ async function onComplete(): Promise<void> {
                 }
                 await checkpointApp.sendResult(user.id, id.value);
             } catch (error) {
-                handleRequestError(error as AxiosError);
+                await handleRequestError(error as AxiosError);
             }
         }
     });
@@ -174,7 +150,7 @@ async function handleAddingQuestion(): Promise<void> {
     }
 
     if (!questionValid()) {
-        showError('Проверьте правильность введённых данных и повторите попытку', 'Недостаточно информации');
+        noticeError('Проверьте правильность введённых данных и повторите попытку', 'Недостаточно информации');
         return;
     }
 
@@ -195,10 +171,36 @@ async function handleAddingQuestion(): Promise<void> {
 
         questions.value.push(question);
         questionMaker.value.reset();
-        showSuccess('Вопрос успешно добавлен');
+        noticeSuccess('Вопрос успешно добавлен');
     } catch (error) {
-        handleRequestError(error as AxiosError);
+        await handleRequestError(error as AxiosError);
     }
+}
+
+
+
+try {
+    const checkpoint: Checkpoint = await checkpointApp.checkpoint(id.value);
+
+    name.value = checkpoint.name;
+    number.value = checkpoint.checkpoint_number;
+    questions.value = checkpoint.questions;
+
+    if (user.isStudent) {
+        const res: number | '-' = await userApp.getStudentGradeOnCheckpoint(user.id, id.value);
+
+        if (res !== '-') {
+            passedByCurrentStudent.value = true;
+            passable.value = false;
+            grade.value = res;
+        } else {
+            passable.value = false;
+        }
+    } else {
+        passable.value = false;
+    }
+} catch (error) {
+    handleRequestError(error as AxiosError);
 }
 </script>
 
@@ -276,7 +278,3 @@ async function handleAddingQuestion(): Promise<void> {
     </div>
     <ConfirmDialog/>
 </template>
-
-<style scoped>
-
-</style>

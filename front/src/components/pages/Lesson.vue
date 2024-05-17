@@ -1,33 +1,7 @@
 <script setup lang="ts">
-import { AxiosError } from 'axios';
-
-import Button from 'primevue/button';
-
-import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic';
-
-import { Essentials } from '@ckeditor/ckeditor5-essentials';
 import {
-    Bold,
-    Italic
-} from '@ckeditor/ckeditor5-basic-styles';
-import { Link } from '@ckeditor/ckeditor5-link';
-import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
-import { CodeBlock } from '@ckeditor/ckeditor5-code-block';
-
-import hljs from 'highlight.js';
-
-import Header from '#elements/Header';
-import Divider from 'primevue/divider';
-
-import { courseApp } from '#requests';
-
-import { handleRequestError } from '#functions';
-
-import Path from '#src/classes/Path';
-
-import {
-    ref,
     Ref,
+    ref,
     inject,
     onMounted,
     onUpdated
@@ -38,23 +12,48 @@ import {
     RouteLocationNormalizedLoaded
 } from 'vue-router';
 
+import { AxiosError } from 'axios';
+
+import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic';
+
+import { Essentials } from '@ckeditor/ckeditor5-essentials';
+import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
+import {
+    Bold,
+    Italic
+} from '@ckeditor/ckeditor5-basic-styles';
+import { Link } from '@ckeditor/ckeditor5-link';
+import { CodeBlock } from '@ckeditor/ckeditor5-code-block';
+
+import hljs from 'highlight.js';
 import '#src/atom-one-dark.css';
+
+import Button from 'primevue/button';
+import Divider from 'primevue/divider';
 
 import useUserStore from '#store';
 
 import {
-    PopUp,
+    Notice,
+    ErrorHandler,
     Lesson,
     LessonFile
 } from '#types';
 
+import Path from '#src/classes/Path';
+
+import { courseApp } from '#requests';
+
+import Header from '#elements/Header';
 
 
-const showSuccess: PopUp = inject('showSuccess') as PopUp;
-
-const route: RouteLocationNormalizedLoaded = useRoute();
 
 const user = useUserStore();
+
+const noticeSuccess: Notice = inject('noticeSuccess') as Notice;
+const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
+
+const route: RouteLocationNormalizedLoaded = useRoute();
 
 const editor = ref({
     editor: ClassicEditor,
@@ -63,19 +62,20 @@ const editor = ref({
     config: {
         plugins: [
             Essentials,
+            Paragraph,
             Bold,
             Italic,
             Link,
-            Paragraph,
             CodeBlock
         ],
         toolbar: {
             items: [
+                'undo',
+                'redo',
+                '|',
                 'bold',
                 'italic',
                 'link',
-                'undo',
-                'redo',
                 'codeBlock'
             ]
         }
@@ -88,6 +88,25 @@ const description: Ref<string> = ref('');
 const videoPath: Ref<string> = ref('');
 const files: Ref<LessonFile[]> = ref([]);
 const moduleId: Ref<number> = ref(0);
+
+
+
+function openEditor(): void {
+    editor.value.data = description.value;
+    editor.value.visible = true;
+}
+
+async function onUpdateLesson(): Promise<void> {
+    try {
+        await courseApp.updateLesson(id.value, {
+            description: editor.value.data
+        });
+        noticeSuccess('Документ изменён');
+        description.value = editor.value.data;
+    } catch (error) {
+        await handleRequestError(error as AxiosError);
+    }
+}
 
 
 
@@ -107,31 +126,15 @@ try {
     handleRequestError(error as AxiosError);
 }
 
+let highlightCode = () => hljs.highlightAll;
+
 onMounted((): void => {
-    hljs.highlightAll();
+    highlightCode();
 });
+
 onUpdated((): void => {
-    hljs.highlightAll();
+    highlightCode();
 });
-
-
-
-function openEditor(): void {
-    editor.value.data = description.value;
-    editor.value.visible = true;
-}
-
-async function onUpdateLesson(): Promise<void> {
-    try {
-        await courseApp.updateLesson(id.value, {
-            description: editor.value.data
-        });
-        showSuccess('Документ изменён');
-        description.value = editor.value.data;
-    } catch (error) {
-        handleRequestError(error as AxiosError);
-    }
-}
 </script>
 
 <template>
