@@ -31,7 +31,7 @@ const courseAppURL: string = `${API_URL}/courseapp`;
 
 const coursesURL: string = `${courseAppURL}/courses/`;
 const modulesURL: string = `${courseAppURL}/modules/`;
-export const lessonsURL: string = `${courseAppURL}/lessons/`;
+const lessonsURL: string = `${courseAppURL}/lessons/`;
 const lessonsFilesURL: string = `${courseAppURL}/lesson-other-files/`;
 const enrollmentsURL: string = `${courseAppURL}/enrollments/`;
 
@@ -195,6 +195,11 @@ export const courseApp = {
             password,
             csrfmiddlewaretoken: getCSRF_token()
         })).data;
+    },
+    async deleteCourse(id: number): Promise<void> {
+        const config: AxiosRequestConfig = structuredClone(standardConfig);
+        config.headers = getHeadersWithCSRF_token();
+        await axios.delete(`${coursesURL}${id}/`, config);
     },
     async module(id: number): Promise<Module> {
         return await getEntity(modulesURL, id);

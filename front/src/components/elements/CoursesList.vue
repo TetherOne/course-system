@@ -66,7 +66,7 @@ async function onAddCourse(): Promise<void> {
         props.courses.push(await courseApp.addCourse(newCourse.value.name, newCourse.value.description, user.id, newCourse.value.password));
         newCourse.value.dialogVisible = false;
     } catch (error) {
-        handleRequestError(error as AxiosError);
+        await handleRequestError(error as AxiosError);
     }
 }
 </script>
