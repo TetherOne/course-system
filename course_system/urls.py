@@ -34,17 +34,13 @@ urlpatterns = [
     path("api/courseapp/", include("courses.urls")),
     path("api/questionapp/", include("questions.urls")),
     path("api/checkpointapp/", include("checkpoints.urls")),
-    path("api/history/", include("history.urls")),
-    re_path('.*', TemplateView.as_view(template_name='index.html'))
+    path("api/history/", include("history.urls"))
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-urlpatterns.extend(
-    static(
-        settings.MEDIA_URL,
-        document_root=settings.MEDIA_ROOT,
-    )
-)
 
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns.append(re_path('.*', TemplateView.as_view(template_name='index.html')))
 urlpatterns = [
     path("__debug__/", include(debug_toolbar.urls)),
 ] + urlpatterns

@@ -23,5 +23,5 @@ const attributeValue: ComputedRef<string> = computed((): string => props.avatarP
 </script>
 
 <template>
-    <Avatar :[attributeName]="attributeValue" :size="size"/>
+    <Avatar :[attributeName]="attributeValue" :size="size" shape="circle"/>
 </template>
