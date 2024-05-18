@@ -156,6 +156,10 @@ async function handleEnrollment(): Promise<void> {
     overflow: hidden;
 }
 
+:deep(.p-card-header) {
+    height: 187px;
+}
+
 :deep(.p-card-title) {
     @extend .flexRow;
     @extend .justifyBetween;
@@ -168,7 +172,7 @@ async function handleEnrollment(): Promise<void> {
 
 img {
     width: 100%;
-    height: auto;
+    height: 100%;
 }
 
 :deep(.p-dialog-content) {

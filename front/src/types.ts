@@ -14,17 +14,17 @@ type User = Omit<Model, 'created_at'> & {
 }
 
 export type Teacher = Model & {
-    name: string
-    surname: string
+    name: string | null
+    surname: string | null
     father_name: string | null
-    faculty: string
+    faculty: string | null
     avatar: string | null
     is_teacher: boolean
     user: number
 }
 
 export type Student = Teacher & {
-    group: string
+    group: string | null
 }
 
 export type Course = Model & {
