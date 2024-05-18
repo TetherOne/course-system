@@ -1,14 +1,9 @@
-from django.core.mail import EmailMultiAlternatives
-
-from django.template.loader import render_to_string
-
-from django.utils.html import strip_tags
-
-from django.template import loader
-
-from django.conf import settings
-
 from celery import shared_task
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template import loader
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 @shared_task

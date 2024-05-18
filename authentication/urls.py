@@ -12,6 +12,7 @@ from authentication.views import (
     logout_view,
 )
 
+
 app_name = "authentication"
 
 

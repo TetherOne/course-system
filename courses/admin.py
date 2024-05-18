@@ -1,14 +1,8 @@
-from courses.models import LessonOtherFile
-from courses.models import Enrollment
-from courses.models import Lesson
-from courses.models import Module
-from courses.models import Course
-
-from checkpoints.models import CheckPoint
-
+from django.contrib import admin
 from django.utils.html import format_html
 
-from django.contrib import admin
+from checkpoints.models import CheckPoint
+from courses.models import Course, Enrollment, Lesson, LessonOtherFile, Module
 
 
 class CourseInline(admin.StackedInline):

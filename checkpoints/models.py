@@ -1,14 +1,16 @@
-from django.utils.translation import gettext_lazy as _
-
 from typing import TYPE_CHECKING
 
-from profiles.models import StudentProfile
-
-from courses.models import Module
-
-from django.db.models import Sum, Max, Manager
-
 from django.db import models
+from django.db.models import Manager
+from django.utils.translation import gettext_lazy as _
+
+from checkpoints.utils import (
+    calculate_current_points,
+    calculate_points,
+    calculate_total_points,
+)
+from courses.models import Module
+from profiles.models import StudentProfile
 
 
 class CheckPoint(models.Model):
@@ -65,30 +67,11 @@ class PassedCheckPoint(models.Model):
     if TYPE_CHECKING:
         objects: Manager
 
-    def calculate_points(self):
-        """
-        Calculate points for the passed checkpoint based on the last attempt for each question.
-        """
-        from history.models import HistoryOfSelectedAnswer
-
-        total_points = 0
-        history_records = (
-            HistoryOfSelectedAnswer.objects.filter(
-                student=self.student,
-                checkpoint=self.checkpoint,
-            )
-            .order_by("question", "-attempt_number")
-            .distinct("question")
-        )
-        for passed_question in history_records:
-            total_points += passed_question.points
-        self.points = total_points
-
     def save(self, *args, **kwargs):
         """
         Create Summary for student.
         """
-        self.calculate_points()
+        self.points = calculate_points(self.student, self.checkpoint)
         super().save(*args, **kwargs)
         summary = Summary.objects.filter(
             student=self.student,
@@ -131,57 +114,10 @@ class Summary(models.Model):
     if TYPE_CHECKING:
         objects: Manager
 
-    def calculate_total_points(self):
-        from questions.models import Question
-
-        total_points = 0
-        checkpoints = CheckPoint.objects.filter(
-            module__course=self.course,
-        )
-        for checkpoint in checkpoints:
-            total_points += (
-                Question.objects.filter(
-                    checkpoint=checkpoint,
-                ).aggregate(
-                    total_points=Sum("max_points"),
-                )["total_points"]
-                or 0
-            )
-        self.total = total_points
-
-    def calculate_current_points(self):
-        """
-        Calculate current points for the student in the course.
-        """
-        current_points = 0
-        latest_passed_checkpoints = (
-            PassedCheckPoint.objects.filter(
-                student=self.student,
-                checkpoint__module__course=self.course,
-            )
-            .values(
-                "checkpoint__module",
-            )
-            .annotate(
-                max_created_at=Max("created_at"),
-            )
-        )
-
-        for module_checkpoint in latest_passed_checkpoints:
-            latest_checkpoint = PassedCheckPoint.objects.filter(
-                student=self.student,
-                checkpoint__module=module_checkpoint["checkpoint__module"],
-                created_at=module_checkpoint["max_created_at"],
-            ).first()
-
-            current_points += latest_checkpoint.points if latest_checkpoint else 0
-
-        self.current_points = current_points
-
     def save(self, *args, **kwargs):
         """
         Calculate total points and current points for Summary.
         """
-        self.calculate_total_points()
-        self.calculate_current_points()
+        self.total = calculate_total_points(self.course)
+        self.current_points = calculate_current_points(self.student, self.course)
         super().save(*args, **kwargs)

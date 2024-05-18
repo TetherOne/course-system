@@ -1,11 +1,7 @@
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from profiles.views import StudentProfileViewSet
-from profiles.views import TeacherProfileViewSet
-from profiles.views import UserViewSet
-
-from django.urls import include
-from django.urls import path
+from profiles.views import StudentProfileViewSet, TeacherProfileViewSet, UserViewSet
 
 
 app_name = "profiles"

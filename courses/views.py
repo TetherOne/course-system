@@ -1,22 +1,18 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.response import Response
 from rest_framework import status
-
-from courses.serializers import LessonOtherFileSerializer
-from courses.serializers import EnrollmentSerializer
-from courses.permissions import IsOwnerOrReadOnly
-from courses.serializers import LessonSerializer
-from courses.serializers import CourseSerializer
-from courses.serializers import ModuleSerializer
-
 from rest_framework.filters import OrderingFilter
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from courses.models import LessonOtherFile
-from courses.models import Enrollment
-from courses.models import Lesson
-from courses.models import Course
-from courses.models import Module
+from courses.models import Course, Enrollment, Lesson, LessonOtherFile, Module
+from courses.permissions import IsOwnerOrReadOnly
+from courses.serializers import (
+    CourseSerializer,
+    EnrollmentSerializer,
+    LessonOtherFileSerializer,
+    LessonSerializer,
+    ModuleSerializer,
+)
 
 
 class BasePermissionViewSet(ModelViewSet):

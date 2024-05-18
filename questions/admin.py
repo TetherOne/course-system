@@ -1,9 +1,6 @@
-from questions.models import QuestionFile
-from questions.models import AnswerFile
-from questions.models import Question
-from questions.models import Answer
-
 from django.contrib import admin
+
+from questions.models import Answer, AnswerFile, Question, QuestionFile
 
 
 class AnswerInline(admin.StackedInline):

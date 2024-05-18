@@ -1,6 +1,6 @@
-from history.models import HistoryOfSelectedAnswer
-
 from django.contrib import admin
+
+from history.models import HistoryOfSelectedAnswer
 
 
 @admin.register(HistoryOfSelectedAnswer)

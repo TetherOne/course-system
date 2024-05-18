@@ -1,9 +1,7 @@
-from history.views import HistoryOfSelectedAnswerViewSet
-
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from django.urls import include
-from django.urls import path
+from history.views import HistoryOfSelectedAnswerViewSet
 
 
 app_name = "history"

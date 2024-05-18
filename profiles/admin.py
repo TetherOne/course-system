@@ -1,7 +1,6 @@
-from profiles.models import TeacherProfile
-from profiles.models import StudentProfile
-
 from django.contrib import admin
+
+from profiles.models import StudentProfile, TeacherProfile
 
 
 @admin.register(TeacherProfile)

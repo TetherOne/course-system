@@ -1,14 +1,11 @@
-from questions.utils import question_file_directory_path
-from questions.utils import answer_file_directory_path
+from typing import TYPE_CHECKING
 
+from django.db import models
+from django.db.models import Manager
 from django.utils.translation import gettext_lazy as _
 
 from checkpoints.models import CheckPoint
-
-from django.db.models import Manager
-from django.db import models
-
-from typing import TYPE_CHECKING
+from questions.utils import answer_file_directory_path, question_file_directory_path
 
 
 class Question(models.Model):

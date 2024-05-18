@@ -1,8 +1,7 @@
-from authentication.models import CustomUser
-from profiles.models import TeacherProfile
-from profiles.models import StudentProfile
-
 from rest_framework import serializers
+
+from authentication.models import CustomUser
+from profiles.models import StudentProfile, TeacherProfile
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):

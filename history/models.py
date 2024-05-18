@@ -1,9 +1,8 @@
-from django.utils.translation import gettext_lazy as _
-
-from django.db.models import Manager
-from django.db import models
-
 from typing import TYPE_CHECKING
+
+from django.db import models
+from django.db.models import Manager
+from django.utils.translation import gettext_lazy as _
 
 
 class HistoryOfSelectedAnswer(models.Model):
@@ -45,8 +44,7 @@ class HistoryOfSelectedAnswer(models.Model):
         objects: Manager
 
     def save(self, *args, **kwargs):
-        from history.utils import determine_attempt_number
-        from history.utils import calculate_points
+        from history.utils import calculate_points, determine_attempt_number
 
         self.points = calculate_points(
             self.selected_answer,

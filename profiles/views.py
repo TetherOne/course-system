@@ -1,16 +1,14 @@
 from django_filters.rest_framework import DjangoFilterBackend
-
-from profiles.permissions import IsOwnerOrReadOnly
-from profiles.serializers import UserRegistrationSerializer
-from profiles.serializers import TeacherSerializer
-from profiles.serializers import StudentSerializer
-
 from rest_framework.viewsets import ModelViewSet
 
-from profiles.models import TeacherProfile
-from profiles.models import StudentProfile
-
 from authentication.models import CustomUser
+from profiles.models import StudentProfile, TeacherProfile
+from profiles.permissions import IsOwnerOrReadOnly
+from profiles.serializers import (
+    StudentSerializer,
+    TeacherSerializer,
+    UserRegistrationSerializer,
+)
 
 
 class UserViewSet(ModelViewSet):

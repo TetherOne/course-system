@@ -1,13 +1,9 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
 
-from questions.permissions import IsStudentEnrollment
-from questions.serializers import QuestionSerializer
-from questions.serializers import AnswerSerializer
-from questions.permissions import IsTeacherOwner
-
-from questions.models import Question
-from questions.models import Answer
+from questions.models import Answer, Question
+from questions.permissions import IsStudentEnrollment, IsTeacherOwner
+from questions.serializers import AnswerSerializer, QuestionSerializer
 
 
 class QuestionViewSet(ModelViewSet):

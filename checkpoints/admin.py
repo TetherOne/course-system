@@ -1,10 +1,7 @@
-from checkpoints.models import PassedCheckPoint
-from checkpoints.models import CheckPoint
-from checkpoints.models import Summary
-
-from questions.models import Question
-
 from django.contrib import admin
+
+from checkpoints.models import CheckPoint, PassedCheckPoint, Summary
+from questions.models import Question
 
 
 class QuestionInline(admin.StackedInline):

@@ -1,13 +1,13 @@
-from courses.views import LessonOtherFileViewSet
-from courses.views import EnrollmentViewSet
-from courses.views import LessonViewSet
-from courses.views import CourseViewSet
-from courses.views import ModuleViewSet
-
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from django.urls import include
-from django.urls import path
+from courses.views import (
+    CourseViewSet,
+    EnrollmentViewSet,
+    LessonOtherFileViewSet,
+    LessonViewSet,
+    ModuleViewSet,
+)
 
 
 app_name = "courses"

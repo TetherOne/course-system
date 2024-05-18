@@ -1,10 +1,6 @@
 from rest_framework import serializers
 
-from .models import LessonOtherFile
-from .models import Enrollment
-from .models import Lesson
-from .models import Course
-from .models import Module
+from .models import Course, Enrollment, Lesson, LessonOtherFile, Module
 
 
 class EnrollmentSerializer(serializers.ModelSerializer):

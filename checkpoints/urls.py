@@ -1,11 +1,7 @@
-from checkpoints.views import PassedCheckPointViewSet
-from checkpoints.views import CheckPointViewSet
-from checkpoints.views import SummaryViewSet
-
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from django.urls import include
-from django.urls import path
+from checkpoints.views import CheckPointViewSet, PassedCheckPointViewSet, SummaryViewSet
 
 
 app_name = "checkpoints"
