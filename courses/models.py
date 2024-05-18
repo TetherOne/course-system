@@ -1,16 +1,12 @@
-from django.utils.translation import gettext_lazy as _
-
-from courses.utils import lesson_video_directory_path
-from courses.utils import other_file_directory_path
-
-from profiles.models import TeacherProfile
-
-from django.db.models import Manager
-from django.db import models
-
+import uuid
 from typing import TYPE_CHECKING
 
-import uuid
+from django.db import models
+from django.db.models import Manager
+from django.utils.translation import gettext_lazy as _
+
+from courses.utils import lesson_video_directory_path, other_file_directory_path
+from profiles.models import TeacherProfile
 
 
 class Enrollment(models.Model):
@@ -27,7 +23,10 @@ class Enrollment(models.Model):
         related_name="enrollments",
         verbose_name=_("курс"),
     )
-    enrollment_date = models.DateTimeField(_("дата зачисления"), auto_now_add=True)
+    enrollment_date = models.DateTimeField(
+        _("дата зачисления"),
+        auto_now_add=True,
+    )
 
     class Meta:
         db_table = "enrollments"
@@ -165,7 +164,12 @@ class LessonOtherFile(models.Model):
 
 class Module(models.Model):
 
-    name = models.CharField(_("название"), max_length=100, blank=True, null=True)
+    name = models.CharField(
+        _("название"),
+        max_length=100,
+        blank=True,
+        null=True,
+    )
     created_at = models.DateTimeField(_("дата создания"), auto_now_add=True)
     course = models.ForeignKey(
         "Course",
