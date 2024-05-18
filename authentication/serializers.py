@@ -1,14 +1,9 @@
-from django.contrib.auth.models import AnonymousUser
-
-from profiles.serializers import TeacherSerializer
-from profiles.serializers import StudentSerializer
-
 from django.contrib.auth import get_user_model
-
-from profiles.models import TeacherProfile
-from profiles.models import StudentProfile
-
+from django.contrib.auth.models import AnonymousUser
 from rest_framework import serializers
+
+from profiles.models import StudentProfile, TeacherProfile
+from profiles.serializers import StudentSerializer, TeacherSerializer
 
 
 class CurrentUserSerializer(serializers.ModelSerializer):
@@ -27,8 +22,8 @@ class CurrentUserSerializer(serializers.ModelSerializer):
 
     def get_user_profile(self, obj):
         """
-        Получение профиля для текущего
-        аутентифицированного пользователя
+        Getting a profile for the current
+        authenticated user
         """
         try:
             teacher_profile = obj.teacher_profile
