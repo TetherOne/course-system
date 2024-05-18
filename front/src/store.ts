@@ -53,11 +53,11 @@ const useUserStore = defineStore(name, () => {
 
         id.value = data.id;
         role.value = data.is_teacher ? Role.Teacher : Role.Student;
-        surname.value = data.surname;
-        name.value = data.name;
+        surname.value = data.surname ?? '';
+        name.value = data.name ?? '';
         fatherName.value = data.father_name;
-        faculty.value = data.faculty;
-        group.value = 'group' in data ? data.group : '';
+        faculty.value = data.faculty ?? '';
+        group.value = 'group' in data ? data.group ?? '' : '';
         avatar.value = data.avatar;
     }
 
