@@ -1,10 +1,7 @@
-from questions.serializers import QuestionSerializer
-
-from checkpoints.models import PassedCheckPoint
-from checkpoints.models import CheckPoint
-from checkpoints.models import Summary
-
 from rest_framework import serializers
+
+from checkpoints.models import CheckPoint, PassedCheckPoint, Summary
+from questions.serializers import QuestionSerializer
 
 
 class CheckPointSerializer(serializers.ModelSerializer):
