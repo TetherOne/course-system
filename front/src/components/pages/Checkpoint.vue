@@ -193,8 +193,6 @@ try {
             passedByCurrentStudent.value = true;
             passable.value = false;
             grade.value = res;
-        } else {
-            passable.value = false;
         }
     } else {
         passable.value = false;
