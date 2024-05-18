@@ -1,15 +1,16 @@
-from authentication.views import MyPasswordResetCompleteView
-from authentication.views import MyPasswordResetConfirmView
-from authentication.views import MyPasswordResetDoneView
-from authentication.views import MyPasswordResetView
-from authentication.views import CurrentUserView
-from authentication.views import RegisterView
-from authentication.views import MyLoginView
-from authentication.views import AboutMeView
-from authentication.views import logout_view
-
 from django.urls import path
 
+from authentication.views import (
+    AboutMeView,
+    CurrentUserView,
+    MyLoginView,
+    MyPasswordResetCompleteView,
+    MyPasswordResetConfirmView,
+    MyPasswordResetDoneView,
+    MyPasswordResetView,
+    RegisterView,
+    logout_view,
+)
 
 app_name = "authentication"
 
@@ -58,6 +59,6 @@ urlpatterns = [
     path(
         "current-user/",
         CurrentUserView.as_view(),
-        name="current-user",
+        name="current_user",
     ),
 ]
