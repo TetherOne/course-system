@@ -13,7 +13,7 @@ const router: Router = useRouter();
 
 <template>
     <div class="specialPage">
-        <div class="absolutelyCentered flexColumn alignCenter">
+        <div class="absolutelyCentered flex-column alignCenter">
             <div class="veryLargeText">
                 Доступ запрещён
             </div>

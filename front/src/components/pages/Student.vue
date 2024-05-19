@@ -44,11 +44,11 @@ try {
 </script>
 
 <template>
-    <div class="flexColumn alignCenter">
+    <div class="flex-column alignCenter">
         <Header/>
-        <div class="flexRow alignCenter block wide">
+        <div class="flex-row alignCenter block wide">
             <UserAvatar size="xlarge" :avatarPath="user.avatar" :name="user.name"/>
-            <div class="flexColumn">
+            <div class="flex-column">
                 <div>
                     {{ user.fullName }}
                 </div>

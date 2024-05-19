@@ -18,19 +18,15 @@ body {
     box-sizing: border-box;
 }
 
-.flex {
+.flex-row {
     display: flex;
     gap: 10px;
     justify-content: flex-start;
     align-items: flex-start;
 }
 
-.flexRow {
-    @extend .flex;
-}
-
-.flexColumn {
-    @extend .flex;
+.flex-column {
+    @extend .flex-row;
     flex-direction: column;
 }
 

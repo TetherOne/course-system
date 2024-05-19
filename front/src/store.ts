@@ -12,6 +12,7 @@ import {
 import { Role } from '#enums';
 
 import {
+    CurrentUser,
     Student,
     Teacher
 } from '#types';
@@ -28,12 +29,15 @@ const useUserStore = defineStore(name, () => {
     const id: Ref<number> = ref(0);
     const role: Ref<Role> = ref(Role.Guest);
 
-    const surname: Ref<string> = ref('');
-    const name: Ref<string> = ref('');
+    const login: Ref<string> = ref('');
+    const email: Ref<string> = ref('');
+
+    const surname: Ref<string | null> = ref('');
+    const name: Ref<string | null> = ref('');
     const fatherName: Ref<string | null> = ref('');
 
-    const faculty: Ref<string> = ref('');
-    const group: Ref<string> = ref('');
+    const faculty: Ref<string | null> = ref('');
+    const group: Ref<string | null> = ref('');
 
     const avatar: Ref<string | null> = ref('');
 
@@ -41,18 +45,24 @@ const useUserStore = defineStore(name, () => {
     const isTeacher: ComputedRef<boolean> = computed((): boolean => role.value === Role.Teacher);
 
     const fullName: ComputedRef<string> = computed((): string => {
-        return buildFullName({
-            surname: surname.value,
-            name: name.value,
-            father_name: fatherName.value
-        } as Student);
+        if (surname.value && name.value)
+            return buildFullName({
+                surname: surname.value,
+                name: name.value,
+                father_name: fatherName.value
+            } as Student);
+        else
+            return login.value;
     });
 
     async function loadData(): Promise<void> {
-        const data: Student | Teacher = (await authApp.currentUser()).user_profile;
+        const dataAsUser: CurrentUser = await authApp.currentUser();
+        const data: Student | Teacher = dataAsUser.user_profile;
 
         id.value = data.id;
         role.value = data.is_teacher ? Role.Teacher : Role.Student;
+        login.value = dataAsUser.username;
+        email.value = dataAsUser.email;
         surname.value = data.surname ?? '';
         name.value = data.name ?? '';
         fatherName.value = data.father_name;
@@ -64,6 +74,8 @@ const useUserStore = defineStore(name, () => {
     return {
         id,
         role,
+        login,
+        email,
         surname,
         name,
         fatherName,
