@@ -64,11 +64,11 @@ try {
 </script>
 
 <template>
-    <div class="flexColumn alignCenter">
+    <div class="flex-column alignCenter">
         <Header/>
-        <div class="flexRow alignCenter block wide">
+        <div class="flex-row alignCenter block wide">
             <UserAvatar size="xlarge" :avatarPath="teacher.avatar" :name="teacher.name"/>
-            <div class="flexColumn">
+            <div class="flex-column">
                 <div>
                     {{ teacherFullName }}
                 </div>

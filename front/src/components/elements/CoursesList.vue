@@ -72,15 +72,15 @@ async function onAddCourse(): Promise<void> {
 </script>
 
 <template>
-    <div class="flexColumn block wide">
-        <div class="alignSelfCenter h1 flexRow alignCenter">
+    <div class="flex-column block wide">
+        <div class="alignSelfCenter h1 flex-row alignCenter">
             <div>
                 {{ title }}
             </div>
             <Button v-if="user.isTeacher" icon="pi pi-plus" v-tooltip="'Добавить курс'" text @click="newCourse.dialogVisible=true"/>
         </div>
         <Divider/>
-        <div id="cards" class="flexRow">
+        <div id="cards" class="flex-row">
             <CourseCard v-for="course in props.courses" :course="course"/>
         </div>
         <div v-if="!courses.length">
@@ -88,7 +88,7 @@ async function onAddCourse(): Promise<void> {
         </div>
     </div>
     <Dialog v-model:visible="newCourse.dialogVisible" modal header="Новый курс">
-        <div class="flexColumn">
+        <div class="flex-column">
             <InputText v-model="newCourse.name" placeholder="Название курса" :invalid="newCourseNameInvalid"/>
             <Textarea v-model="newCourse.description" placeholder="Краткое описание курса" autoResize/>
             <InputText v-model="newCourse.password" placeholder="Пароль курса" :invalid="newCoursePasswordInvalid"/>

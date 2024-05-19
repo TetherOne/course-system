@@ -203,27 +203,27 @@ try {
 </script>
 
 <template>
-    <div class="flexColumn alignCenter">
+    <div class="flex-column alignCenter">
         <Header/>
-        <div class="flexColumn block wide">
+        <div class="flex-column block wide">
             <div class="h2">
                 КТ {{ number }}. {{ name }}
             </div>
             <Divider/>
-            <div v-if="passedByCurrentStudent" class="flexRow">
+            <div v-if="passedByCurrentStudent" class="flex-row">
                 <div>
                     Вы уже прошли эту КТ. Ваша оценка:
                 </div>
                 <Badge :value="grade" :severity="colors[grade as 2 | 3 | 4 | 5]"/>
             </div>
-            <div v-for="(question, i) in questions" :key="question.id" class="flexColumn alignStretch">
+            <div v-for="(question, i) in questions" :key="question.id" class="flex-column alignStretch">
                 <Card>
                     <template #title>
                         {{ i + 1 }}. {{ question.question_text }}
                     </template>
                     <template #content>
-                        <div class="flexColumn sub">
-                            <div v-for="answer in question.answers" :key="answer.id" class="flexRow">
+                        <div class="flex-column sub">
+                            <div v-for="answer in question.answers" :key="answer.id" class="flex-row">
                                 <RadioButton v-model="question.chosenAnswer" :inputId="`${answer.id}`"
                                              :value="answer.id" :disabled="!passable"/>
                                 <label :for="`${answer.id}`">
@@ -235,8 +235,8 @@ try {
                 </Card>
             </div>
             <Button v-if="user.isTeacher" label="Добавить вопрос" @click="showQuestionMaker" :disabled="questionMaker.seen"/>
-            <div v-if="questionMaker.seen" class="flexColumn">
-                <div class="flexRow alignCenter">
+            <div v-if="questionMaker.seen" class="flex-column">
+                <div class="flex-row alignCenter">
                     <div>
                         Текст вопроса
                     </div>
@@ -247,21 +247,21 @@ try {
                         <InputText v-model="questionMaker.text" :invalid="!questionMaker.text"/>
                     </InputGroup>
                 </div>
-                <div class="flexRow alignCenter">
+                <div class="flex-row alignCenter">
                     <div>
                         Кол-во баллов
                     </div>
                     <InputNumber v-model="questionMaker.value" :min="1"/>
                 </div>
-                <div class="flexColumn">
-                    <div class="flexRow alignCenter">
+                <div class="flex-column">
+                    <div class="flex-row alignCenter">
                         <div>
                             Ответы
                         </div>
                         <Button icon="pi pi-plus" text @click="questionMaker.addAnswer()"/>
                     </div>
-                    <div class="sub flexColumn">
-                        <div v-for="(answer, i) in questionMaker.answers" :key="i" class="flexRow alignCenter">
+                    <div class="sub flex-column">
+                        <div v-for="(answer, i) in questionMaker.answers" :key="i" class="flex-row alignCenter">
                             <RadioButton v-model="questionMaker.indexOfRightAnswer" :value="i" v-tooltip="'Нажмите, чтобы отметить ответ правильным'"/>
                             <InputText v-model="answer.text" :invalid="!answer.text"/>
                         </div>

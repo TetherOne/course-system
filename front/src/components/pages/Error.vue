@@ -25,7 +25,7 @@ const message: Ref<string> = ref(route.query.message as string);
 
 <template>
     <div class="specialPage">
-        <div class="absolutelyCentered flexColumn alignCenter">
+        <div class="absolutelyCentered flex-column alignCenter">
             <div class="veryLargeText">
                 ОШИБКА
             </div>
@@ -61,7 +61,7 @@ const message: Ref<string> = ref(route.query.message as string);
 }
 
 :deep(.p-inplace-content) {
-    @extend .flexColumn;
+    @extend .flex-column;
     @extend .block;
 }
 

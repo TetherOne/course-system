@@ -138,18 +138,18 @@ onUpdated((): void => {
 </script>
 
 <template>
-    <div class="flexColumn alignCenter">
+    <div class="flex-column alignCenter">
         <Header/>
-        <div class="flexColumn block wide">
-            <div class="h2 flexRow alignCenter">
+        <div class="flex-column block wide">
+            <div class="h2 flex-row alignCenter">
                 <div>{{ name }}</div>
                 <Button v-if="user.isTeacher" icon="pi pi-file-edit" text @click="openEditor" :disabled="editor.visible"/>
             </div>
             <Divider/>
-            <div v-if="editor.visible"  id="editorWrapper" class="flexColumn alignSelfStretch">
+            <div v-if="editor.visible"  id="editorWrapper" class="flex-column alignSelfStretch">
                 <ckeditor class="alignSelfCenter" :editor="editor.editor" v-model="editor.data"
                           :config="editor.config"/>
-                <div class="flexRow">
+                <div class="flex-row">
                     <Button label="Закрыть" @click="editor.visible=false"/>
                     <Button label="Сохранить" @click="onUpdateLesson"/>
                 </div>
@@ -160,9 +160,9 @@ onUpdated((): void => {
                 <video controls width="320" height="240" :src="videoPath"/>
                 <Divider/>
             </div>
-            <div v-if="files.length" class="flexColumn">
+            <div v-if="files.length" class="flex-column">
                 <div class="h1">Дополнительно:</div>
-                <div id="files" class="flexColumn sub">
+                <div id="files" class="flex-column sub">
                     <a v-for="file in files" :key="file.id" :href="file.other_file">
                         {{ file.name }}
                     </a>

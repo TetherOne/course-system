@@ -57,20 +57,20 @@ function toggleMenu(event: Event): void {
 </script>
 
 <template>
-    <div class="block flexRow justifyBetween alignCenter alignSelfStretch">
+    <div class="block flex-row justifyBetween alignCenter alignSelfStretch">
         <router-link :to="user.isStudent ? { name: 'student' } : { name: 'teacher', params: { id: user.id } }">
             Scart
         </router-link>
-        <Button class="flexRow alignCenter" text rounded @click="toggleMenu">
+        <Button class="flex-row alignCenter" text rounded @click="toggleMenu">
             <UserAvatar size="normal" :avatarPath="user.avatar" :name="user.name"/>
             <i class="pi pi-angle-down"/>
         </Button>
         <Menu :model="menuItems" popup ref="menu">
             <template #start>
-                <div class="flexColumn alignCenter">
+                <div class="flex-column alignCenter">
                     <UserAvatar size="normal" :avatarPath="user.avatar" :name="user.name"/>
                     <div>
-                        {{ user.name }} {{ user.surname }}
+                        {{ user.fullName }}
                     </div>
                 </div>
             </template>

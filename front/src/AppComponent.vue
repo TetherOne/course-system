@@ -1,6 +1,16 @@
 <script setup lang="ts">
-import Main from '#pages/Main';
+import axios from 'axios';
+
 import ProgressSpinner from 'primevue/progressspinner';
+
+import Main from '#pages/Main';
+
+import { getCSRF_token } from '#functions';
+
+
+
+axios.defaults.headers.common['X-CSRFTOKEN'] = getCSRF_token();
+axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
 </script>
 
 <template>

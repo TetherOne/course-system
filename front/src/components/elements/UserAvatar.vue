@@ -18,8 +18,22 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const attributeName: ComputedRef<string> = computed((): string => props.avatarPath ? 'image' : 'label');
-const attributeValue: ComputedRef<string> = computed((): string => 'f');
+const attributeName: ComputedRef<string> = computed((): string => {
+    if (props.avatarPath)
+        return 'image'
+    else if (props.name)
+        return 'label'
+    else
+        return 'icon'
+});
+const attributeValue: ComputedRef<string> = computed((): string => {
+    if (props.avatarPath)
+        return props.avatarPath;
+    else if (props.name)
+        return props.name.slice(0, 1);
+    else
+        return 'pi pi-user';
+});
 </script>
 
 <template>
