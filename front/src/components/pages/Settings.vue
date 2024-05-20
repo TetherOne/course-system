@@ -10,6 +10,7 @@ import { AxiosError } from 'axios';
 import Button from 'primevue/button';
 import Divider from 'primevue/divider';
 import InputText from 'primevue/inputtext';
+import FileUpload, { FileUploadUploaderEvent } from 'primevue/fileupload';
 
 import useUserStore from '#store';
 
@@ -23,7 +24,8 @@ import {
 import {
     authApp,
     updateStudent,
-    updateTeacher
+    updateTeacher,
+    addStudentAvatar
 } from '#requests';
 
 import Header from '#elements/Header';
@@ -95,6 +97,26 @@ async function start(): Promise<void> {
     }
 }
 
+async function customUploader(event: FileUploadUploaderEvent) {
+    const files = event.files;
+    let file: File;console.log('USING CUSTOM UPLOADER');
+
+    if (files instanceof File)
+        file = files;
+    else
+        file = files[0];
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+        const data = reader.result;
+        const filename = file.name;console.log(filename);
+        const res = await addStudentAvatar(filename, data);
+        console.log(res);
+    };
+
+    reader.readAsArrayBuffer(file);
+}
+
 
 
 await start();
@@ -118,6 +140,7 @@ await start();
                 <Button label="Сохранить" @click="handleUpdating"/>
                 <Button label="Отмена" severity="danger" outlined @click="disableEditing"/>
             </div>
+            <FileUpload mode="basic" name="demo[]" url="/media/student-avatars" accept="image/*" customUpload @uploader="customUploader"/>
         </div>
     </div>
 </template>
