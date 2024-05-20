@@ -41,7 +41,7 @@ DEBUG = True
 CSRF_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = ["147.45.159.53"]
-
+CORS_ALLOW_ALL_ORIGINS = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "cachalot",
     "captcha",
     "django_recaptcha",
+    "corsheaders",
     "courses.apps.CourseappConfig",
     "profiles.apps.AuthappConfig",
     "checkpoints.apps.CheckpointappConfig",
@@ -73,6 +74,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "course_system.urls"
@@ -156,10 +158,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "/static/"
+STATIC_URL = "/root/static/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "templates/static"]
+STATICFILES_DIRS = [BASE_DIR / "templates/staticfiles"]
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -210,5 +212,7 @@ EMAIL_ADMIN = EMAIL_HOST_USER
 RECAPTCHA_PUBLIC_KEY = RECAPTCHA_PUBLIC_KEY
 RECAPTCHA_PRIVATE_KEY = RECAPTCHA_PRIVATE_KEY
 
+
+INTERNAL_IPS = []
 
 CELERY_BROKER_URL = "amqp://guest:guest@rabbitmq:5672"
