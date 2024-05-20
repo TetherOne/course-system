@@ -130,12 +130,12 @@ try {
 </script>
 
 <template>
-    <div class="flex-column alignCenter">
+    <div class="flexColumn alignCenter">
         <Header/>
-        <div class="flex-row block wide">
-            <div class="flex-column">
+        <div class="flexRow block wide">
+            <div class="flexColumn">
                 <CourseCard :course="course"/>
-                <div v-if="user.isStudent" class="flex-column">
+                <div v-if="user.isStudent" class="flexColumn">
                     <div>
                         Курс ведёт:
                     </div>
@@ -155,8 +155,8 @@ try {
         </div>
     </div>
     <Dialog v-model:visible="studentGradesVisible" modal header="Оценки">
-        <div class="flex-column">
-            <div v-for="grade in studentGrades" class="flex-row alignEnd">
+        <div class="flexColumn">
+            <div v-for="grade in studentGrades" class="flexRow alignEnd">
                 <div class="h1">
                     {{ grade.number }}. {{ grade.name }}
                 </div>

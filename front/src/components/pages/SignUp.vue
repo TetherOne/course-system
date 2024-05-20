@@ -85,7 +85,7 @@ function areFieldsValid(): boolean {
 
 <template>
     <div class="authBackground">
-        <div class="absolutelyCentered authForm flex-column">
+        <div class="absolutelyCentered authForm flexColumn">
             <div class="h1">
                 Регистрация
             </div>
@@ -107,7 +107,7 @@ function areFieldsValid(): boolean {
                 </InputGroupAddon>
                 <Password v-model="password" placeholder="Пароль" toggleMask :invalid="passwordInvalid"/>
             </InputGroup>
-            <div class="flex-row alignCenter">
+            <div class="flexRow alignCenter">
                 <InputSwitch v-model="isTeacher"/>
                 <div>
                     Я преподаватель
@@ -116,7 +116,7 @@ function areFieldsValid(): boolean {
             <Button label="Зарегистрироваться" icon="pi pi-sign-up" iconPos="right" class="alignSelfCenter"
                     @click="handleRegistration"/>
             <Divider/>
-            <div class="flex-row alignCenter alignSelfCenter">
+            <div class="flexRow alignCenter alignSelfCenter">
                 <div>Уже зарегистрированы?</div>
                 <router-link class="signReverse" :to="{ name: 'signIn' }">
                     Войти

@@ -106,13 +106,13 @@ try {
 </script>
 
 <template>
-    <div class="flex-column">
-        <div class="h1 flex-row alignCenter">
+    <div class="flexColumn">
+        <div class="h1 flexRow alignCenter">
             <div>Уроки</div>
             <Button v-if="user.isTeacher" icon="pi pi-plus" v-tooltip="'Добавить урок'" text
                     @click="newLesson.dialogVisible=true;"/>
         </div>
-        <div class="sub flex-column">
+        <div class="sub flexColumn">
             <router-link v-for="lesson in lessons" :key="lesson.id" :to="{ name: 'lesson', params: { id: lesson.id } }">
                 {{ lesson.name }}
             </router-link>
@@ -120,12 +120,12 @@ try {
                 Пока нет уроков...
             </div>
         </div>
-        <div class="h1 flex-row alignCenter">
+        <div class="h1 flexRow alignCenter">
             <div>Контрольные точки</div>
             <Button v-if="user.isTeacher" icon="pi pi-plus" v-tooltip="'Добавить КТ'" text
                     @click="newCheckpoint.dialogVisible=true;"/>
         </div>
-        <div class="sub flex-column">
+        <div class="sub flexColumn">
             <router-link v-for="checkpoint in checkpoints" :key="checkpoint.id"
                          :to="{ name: 'checkpoint', params: { id: checkpoint.id } }">
                 {{ checkpoint.name }}
@@ -136,7 +136,7 @@ try {
         </div>
     </div>
     <Dialog v-model:visible="newLesson.dialogVisible" modal header="Новый урок">
-        <div class="flex-column">
+        <div class="flexColumn">
             <label for="name">Название</label>
             <InputGroup>
                 <InputGroupAddon>
@@ -153,7 +153,7 @@ try {
         </template>
     </Dialog>
     <Dialog v-model:visible="newCheckpoint.dialogVisible" modal header="Новая КТ">
-        <div class="flex-column">
+        <div class="flexColumn">
             <label for="name">Название</label>
             <InputGroup>
                 <InputGroupAddon>

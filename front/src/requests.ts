@@ -23,6 +23,7 @@ const API_URL: string = '/api';
 const userAppURL: string = `${API_URL}/userapp`;
 
 const studentsURL: string = `${userAppURL}/students/`;
+
 const teachersURL: string = `${userAppURL}/teachers/`;
 
 const courseAppURL: string = `${API_URL}/courseapp`;
@@ -274,7 +275,7 @@ export const questionApp = {
             question
         })).data;
     }
-}
+};
 
 export const history = {
     async sendQuestionChoice(student: number, question: number, selected_answer: number, checkpoint: number): Promise<QuestionChoice> {
@@ -313,3 +314,23 @@ export const authApp = {
         return (await axios.get(currentUserURL)).data;
     }
 };
+
+export async function updateStudent(id: number, updated: Student): Promise<Student> {
+    const URL: string = studentsURL + id + '/';
+    const response = await axios.patchForm(URL, updated);
+    const data = response.data;
+    return data;
+}
+
+export async function updateTeacher(id: number, updated: Teacher): Promise<Teacher> {
+    const URL: string = teachersURL + id + '/';
+    const response = await axios.patchForm(URL, updated);
+    const data = response.data;
+    return data;
+}
+
+export async function addStudentAvatar(filename: string, avatar: any) {
+    const URL: string = `/media/student-avatars/${filename}`;
+    const res = await axios.post(URL, avatar);
+    return res.data;
+}
