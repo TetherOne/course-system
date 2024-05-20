@@ -313,3 +313,17 @@ export const authApp = {
         return (await axios.get(currentUserURL)).data;
     }
 };
+
+export async function updateStudent(id: number, updated: Student): Promise<Student> {
+    const URL: string = studentsURL + id + '/';
+    const response = await axios.patchForm(URL, updated);
+    const data = response.data;
+    return data;
+}
+
+export async function updateTeacher(id: number, updated: Teacher): Promise<Teacher> {
+    const URL: string = teachersURL + id + '/';
+    const response = await axios.patchForm(URL, updated);
+    const data = response.data;
+    return data;
+}

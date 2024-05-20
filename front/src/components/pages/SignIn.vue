@@ -78,7 +78,7 @@ async function onSignIn(): Promise<void> {
 
 <template>
     <div class="authBackground">
-        <div class="absolutelyCentered authForm flex-column">
+        <div class="absolutelyCentered authForm flexColumn">
             <div class="h1">
                 Вход
             </div>
@@ -99,8 +99,8 @@ async function onSignIn(): Promise<void> {
                 <Password v-model="password" placeholder="Пароль" toggleMask :feedback="false" variant="filled"
                           :invalid="passwordInvalid"/>
             </InputGroup>
-            <div class="flex-row justifyBetween alignCenter alignSelfStretch">
-                <div class="flex-row alignCenter">
+            <div class="flexRow justifyBetween alignCenter alignSelfStretch">
+                <div class="flexRow alignCenter">
                     <InputSwitch v-model="keepSigned" inputId="keepSignedSwitch"/>
                     <label for="keepSignedSwitch">
                         Запомнить меня
@@ -112,7 +112,7 @@ async function onSignIn(): Promise<void> {
             </div>
             <Button label="Войти" icon="pi pi-sign-in" iconPos="right" class="alignSelfCenter" @click="onSignIn"/>
             <Divider/>
-            <div class="flex-row alignCenter">
+            <div class="flexRow alignCenter">
                 <div>Ещё нет аккаунта?</div>
                 <router-link class="signReverse" :to="{ name: 'signUp' }">
                     Зарегистрироваться

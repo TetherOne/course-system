@@ -136,7 +136,7 @@ async function handleEnrollment(): Promise<void> {
     </Card>
     <ConfirmDialog/>
     <Dialog v-model:visible="enrollFormVisible" modal header="Зачисление на курс">
-        <div class="flex-column alignStretch">
+        <div class="flexColumn alignStretch">
             <div>Для доступа к курсу введите пароль</div>
             <InputText v-model="password" :invalid="!password"/>
         </div>
@@ -161,7 +161,7 @@ async function handleEnrollment(): Promise<void> {
 }
 
 :deep(.p-card-title) {
-    @extend .flex-row;
+    @extend .flexRow;
     @extend .justifyBetween;
     @extend .alignCenter;
 }
