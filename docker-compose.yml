@@ -3,7 +3,7 @@ services:
     build:
       context: .
     ports:
-      - "8007:8000"
+      - "8000:8000"
     volumes:
       - .:/course_system
     environment:
