@@ -30,6 +30,10 @@ class Question(models.Model):
     def __str__(self):
         return f"{self.question_text}"
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.checkpoint.update_total()
+
 
 class Answer(models.Model):
 
