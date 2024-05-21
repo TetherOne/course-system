@@ -78,3 +78,20 @@ def calculate_current_points(student, course):
             current_points += 0
 
     return current_points
+
+
+def calculate_grade(current_points, total_points):
+    """
+    Calculate grade for Summary
+    """
+    if total_points == 0:
+        return ""
+    percent = (current_points / total_points) * 100
+    if percent >= 81:
+        return "5"
+    elif percent >= 61:
+        return "4"
+    elif percent >= 41:
+        return "3"
+    else:
+        return "2"

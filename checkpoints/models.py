@@ -1,13 +1,14 @@
 from typing import TYPE_CHECKING
 
 from django.db import models
-from django.db.models import Manager
+from django.db.models import Manager, Sum
 from django.utils.translation import gettext_lazy as _
 
 from checkpoints.utils import (
     calculate_current_points,
     calculate_points,
     calculate_total_points,
+    calculate_grade,
 )
 from courses.models import Module
 from profiles.models import StudentProfile
@@ -23,7 +24,17 @@ class CheckPoint(models.Model):
         verbose_name=_("модуль"),
     )
     name = models.TextField(_("название"), max_length=255)
+    total = models.IntegerField(_("всего"))
     created_at = models.DateTimeField(_("дата создания"), auto_now_add=True)
+
+    def update_total(self):
+        self.total = (
+            self.questions.aggregate(
+                Sum("max_points"),
+            )["max_points__sum"]
+            or 0
+        )
+        self.save()
 
     class Meta:
         db_table = "checkpoints"
@@ -120,4 +131,5 @@ class Summary(models.Model):
         """
         self.total = calculate_total_points(self.course)
         self.current_points = calculate_current_points(self.student, self.course)
+        self.grade = calculate_grade(self.current_points, self.total)
         super().save(*args, **kwargs)
