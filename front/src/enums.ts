@@ -4,6 +4,11 @@ export enum Role {
     Teacher
 }
 
+export enum NameVariant {
+    Short,
+    Full
+}
+
 export enum PopUpType {
     Success = 'success',
     Warn = 'warn',

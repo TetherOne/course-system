@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 import {
+    User,
     Student,
     Teacher,
     Course,
@@ -69,10 +70,24 @@ async function getEntity(URL: string): Promise<any> {
     return (await axios.get(URL, standardConfig)).data;
 }
 
+async function getEntitiesByForeignKeys(URL: string, key: string, value: number): Promise<any[]> {
+    const config: AxiosRequestConfig = structuredClone(standardConfig);
+    config.params[key] = value;
+    return (await axios.get(URL, config));
+}
 
+
+
+export async function getUser(id: number): Promise<User> {
+    return await getEntity(users(id));
+}
 
 export async function getStudent(id: number): Promise<Student> {
     return await getEntity(students(id));
+}
+
+export async function getStudentByUserId(id: number): Promise<Student> {
+    return (await getEntitiesByForeignKeys(students(), 'user', id))[0];
 }
 
 export async function getStudentCourses(id: number): Promise<Course[]> {
@@ -85,9 +100,7 @@ export async function getStudentCourses(id: number): Promise<Course[]> {
 }
 
 export async function getStudentEnrollments(id: number): Promise<Enrollment[]> {
-    const config: AxiosRequestConfig = structuredClone(standardConfig);
-    config.params.student = id;
-    return (await axios.get(enrollments(), config)).data;
+    return await getEntitiesByForeignKeys(enrollments(), 'student', id);
 }
 
 export async function getStudentGradesInCourse(studentId: number, courseId: number) {
@@ -153,6 +166,10 @@ export async function updateStudent(id: number, updated: Student): Promise<Stude
 
 export async function getTeacher(id: number): Promise<Teacher> {
     return await getEntity(teachers(id));
+}
+
+export async function getTeacherByUserId(id: number): Promise<Teacher> {
+    return (await getEntitiesByForeignKeys(teachers(), 'user', id))[0];
 }
 
 export async function getTeacherCourses(id: number): Promise<Course[]> {

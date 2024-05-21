@@ -7,7 +7,7 @@ type Model = {
     created_at: string
 }
 
-type User = Omit<Model, 'created_at'> & {
+export type User = Omit<Model, 'created_at'> & {
     email: string
     username: string
     is_teacher: boolean

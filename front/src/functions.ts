@@ -1,7 +1,16 @@
+import { NameVariant } from '#enums';
+
 import {
+    User,
     Student,
     Teacher
 } from '#types';
+
+import {
+    getUser,
+    getStudentByUserId,
+    getTeacherByUserId
+} from '#requests';
 
 
 
@@ -10,22 +19,33 @@ export function getCSRF_token(): string {
     return input.value;
 }
 
-export function getCaptcha(): string {
-    const input: HTMLTextAreaElement = document.querySelector('textarea') as HTMLTextAreaElement;
-    return input.value;
-}
+export async function getUserName(id: number, variant: NameVariant): Promise<string> {
+    const user: User = await getUser(id);
+    let userPersonalInfo: Student | Teacher;
 
-export function shortenName(user: Student | Teacher): string {
-    if (!user.name) {
-        return '';
+    if (user.is_teacher)
+        userPersonalInfo = await getTeacherByUserId(id);
+    else
+        userPersonalInfo = await getStudentByUserId(id);
+
+    if (!userPersonalInfo.surname || !userPersonalInfo.name)
+        return user.username;
+
+    let name: string = userPersonalInfo.surname;
+
+    if (variant === NameVariant.Short) {
+        name = `${name} ${userPersonalInfo.name[0]}.`;
+
+        if (userPersonalInfo.father_name)
+            name = `${name} ${userPersonalInfo.father_name[0]}.`;
+
+        return name;
+    } else {
+        name = `${name} ${userPersonalInfo.name}`;
+
+        if (userPersonalInfo.father_name)
+            name = `${name} ${userPersonalInfo.father_name}`;
+
+        return name;
     }
-    const name: string = `${user.name.slice(0, 1)}.`;
-    const fatherName: string = user.father_name ? `${user.father_name.slice(0, 1)}.` : '';
-
-    return `${user.surname} ${name} ${fatherName}`;
-}
-
-export function buildFullName(user: Student | Teacher): string {
-    const fatherName: string = user.father_name ?? '';
-    return `${user.surname} ${user.name} ${fatherName}`;
 }
