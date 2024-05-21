@@ -275,8 +275,9 @@ export const questionApp = {
             answer_text,
             question
         })).data;
+        return await this.changeAnswer(createdAnswer.id, { is_correct });
     },
-    async changeAnswer(id: number, newProperties: Partial<Answer>): Promise<Answer> {
+    async changeAnswer(id: number, newProperties: Partial<Answer> & { is_correct: boolean }): Promise<Answer> {
         return (await axios.patch(`${answersURL}${id}/`, newProperties, standardConfig)).data;
     }
 };
