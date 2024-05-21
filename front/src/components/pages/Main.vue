@@ -22,10 +22,9 @@ import UserSkeleton from '#pages/UserSkeleton';
 import CourseSkeleton from '#pages/CourseSkeleton';
 
 import {
-    authApp,
-    setCSRF_token
+    authApp
 } from '#requests';
-await setCSRF_token();
+
 
 
 const user = useUserStore();
@@ -92,13 +91,14 @@ async function redirectToUserProfile(): Promise<void> {
 
 
 
-if (await authApp.userSignedIn()) {
+if (await authApp.isUserSignedIn()) {
     await user.loadData();
-    if (userInAuth()) {
+    if (userInAuth())
         await redirectToUserProfile();
+} else {
+    await authApp.setCSRF_token();if (!userInAuth()) {
+        await router.push({ name: 'signIn' });
     }
-} else if (!userInAuth()) {
-    await router.push({ name: 'signIn' });
 }
 
 provide('noticeSuccess', noticeSuccess);

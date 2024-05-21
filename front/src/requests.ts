@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import Cookies from 'js-cookie';
 
 import {
     Student,
@@ -49,6 +50,7 @@ const questionsChoicesHistoryURL: string = `${historyURL}/history-of-passed-answ
 
 const authAppURL: string = `${API_URL}/authapp`;
 
+const CSRF_URL: string = `${authAppURL}/csrf/`;
 const signInURL: string = `${authAppURL}/login/`;
 const signUpURL: string = `${authAppURL}/register/`;
 const signOutURL: string = `${authAppURL}/logout/`;
@@ -289,17 +291,21 @@ export const history = {
 };
 
 export const authApp = {
-    async userSignedIn(): Promise<boolean> {
+    async setCSRF_token(): Promise<void> {
+        await axios.get(CSRF_URL);
+        const token: string = Cookies.get('csrftoken') as string;
+        axios.defaults.headers.common['X-CSRFTOKEN'] = token;
+        axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
+    },
+    async isUserSignedIn(): Promise<boolean> {
         const currentUser: CurrentUser = await this.currentUser();
-        return !!currentUser.id;
+        return currentUser.id !== null;
     },
     async signIn(email: string, password: string): Promise<void> {
-        const a = await axios.postForm(signInURL, {
+        await axios.postForm(signInURL, {
             username: email,
             password
         });
-        const r = a;
-        console.log(r)
     },
     async signUp(username: string, email: string, password1: string, is_teacher: boolean): Promise<any> {
         return (await axios.postForm(signUpURL, {
@@ -335,11 +341,4 @@ export async function addStudentAvatar(avatar: any) {
     const URL: string = `/media/student-avatars`;
     const res = await axios.post(URL, avatar);
     return res.data;
-}
-
-export async function setCSRF_token(): Promise<void> {
-    await axios.get('/api/authapp/get_csrf_token');
-    const token = document.cookie.split('=')[1];
-    axios.defaults.headers.common['X-CSRFTOKEN'] = token;
-    axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
 }

@@ -67,8 +67,9 @@ async function handleRegistration(): Promise<void> {
 
         await authApp.signUp(username.value, email.value, password.value, isTeacher.value);
 
-        if (await authApp.userSignedIn()) {
+        if (await authApp.isUserSignedIn()) {
             await user.loadData();
+            await authApp.setCSRF_token();
             await redirectToUserProfile();
         } else {
             noticeError('Попробуйте повторить регистрацию позже', 'Не удалось зарегистрироваться');
