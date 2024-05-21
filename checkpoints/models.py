@@ -8,6 +8,7 @@ from checkpoints.utils import (
     calculate_current_points,
     calculate_points,
     calculate_total_points,
+    calculate_grade,
 )
 from courses.models import Module
 from profiles.models import StudentProfile
@@ -120,4 +121,5 @@ class Summary(models.Model):
         """
         self.total = calculate_total_points(self.course)
         self.current_points = calculate_current_points(self.student, self.course)
+        self.grade = calculate_grade(self.current_points, self.total)
         super().save(*args, **kwargs)
