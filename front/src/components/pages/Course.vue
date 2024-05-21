@@ -34,11 +34,6 @@ import {
 } from '#types';
 
 import {
-    shortenName,
-    buildFullName
-} from '#functions';
-
-import {
     addModule, getCourse, getCourseCheckpoints, getCourseModules, getCourseStudents,
     getStudentGradeOnCheckpoint, getStudentGradesInCourse, getTeacher
 
@@ -108,7 +103,7 @@ try {
     modules.value = await getCourseModules(id.value);
 
     if (user.isStudent) {
-        teacherFullName.value = buildFullName(await getTeacher(course.value.teacher_profile));
+        teacherFullName.value = 'FD'
         studentGrades.value = await getStudentGradesInCourse(user.id, id.value);
     } else {
         checkpoints.value = await getCourseCheckpoints(id.value);
@@ -119,7 +114,7 @@ try {
                 grades.push(await getStudentGradeOnCheckpoint(student.id, cp.id));
             }
             studentsGrades.value.push({
-                student: shortenName(student),
+                student: 'fd',
                 group: student.group,
                 grades
             });

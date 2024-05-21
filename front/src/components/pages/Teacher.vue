@@ -24,8 +24,6 @@ import {
     Course
 } from '#types';
 
-import { buildFullName } from '#functions';
-
 import { doesStudentHaveCourse, getTeacherCourses,
 getTeacher} from '#requests';
 
@@ -51,7 +49,7 @@ const courses: Ref<Course[]> = ref([]);
 
 try {
     teacher.value = await getTeacher(id.value);
-    teacherFullName.value = buildFullName(teacher.value);
+    teacherFullName.value = 'Заглушка'
     courses.value = await getTeacherCourses(id.value);
 
     if (user.isStudent) {

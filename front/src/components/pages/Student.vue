@@ -14,8 +14,6 @@ import {
     Course
 } from '#types';
 
-import { shortenName } from '#functions';
-
 import { getStudentCourses, getTeacher } from '#requests';
 
 import Header from '#elements/Header';
@@ -36,7 +34,7 @@ const courses: Ref<Course[]> = ref([]);
 try {
     courses.value = await getStudentCourses(user.id);
     for (const course of courses.value) {
-        course.teacherShortName = shortenName(await getTeacher(course.teacher_profile));
+        course.teacherShortName = 'Заглушка'
     }
 } catch (error) {
     await handleRequestError(error as AxiosError);
