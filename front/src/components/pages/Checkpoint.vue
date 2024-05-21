@@ -6,7 +6,9 @@ import {
 } from 'vue';
 
 import {
+    Router,
     RouteLocationNormalizedLoaded,
+    useRouter,
     useRoute
 } from 'vue-router';
 
@@ -55,6 +57,7 @@ const noticeError: Notice = inject('noticeError') as Notice;
 
 const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
 
+const router: Router = useRouter();
 const route: RouteLocationNormalizedLoaded = useRoute();
 
 const id: Ref<number> = ref(parseInt(route.params.id as string));
@@ -118,6 +121,7 @@ async function onComplete(): Promise<void> {
                     await history.sendQuestionChoice(user.id, question.id, question.chosenAnswer as number, id.value);
                 }
                 await checkpointApp.sendResult(user.id, id.value);
+                router.go(0);
             } catch (error) {
                 await handleRequestError(error as AxiosError);
             }
