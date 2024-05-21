@@ -45,7 +45,7 @@ class Answer(models.Model):
         max_length=1000,
         blank=True,
     )
-    is_correct = models.BooleanField(_("верно ли"))
+    is_correct = models.BooleanField(_("верно ли"), default=False)
 
     class Meta:
         db_table = "answers"
