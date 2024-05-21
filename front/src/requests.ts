@@ -271,11 +271,13 @@ export const questionApp = {
         })).data;
     },
     async addAnswer(answer_text: string, is_correct: boolean, question: number): Promise<Answer> {
-        return (await axios.postForm(answersURL, {
+        const createdAnswer: Answer = (await axios.post(answersURL, {
             answer_text,
-            is_correct,
             question
         })).data;
+    },
+    async changeAnswer(id: number, newProperties: Partial<Answer>): Promise<Answer> {
+        return (await axios.patch(`${answersURL}${id}/`, newProperties, standardConfig)).data;
     }
 };
 
