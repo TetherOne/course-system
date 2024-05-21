@@ -25,8 +25,10 @@ import {
 } from '#types';
 
 import {
-    courseApp,
-    checkpointApp
+    addLesson,
+    addCheckpoint,
+    getModuleLessons,
+    getModuleCheckpoints
 } from '#requests';
 
 
@@ -70,7 +72,7 @@ async function onAddLesson(): Promise<void> {
     }
 
     try {
-        lessons.value.push(await courseApp.addLesson(newLesson.value.name, props.module.id));
+        lessons.value.push(await addLesson(newLesson.value.name, props.module.id));
         newLesson.value.dialogVisible = false;
         noticeSuccess('Урок добавлен');
     } catch (error) {
@@ -87,7 +89,7 @@ async function onAddCheckpoint(): Promise<void> {
     }
 
     try {
-        checkpoints.value.push(await checkpointApp.addCheckpoint(newCheckpoint.value.name, props.module.id));
+        checkpoints.value.push(await addCheckpoint(newCheckpoint.value.name, props.module.id));
         newCheckpoint.value.dialogVisible = false;
         noticeSuccess('КТ добавлена');
     } catch (error) {
@@ -98,8 +100,8 @@ async function onAddCheckpoint(): Promise<void> {
 
 
 try {
-    lessons.value = await courseApp.moduleLessons(props.module.id);
-    checkpoints.value = await courseApp.moduleCheckpoints(props.module.id);
+    lessons.value = await getModuleLessons(props.module.id);
+    checkpoints.value = await getModuleCheckpoints(props.module.id);
 } catch (error) {
     handleRequestError(error as AxiosError);
 }

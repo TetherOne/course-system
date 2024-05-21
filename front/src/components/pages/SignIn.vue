@@ -25,7 +25,7 @@ import {
     PromiseNoParamsNoReturn
 } from '#types';
 
-import { authApp } from '#requests';
+import { signIn, isUserSignedIn } from '#requests';
 
 
 
@@ -37,7 +37,7 @@ const noticeError: Notice = inject('noticeError') as Notice;
 const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
 const redirectToUserProfile: PromiseNoParamsNoReturn = inject('redirectToUserProfile') as PromiseNoParamsNoReturn;
 
-if (await authApp.userSignedIn()) {
+if (await isUserSignedIn()) {
     await redirectToUserProfile();
 }
 
@@ -62,9 +62,9 @@ async function onSignIn(): Promise<void> {
     }
 
     try {
-        await authApp.signIn(email.value, password.value);
+        await signIn(email.value, password.value);
 
-        if (await authApp.userSignedIn()) {
+        if (await isUserSignedIn()) {
             await user.loadData();
             await redirectToUserProfile();
         } else {

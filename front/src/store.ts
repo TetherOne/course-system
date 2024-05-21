@@ -19,7 +19,7 @@ import {
 
 import { buildFullName } from '#functions';
 
-import { authApp } from '#requests';
+import { getCurrentUser } from '#requests';
 
 
 
@@ -56,7 +56,7 @@ const useUserStore = defineStore(name, () => {
     });
 
     async function loadData(): Promise<void> {
-        const dataAsUser: CurrentUser = await authApp.currentUser();
+        const dataAsUser: CurrentUser = await getCurrentUser();
         const data: Student | Teacher = dataAsUser.user_profile;
 
         id.value = data.id;

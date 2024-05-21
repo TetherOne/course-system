@@ -39,8 +39,9 @@ import {
 } from '#functions';
 
 import {
-    courseApp,
-    userApp
+    addModule, getCourse, getCourseCheckpoints, getCourseModules, getCourseStudents,
+    getStudentGradeOnCheckpoint, getStudentGradesInCourse, getTeacher
+
 } from '#requests';
 
 import Header from '#elements/Header';
@@ -92,7 +93,7 @@ async function onAddModule(): Promise<void> {
     }
 
     try {
-        modules.value.push(await courseApp.addModule(newModule.value.name, id.value));
+        modules.value.push(await addModule(newModule.value.name, id.value));
         newModule.value.visible = false;
         noticeSuccess('Модуль добавлен');
     } catch (error) {
@@ -103,19 +104,19 @@ async function onAddModule(): Promise<void> {
 
 
 try {
-    course.value = await courseApp.course(id.value);
-    modules.value = await courseApp.courseModules(id.value);
+    course.value = await getCourse(id.value);
+    modules.value = await getCourseModules(id.value);
 
     if (user.isStudent) {
-        teacherFullName.value = buildFullName(await userApp.teacher(course.value.teacher_profile));
-        studentGrades.value = await userApp.studentGradesInCourse(user.id, id.value);
+        teacherFullName.value = buildFullName(await getTeacher(course.value.teacher_profile));
+        studentGrades.value = await getStudentGradesInCourse(user.id, id.value);
     } else {
-        checkpoints.value = await courseApp.courseCheckpoints(id.value);
-        const students: Student[] = await courseApp.courseStudents(id.value);
+        checkpoints.value = await getCourseCheckpoints(id.value);
+        const students: Student[] = await getCourseStudents(id.value);
         for (const student of students) {
             const grades: any[] = [];
             for (const cp of checkpoints.value) {
-                grades.push(await userApp.getStudentGradeOnCheckpoint(student.id, cp.id));
+                grades.push(await getStudentGradeOnCheckpoint(student.id, cp.id));
             }
             studentsGrades.value.push({
                 student: shortenName(student),

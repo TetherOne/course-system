@@ -29,7 +29,10 @@ import {
     Course
 } from '#types';
 
-import { courseApp } from '#requests';
+import {
+    deleteCourse,
+    addEnrollment
+} from '#requests';
 
 
 
@@ -74,7 +77,7 @@ function confirmCourseDeletion(): void {
 
 async function handleCourseDeletion(): Promise<void> {
     try {
-        await courseApp.deleteCourse(props.course.id);
+        await deleteCourse(props.course.id);
         router.go(0);
     } catch (error) {
         await handleRequestError(error as AxiosError);
@@ -87,7 +90,7 @@ async function handleEnrollment(): Promise<void> {
     }
 
     try {
-        await courseApp.enroll(user.id, props.course.id, password.value);
+        await addEnrollment(user.id, props.course.id, password.value);
         props.course.studentHasIt = true;
         enrollFormVisible.value = false;
         noticeSuccess('Вы были успешно зачислены на курс');

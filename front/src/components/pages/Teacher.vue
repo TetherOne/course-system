@@ -26,7 +26,8 @@ import {
 
 import { buildFullName } from '#functions';
 
-import { userApp } from '#requests';
+import { doesStudentHaveCourse, getTeacherCourses,
+getTeacher} from '#requests';
 
 import Header from '#elements/Header';
 import UserAvatar from '#elements/UserAvatar';
@@ -49,13 +50,13 @@ const courses: Ref<Course[]> = ref([]);
 
 
 try {
-    teacher.value = await userApp.teacher(id.value);
+    teacher.value = await getTeacher(id.value);
     teacherFullName.value = buildFullName(teacher.value);
-    courses.value = await userApp.teacherCourses(id.value);
+    courses.value = await getTeacherCourses(id.value);
 
     if (user.isStudent) {
         for (const course of courses.value) {
-            course.studentHasIt = await userApp.studentHasCourse(user.id, course.id);
+            course.studentHasIt = await doesStudentHaveCourse(user.id, course.id);
         }
     }
 } catch (error) {

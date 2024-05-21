@@ -18,7 +18,9 @@ import Menu from 'primevue/menu';
 import useUserStore from '#store';
 import { Notice } from '#types';
 
-import { authApp } from '#requests';
+import {
+    signOut
+} from '#requests';
 
 import UserAvatar from '#elements/UserAvatar';
 
@@ -41,7 +43,7 @@ const menuItems: Ref<MenuItem[]> = ref([{
     icon: 'pi pi-sign-out',
     async command() {
         try {
-            await authApp.signOut();
+            await signOut();
             window.location.pathname = '/sign-in';
         } catch (error) {
             noticeError(`${error}`, 'Не удалось выйти');

@@ -10,7 +10,6 @@ import { AxiosError } from 'axios';
 import Button from 'primevue/button';
 import Divider from 'primevue/divider';
 import InputText from 'primevue/inputtext';
-import FileUpload, { FileUploadBeforeSendEvent, FileUploadUploaderEvent } from 'primevue/fileupload';
 
 import useUserStore from '#store';
 
@@ -22,14 +21,13 @@ import {
 } from '#types';
 
 import {
-    authApp,
+
     updateStudent,
     updateTeacher,
-    addStudentAvatar
+    getCurrentUser
 } from '#requests';
 
 import Header from '#elements/Header';
-import { getCSRF_token } from '#functions';
 
 
 
@@ -84,7 +82,7 @@ async function handleUpdating() {
 
 async function start(): Promise<void> {
     try {
-        const info: Student | Teacher = (await authApp.currentUser()).user_profile;
+        const info: Student | Teacher = (await getCurrentUser()).user_profile;
 
         surname.value = info.surname ?? '';
         name.value = info.name ?? '';
@@ -96,28 +94,6 @@ async function start(): Promise<void> {
     } catch (error) {
         await handleRequestError(error as AxiosError);
     }
-}
-
-async function customUploader(event: FileUploadUploaderEvent) {
-    const files = event.files;
-    let file: File;console.log('USING CUSTOM UPLOADER');
-
-    if (files instanceof File)
-        file = files;
-    else
-        file = files[0];
-
-    const reader = new FileReader();
-    reader.onload = async () => {
-        const data = reader.result;
-        const res = await addStudentAvatar(data);
-        console.log(res);
-    };
-
-    reader.readAsDataURL(file);
-}
-function q(e: FileUploadBeforeSendEvent) {
-    e.xhr.setRequestHeader('X-CSRFTOKEN', getCSRF_token());
 }
 
 
@@ -143,8 +119,6 @@ await start();
                 <Button label="Сохранить" @click="handleUpdating"/>
                 <Button label="Отмена" severity="danger" outlined @click="disableEditing"/>
             </div>
-            <FileUpload mode="basic" name="demo[]" url="/media/student-avatars" accept="image/*" @uploader="customUploader"
-            @beforeSend="q"/>
         </div>
     </div>
 </template>

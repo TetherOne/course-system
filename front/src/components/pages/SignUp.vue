@@ -25,7 +25,7 @@ import {
     PromiseNoParamsNoReturn
 } from '#types';
 
-import { authApp } from '#requests';
+import { signUp, isUserSignedIn } from '#requests';
 
 
 
@@ -65,9 +65,9 @@ async function handleRegistration(): Promise<void> {
             return;
         }
 
-        await authApp.signUp(username.value, email.value, password.value, isTeacher.value);
+        await signUp(username.value, email.value, password.value, isTeacher.value);
 
-        if (await authApp.userSignedIn()) {
+        if (await isUserSignedIn()) {
             await user.loadData();
             await redirectToUserProfile();
         } else {

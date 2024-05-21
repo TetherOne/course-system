@@ -35,10 +35,11 @@ import {
 } from '#types';
 
 import {
-    userApp,
-    checkpointApp,
-    questionApp,
-    history
+    addAnswer,
+    addQuestion, getCheckpoint, getStudentGradeOnCheckpoint,
+    sendQuestionChoice,
+    sendResultOnCheckpoint
+
 } from '#requests';
 
 import Header from '#elements/Header';
@@ -115,9 +116,9 @@ async function onComplete(): Promise<void> {
         async accept() {
             try {
                 for (const question of questions.value) {
-                    await history.sendQuestionChoice(user.id, question.id, question.chosenAnswer as number, id.value);
+                    await sendQuestionChoice(user.id, question.id, question.chosenAnswer as number, id.value);
                 }
-                await checkpointApp.sendResult(user.id, id.value);
+                await sendResultOnCheckpoint(user.id, id.value);
             } catch (error) {
                 await handleRequestError(error as AxiosError);
             }
@@ -155,14 +156,14 @@ async function handleAddingQuestion(): Promise<void> {
     }
 
     try {
-        const question: Question = await questionApp.addQuestion(questionMaker.value.text, questionMaker.value.value, id.value);
+        const question: Question = await addQuestion(questionMaker.value.text, questionMaker.value.value, id.value);
 
         questionMaker.value.answers.forEach((answer, i) => {
             answer.isCorrect = i === questionMaker.value.indexOfRightAnswer;
         });
 
         for (const answer of questionMaker.value.answers) {
-            question.answers.push(await questionApp.addAnswer(
+            question.answers.push(await addAnswer(
                 answer.text,
                 answer.isCorrect as boolean,
                 question.id
@@ -180,14 +181,14 @@ async function handleAddingQuestion(): Promise<void> {
 
 
 try {
-    const checkpoint: Checkpoint = await checkpointApp.checkpoint(id.value);
+    const checkpoint: Checkpoint = await getCheckpoint(id.value);
 
     name.value = checkpoint.name;
     number.value = checkpoint.checkpoint_number;
     questions.value = checkpoint.questions;
 
     if (user.isStudent) {
-        const res: number | '-' = await userApp.getStudentGradeOnCheckpoint(user.id, id.value);
+        const res: number | '-' = await getStudentGradeOnCheckpoint(user.id, id.value);
 
         if (res !== '-') {
             passedByCurrentStudent.value = true;

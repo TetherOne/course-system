@@ -22,8 +22,8 @@ import UserSkeleton from '#pages/UserSkeleton';
 import CourseSkeleton from '#pages/CourseSkeleton';
 
 import {
-    authApp,
-    setCSRF_token
+
+    setCSRF_token, isUserSignedIn
 } from '#requests';
 await setCSRF_token();
 
@@ -92,7 +92,7 @@ async function redirectToUserProfile(): Promise<void> {
 
 
 
-if (await authApp.userSignedIn()) {
+if (await isUserSignedIn()) {
     await user.loadData();
     if (userInAuth()) {
         await redirectToUserProfile();

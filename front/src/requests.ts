@@ -18,41 +18,44 @@ import {
 
 
 
-const API_URL: string = '/api';
+const API: string = '/api';
 
-const userAppURL: string = `${API_URL}/userapp`;
+const userApp: string = `${API}/userapp`;
+const courseApp: string = `${API}/courseapp`;
+const checkpointApp: string = `${API}/checkpointapp`;
+const questionApp: string = `${API}/questionapp`;
+const historyApp: string = `${API}/history`;
+const authApp: string = `${API}/authapp`;
 
-const studentsURL: string = `${userAppURL}/students/`;
+const getURL = (URL: string, id?: number): string => {
+    if (id)
+        URL = `${URL}${id}/`;
+    return URL;
+}
 
-const teachersURL: string = `${userAppURL}/teachers/`;
+const users = (id?: number) => getURL(`${userApp}/users/`, id);
+const students = (id?: number) => getURL(`${userApp}/students/`, id);
+const teachers = (id?: number) => getURL(`${userApp}/teachers/`, id);
 
-const courseAppURL: string = `${API_URL}/courseapp`;
+const courses = (id?: number) => getURL(`${courseApp}/courses/`, id);
+const modules = (id?: number) => getURL(`${courseApp}/modules/`, id);
+const lessons = (id?: number) => getURL(`${courseApp}/lessons/`, id);
+const lessonsFiles = (id?: number) => getURL(`${courseApp}/lesson-other-files/`, id);
+const enrollments = (id?: number) => getURL(`${courseApp}/enrollments/`, id);
 
-const coursesURL: string = `${courseAppURL}/courses/`;
-const modulesURL: string = `${courseAppURL}/modules/`;
-const lessonsURL: string = `${courseAppURL}/lessons/`;
-const lessonsFilesURL: string = `${courseAppURL}/lesson-other-files/`;
-const enrollmentsURL: string = `${courseAppURL}/enrollments/`;
+const checkpoints = (id?: number) => getURL(`${checkpointApp}/checkpoints/`, id);
+const passedCheckpoints = (id?: number) => getURL(`${checkpointApp}/passed-checkpoints/`, id);
+const summaries = (id?: number) => getURL(`${checkpointApp}/summaries/`, id);
 
-const checkpointAppURL: string = `${API_URL}/checkpointapp`;
+const questions = (id?: number) => getURL(`${questionApp}/questions`, id);
+const answers = (id?: number) => getURL(`${questionApp}/answers`, id);
 
-const checkpointsURL: string = `${checkpointAppURL}/checkpoints/`;
-const passedCheckpointsURL: string = `${checkpointAppURL}/passed-checkpoints/`;
+const questionsChoices = (id?: number) => getURL(`${historyApp}/history-of-passed-answers/`, id);
 
-const questionAppURL: string = `${API_URL}/questionapp`;
-
-const questionsURL: string = `${questionAppURL}/questions/`;
-const answersURL: string = `${questionAppURL}/answers/`;
-
-const historyURL: string = `${API_URL}/history`;
-const questionsChoicesHistoryURL: string = `${historyURL}/history-of-passed-answers/`;
-
-const authAppURL: string = `${API_URL}/authapp`;
-
-const signInURL: string = `${authAppURL}/login/`;
-const signUpURL: string = `${authAppURL}/register/`;
-const signOutURL: string = `${authAppURL}/logout/`;
-const currentUserURL: string = `${authAppURL}/current-user/`;
+const signInURL: string = `${authApp}/login/`;
+const signUpURL: string = `${authApp}/register/`;
+const signOutURL: string = `${authApp}/logout/`;
+const currentUser: string = `${authApp}/current-user/`;
 
 const standardConfig: AxiosRequestConfig = {
     params: {
@@ -62,279 +65,312 @@ const standardConfig: AxiosRequestConfig = {
 
 
 
-async function getEntity(URL: string, id: number): Promise<any> {
-    return (await axios.get(`${URL}${id}/`, standardConfig)).data;
+async function getEntity(URL: string): Promise<any> {
+    return (await axios.get(URL, standardConfig)).data;
 }
 
-export const userApp = {
-    async student(id: number): Promise<Student> {
-        return await getEntity(studentsURL, id);
-    },
-    async studentCourses(id: number): Promise<Course[]> {
-        const enrollments: Enrollment[] = await this.studentEnrollments(id);
-        const courses: Course[] = [];
-        for (const enrollment of enrollments) {
-            courses.push(await courseApp.course(enrollment.course));
-        }
-        return courses;
-    },
-    async studentHasCourse(studentId: number, courseId: number): Promise<boolean> {
-        const courses: Course[] = await this.studentCourses(studentId);
-        return courses.some(course => course.id === courseId);
-    },
-    async studentEnrollments(id: number): Promise<Enrollment[]> {
-        const config: AxiosRequestConfig = structuredClone(standardConfig);
-        config.params.student = id;
-        return (await axios.get(enrollmentsURL, config)).data;
-    },
-    async studentGradesInCourse(studentId: number, courseId: number) {
-        const checkpoints: Checkpoint[] = await courseApp.courseCheckpoints(courseId);
-        const grades = [];
-        for (const cp of checkpoints) {
-            const grade = {
-                number: cp.checkpoint_number,
-                name: cp.name,
-                grade: await this.getStudentGradeOnCheckpoint(studentId, cp.id)
-            };
-            grades.push(grade);
-        }
-        return grades;
-    },
-    async studentPassedCheckpoints(id: number): Promise<PassedCheckpoint[]> {
-        const config: AxiosRequestConfig = structuredClone(standardConfig);
-        config.params.student = id;
-        return (await axios.get(passedCheckpointsURL, config)).data;
-    },
-    async getStudentGradeOnCheckpoint(studentId: number, checkpointId: number): Promise<number | '-'> {
-        let passedCheckpoints: PassedCheckpoint[] = await this.studentPassedCheckpoints(studentId);
-        passedCheckpoints = passedCheckpoints.filter(cp => cp.checkpoint === checkpointId);
 
-        if (!passedCheckpoints.length) {
-            return '-';
-        }
 
-        const passedCheckpoint: PassedCheckpoint = passedCheckpoints[0];
-        const checkpoint: Checkpoint = await checkpointApp.checkpoint(checkpointId);
-        let maxPoints: number = 0;
-        for (const question of checkpoint.questions) {
-            maxPoints += question.max_points;
-        }
-        let grade: number = passedCheckpoint.points / maxPoints;
+export async function getStudent(id: number): Promise<Student> {
+    return await getEntity(students(id));
+}
 
-        if (grade > .8) {
-            return 5;
-        } else if (grade > .6) {
-            return 4;
-        } else if (grade > .4) {
-            return 3;
-        } else {
-            return 2;
-        }
-    },
-    async teacher(id: number): Promise<Teacher> {
-        return await getEntity(teachersURL, id);
-    },
-    async teacherCourses(id: number): Promise<Course[]> {
-        const config: AxiosRequestConfig = structuredClone(standardConfig);
-        config.params.teacher_profile = id;
-        return (await axios.get(coursesURL, config)).data;
+export async function getStudentCourses(id: number): Promise<Course[]> {
+    const enrollments: Enrollment[] = await getStudentEnrollments(id);
+    const courses: Course[] = [];
+    for (const enrollment of enrollments) {
+        courses.push(await getCourse(enrollment.course));
     }
-};
+    return courses;
+}
 
-export const courseApp = {
-    async course(id: number): Promise<Course> {
-        return await getEntity(coursesURL, id);
-    },
-    async courseStudents(id: number): Promise<Student[]> {
-        const enrollments: Enrollment[] = await this.courseEnrollments(id);
-        const students: Student[] = [];
-        for (const enrollment of enrollments) {
-            students.push(await userApp.student(enrollment.student));
-        }
-        return students;
-    },
-    async courseModules(id: number): Promise<Module[]> {
-        const config: AxiosRequestConfig = structuredClone(standardConfig);
-        config.params.course = id;
-        return (await axios.get(modulesURL, config)).data;
-    },
-    async courseEnrollments(id: number): Promise<Enrollment[]> {
-        const config: AxiosRequestConfig = structuredClone(standardConfig);
-        config.params.course = id;
-        return (await axios.get(enrollmentsURL, config)).data;
-    },
-    async courseCheckpoints(id: number): Promise<Checkpoint[]> {
-        const modules: Module[] = await this.courseModules(id);
-        const checkpoints: Checkpoint[] = [];
-        for (const module of modules) {
-            const moduleCheckpoints: Checkpoint[] = await this.moduleCheckpoints(module.id);
-            for (const cp of moduleCheckpoints) {
-                checkpoints.push(cp);
-            }
-        }
-        return checkpoints;
-    },
-    async numberOfLastCheckpointInCourse(id: number): Promise<number> {
-        const checkpoints: Checkpoint[] = await this.courseCheckpoints(id);
-        return checkpoints.length;
-    },
-    async addCourse(course_name: string, description: string, teacher_profile: number, password: string): Promise<Course> {
-        return (await axios.postForm(coursesURL, {
-            course_name,
-            description,
-            status: true,
-            teacher_profile,
-            image: '',
-            password
-        })).data;
-    },
-    async deleteCourse(id: number): Promise<void> {
-        await axios.delete(`${coursesURL}${id}/`);
-    },
-    async module(id: number): Promise<Module> {
-        return await getEntity(modulesURL, id);
-    },
-    async moduleLessons(id: number): Promise<Lesson[]> {
-        const config: AxiosRequestConfig = structuredClone(standardConfig);
-        config.params.module = id;
-        return (await axios.get(lessonsURL, config)).data;
-    },
-    async moduleCheckpoints(id: number): Promise<Checkpoint[]> {
-        const config: AxiosRequestConfig = structuredClone(standardConfig);
-        config.params.module = id;
-        return (await axios.get(checkpointsURL, config)).data;
-    },
-    async addModule(name: string, course: number): Promise<Module> {
-        return (await axios.postForm(modulesURL, {
-            name,
-            course,
-            status: true
-        })).data;
-    },
-    async lesson(id: number): Promise<Lesson> {
-        return await getEntity(lessonsURL, id);
-    },
-    async lessonFiles(id: number): Promise<LessonFile[]> {
-        const config: AxiosRequestConfig = structuredClone(standardConfig);
-        config.params.lesson = id;
-        return (await axios.get(lessonsFilesURL, config)).data;
-    },
-    async addLesson(name: string, module: number): Promise<Lesson> {
-        return (await axios.postForm(lessonsURL, {
-            name,
-            description: '',
-            module,
-            video: '',
-            status: true
-        })).data;
-    },
-    async updateLesson(id: number, updated: Partial<Lesson>): Promise<Lesson> {
-        return (await axios.patchForm(`${lessonsURL}${id}/`, updated)).data;
-    },
-    async enroll(student: number, course: number, course_password: string): Promise<Enrollment> {
-        return (await axios.postForm(enrollmentsURL, {
-            student,
-            course,
-            course_password
-        })).data;
-    }
-};
+export async function getStudentEnrollments(id: number): Promise<Enrollment[]> {
+    const config: AxiosRequestConfig = structuredClone(standardConfig);
+    config.params.student = id;
+    return (await axios.get(enrollments(), config)).data;
+}
 
-export const checkpointApp = {
-    async checkpoint(id: number): Promise<Checkpoint> {
-        return await getEntity(checkpointsURL, id);
-    },
-    async addCheckpoint(name: string, module: number): Promise<Checkpoint> {
-        return (await axios.postForm(checkpointsURL, {
-            name,
-            module,
-            checkpoint_number: await courseApp.numberOfLastCheckpointInCourse((await courseApp.module(module)).course) + 1
-        })).data;
-    },
-    async sendResult(student: number, checkpoint: number): Promise<PassedCheckpoint> {
-        return (await axios.postForm(passedCheckpointsURL, {
-            student,
-            checkpoint,
-            points: 0
-        })).data;
+export async function getStudentGradesInCourse(studentId: number, courseId: number) {
+    const checkpoints: Checkpoint[] = await getCourseCheckpoints(courseId);
+    const grades = [];
+    for (const cp of checkpoints) {
+        const grade = {
+            number: cp.checkpoint_number,
+            name: cp.name,
+            grade: await getStudentGradeOnCheckpoint(studentId, cp.id)
+        };
+        grades.push(grade);
     }
-};
+    return grades;
+}
 
-export const questionApp = {
-    async addQuestion(question_text: string, max_points: number, checkpoint: number): Promise<Question> {
-        return (await axios.postForm(questionsURL, {
-            question_text,
-            max_points,
-            checkpoint
-        })).data;
-    },
-    async addAnswer(answer_text: string, is_correct: boolean, question: number): Promise<Answer> {
-        return (await axios.postForm(answersURL, {
-            answer_text,
-            is_correct,
-            question
-        })).data;
-    }
-};
+export async function doesStudentHaveCourse(studentId: number, courseId: number): Promise<boolean> {
+    const courses: Course[] = await getStudentCourses(studentId);
+    return courses.some(course => course.id === courseId);
+}
 
-export const history = {
-    async sendQuestionChoice(student: number, question: number, selected_answer: number, checkpoint: number): Promise<QuestionChoice> {
-        return (await axios.postForm(questionsChoicesHistoryURL, {
-            student,
-            question,
-            selected_answer,
-            checkpoint
-        })).data;
-    }
-};
+export async function getStudentPassedCheckpoints(id: number): Promise<PassedCheckpoint[]> {
+    const config: AxiosRequestConfig = structuredClone(standardConfig);
+    config.params.student = id;
+    return (await axios.get(passedCheckpoints(), config)).data;
+}
 
-export const authApp = {
-    async userSignedIn(): Promise<boolean> {
-        const currentUser: CurrentUser = await this.currentUser();
-        return !!currentUser.id;
-    },
-    async signIn(email: string, password: string): Promise<void> {
-        const a = await axios.post(signInURL, {
-            username: email,
-            password
-        });
-        const r = a;
-        console.log(r)
-    },
-    async signUp(username: string, email: string, password1: string, is_teacher: boolean): Promise<any> {
-        return (await axios.postForm(signUpURL, {
-            username,
-            email,
-            password1,
-            is_teacher
-        })).data;
-    },
-    async signOut(): Promise<void> {
-        await axios.get(signOutURL);
-    },
-    async currentUser(): Promise<CurrentUser> {
-        return (await axios.get(currentUserURL)).data;
+export async function getStudentGradeOnCheckpoint(studentId: number, checkpointId: number): Promise<number | '-'> {
+    let passedCheckpoints: PassedCheckpoint[] = await getStudentPassedCheckpoints(studentId);
+    passedCheckpoints = passedCheckpoints.filter(cp => cp.checkpoint === checkpointId);
+
+    if (!passedCheckpoints.length) {
+        return '-';
     }
-};
+
+    const passedCheckpoint: PassedCheckpoint = passedCheckpoints[0];
+    const checkpoint: Checkpoint = await getCheckpoint(checkpointId);
+    let maxPoints: number = 0;
+    for (const question of checkpoint.questions) {
+        maxPoints += question.max_points;
+    }
+    let grade: number = passedCheckpoint.points / maxPoints;
+
+    if (grade > .8) {
+        return 5;
+    } else if (grade > .6) {
+        return 4;
+    } else if (grade > .4) {
+        return 3;
+    } else {
+        return 2;
+    }
+}
 
 export async function updateStudent(id: number, updated: Student): Promise<Student> {
-    const URL: string = studentsURL + id + '/';
+    const URL: string = students(id);
     const response = await axios.patchForm(URL, updated);
     const data = response.data;
     return data;
+}
+
+
+
+export async function getTeacher(id: number): Promise<Teacher> {
+    return await getEntity(teachers(id));
+}
+
+export async function getTeacherCourses(id: number): Promise<Course[]> {
+    const config: AxiosRequestConfig = structuredClone(standardConfig);
+    config.params.teacher_profile = id;
+    return (await axios.get(courses(), config)).data;
 }
 
 export async function updateTeacher(id: number, updated: Teacher): Promise<Teacher> {
-    const URL: string = teachersURL + id + '/';
+    const URL: string = teachers(id);
     const response = await axios.patchForm(URL, updated);
     const data = response.data;
     return data;
 }
 
-export async function addStudentAvatar(avatar: any) {
-    const URL: string = `/media/student-avatars`;
-    const res = await axios.post(URL, avatar);
-    return res.data;
+
+
+export async function getCourse(id: number): Promise<Course> {
+    return await getEntity(courses(id));
+}
+
+export async function getCourseStudents(id: number): Promise<Student[]> {
+    const enrollments: Enrollment[] = await getCourseEnrollments(id);
+    const students: Student[] = [];
+    for (const enrollment of enrollments) {
+        students.push(await getStudent(enrollment.student));
+    }
+    return students;
+}
+export async function getCourseModules(id: number): Promise<Module[]> {
+    const config: AxiosRequestConfig = structuredClone(standardConfig);
+    config.params.course = id;
+    return (await axios.get(modules(), config)).data;
+}
+export async function getCourseEnrollments(id: number): Promise<Enrollment[]> {
+    const config: AxiosRequestConfig = structuredClone(standardConfig);
+    config.params.course = id;
+    return (await axios.get(enrollments(), config)).data;
+}
+
+export async function getCourseCheckpoints(id: number): Promise<Checkpoint[]> {
+    const modules: Module[] = await getCourseModules(id);
+    const checkpoints: Checkpoint[] = [];
+    for (const module of modules) {
+        const moduleCheckpoints: Checkpoint[] = await getModuleCheckpoints(module.id);
+        for (const cp of moduleCheckpoints) {
+            checkpoints.push(cp);
+        }
+    }
+    return checkpoints;
+}
+
+export async function getNumberOfLastCheckpointInCourse(id: number): Promise<number> {
+    const checkpoints: Checkpoint[] = await getCourseCheckpoints(id);
+    return checkpoints.length;
+}
+
+export async function addCourse(course_name: string, description: string, teacher_profile: number, password: string): Promise<Course> {
+    return (await axios.postForm(courses(), {
+        course_name,
+        description,
+        status: true,
+        teacher_profile,
+        image: '',
+        password
+    })).data;
+}
+
+export async function deleteCourse(id: number): Promise<void> {
+    await axios.delete(courses(id));
+}
+
+
+
+export async function getModule(id: number): Promise<Module> {
+    return await getEntity(modules(id));
+}
+
+export async function getModuleLessons(id: number): Promise<Lesson[]> {
+    const config: AxiosRequestConfig = structuredClone(standardConfig);
+    config.params.module = id;
+    return (await axios.get(lessons(), config)).data;
+}
+
+export async function getModuleCheckpoints(id: number): Promise<Checkpoint[]> {
+    const config: AxiosRequestConfig = structuredClone(standardConfig);
+    config.params.module = id;
+    return (await axios.get(checkpoints(), config)).data;
+}
+
+export async function addModule(name: string, course: number): Promise<Module> {
+    return (await axios.postForm(modules(), {
+        name,
+        course,
+        status: true
+    })).data;
+}
+
+
+
+export async function getLesson(id: number): Promise<Lesson> {
+    return await getEntity(lessons(id));
+}
+
+export async function getLessonFiles(id: number): Promise<LessonFile[]> {
+    const config: AxiosRequestConfig = structuredClone(standardConfig);
+    config.params.lesson = id;
+    return (await axios.get(lessonsFiles(), config)).data;
+}
+
+export async function addLesson(name: string, module: number): Promise<Lesson> {
+    return (await axios.postForm(lessons(), {
+        name,
+        description: '',
+        module,
+        video: '',
+        status: true
+    })).data;
+}
+
+export async function updateLesson(id: number, updated: Partial<Lesson>): Promise<Lesson> {
+    return (await axios.patchForm(lessons(id), updated)).data;
+}
+
+
+
+export async function addEnrollment(student: number, course: number, course_password: string): Promise<Enrollment> {
+    return (await axios.postForm(enrollments(), {
+        student,
+        course,
+        course_password
+    })).data;
+}
+
+
+
+export async function getCheckpoint(id: number): Promise<Checkpoint> {
+    return await getEntity(checkpoints(id));
+}
+
+export async function addCheckpoint(name: string, module: number): Promise<Checkpoint> {
+    return (await axios.postForm(checkpoints(), {
+        name,
+        module,
+        checkpoint_number: await getNumberOfLastCheckpointInCourse((await getModule(module)).course) + 1
+    })).data;
+}
+
+
+
+export async function sendResultOnCheckpoint(student: number, checkpoint: number): Promise<PassedCheckpoint> {
+    return (await axios.postForm(passedCheckpoints(), {
+        student,
+        checkpoint,
+        points: 0
+    })).data;
+}
+
+
+
+export async function addQuestion(question_text: string, max_points: number, checkpoint: number): Promise<Question> {
+    return (await axios.postForm(questions(), {
+        question_text,
+        max_points,
+        checkpoint
+    })).data;
+}
+
+export async function addAnswer(answer_text: string, is_correct: boolean, question: number): Promise<Answer> {
+    return (await axios.postForm(answers(), {
+        answer_text,
+        is_correct,
+        question
+    })).data;
+}
+
+
+
+export async function sendQuestionChoice(student: number, question: number, selected_answer: number, checkpoint: number): Promise<QuestionChoice> {
+    return (await axios.postForm(questionsChoices(), {
+        student,
+        question,
+        selected_answer,
+        checkpoint
+    })).data;
+}
+
+
+
+export async function isUserSignedIn(): Promise<boolean> {
+    const currentUser: CurrentUser = await getCurrentUser();
+    return !!currentUser.id;
+}
+
+export async function signIn(email: string, password: string): Promise<void> {
+    const a = await axios.post(signInURL, {
+        username: email,
+        password
+    });
+    const r = a;
+    console.log(r)
+}
+
+export async function signUp(username: string, email: string, password1: string, is_teacher: boolean): Promise<any> {
+    return (await axios.postForm(signUpURL, {
+        username,
+        email,
+        password1,
+        is_teacher
+    })).data;
+}
+
+export async function signOut(): Promise<void> {
+    await axios.get(signOutURL);
+}
+
+export async function getCurrentUser(): Promise<CurrentUser> {
+    return (await axios.get(currentUser)).data;
 }
 
 export async function setCSRF_token(): Promise<void> {

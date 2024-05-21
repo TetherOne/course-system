@@ -22,7 +22,9 @@ import {
     Course
 } from '#types';
 
-import { courseApp } from '#requests';
+import {
+    addCourse
+} from '#requests';
 
 import CourseCard from '#elements/CourseCard';
 
@@ -63,7 +65,7 @@ async function onAddCourse(): Promise<void> {
     }
 
     try {
-        props.courses.push(await courseApp.addCourse(newCourse.value.name, newCourse.value.description, user.id, newCourse.value.password));
+        props.courses.push(await addCourse(newCourse.value.name, newCourse.value.description, user.id, newCourse.value.password));
         newCourse.value.dialogVisible = false;
     } catch (error) {
         await handleRequestError(error as AxiosError);

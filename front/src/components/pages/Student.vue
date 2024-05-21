@@ -16,7 +16,7 @@ import {
 
 import { shortenName } from '#functions';
 
-import { userApp } from '#requests';
+import { getStudentCourses, getTeacher } from '#requests';
 
 import Header from '#elements/Header';
 import UserAvatar from '#elements/UserAvatar';
@@ -34,9 +34,9 @@ const courses: Ref<Course[]> = ref([]);
 
 
 try {
-    courses.value = await userApp.studentCourses(user.id);
+    courses.value = await getStudentCourses(user.id);
     for (const course of courses.value) {
-        course.teacherShortName = shortenName(await userApp.teacher(course.teacher_profile));
+        course.teacherShortName = shortenName(await getTeacher(course.teacher_profile));
     }
 } catch (error) {
     await handleRequestError(error as AxiosError);

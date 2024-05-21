@@ -42,7 +42,7 @@ import {
 
 import Path from '#src/classes/Path';
 
-import { courseApp } from '#requests';
+import { getLesson, getLessonFiles, updateLesson } from '#requests';
 
 import Header from '#elements/Header';
 
@@ -98,7 +98,7 @@ function openEditor(): void {
 
 async function onUpdateLesson(): Promise<void> {
     try {
-        await courseApp.updateLesson(id.value, {
+        await updateLesson(id.value, {
             description: editor.value.data
         });
         noticeSuccess('Документ изменён');
@@ -111,14 +111,14 @@ async function onUpdateLesson(): Promise<void> {
 
 
 try {
-    const lesson: Lesson = await courseApp.lesson(id.value);
+    const lesson: Lesson = await getLesson(id.value);
 
     name.value = lesson.name;
     description.value = lesson.description;
     videoPath.value = lesson.video ?? '';
     moduleId.value = lesson.module;
 
-    files.value = await courseApp.lessonFiles(id.value);
+    files.value = await getLessonFiles(id.value);
     for (const file of files.value) {
         file.name = decodeURIComponent(Path.getLastElement(file.other_file));
     }
