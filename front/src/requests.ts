@@ -294,10 +294,12 @@ export const authApp = {
         return !!currentUser.id;
     },
     async signIn(email: string, password: string): Promise<void> {
-        await axios.postForm(signInURL, {
+        const a = await axios.post(signInURL, {
             username: email,
             password
         });
+        const r = a;
+        console.log(r)
     },
     async signUp(username: string, email: string, password1: string, is_teacher: boolean): Promise<any> {
         return (await axios.postForm(signUpURL, {
@@ -329,8 +331,15 @@ export async function updateTeacher(id: number, updated: Teacher): Promise<Teach
     return data;
 }
 
-export async function addStudentAvatar(filename: string, avatar: any) {
-    const URL: string = `/media/student-avatars/${filename}`;
+export async function addStudentAvatar(avatar: any) {
+    const URL: string = `/media/student-avatars`;
     const res = await axios.post(URL, avatar);
     return res.data;
+}
+
+export async function setCSRF_token(): Promise<void> {
+    await axios.get('/api/authapp/get_csrf_token');
+    const token = document.cookie.split('=')[1];
+    axios.defaults.headers.common['X-CSRFTOKEN'] = token;
+    axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
 }

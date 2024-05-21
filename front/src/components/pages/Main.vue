@@ -21,8 +21,11 @@ import useUserStore from '#store';
 import UserSkeleton from '#pages/UserSkeleton';
 import CourseSkeleton from '#pages/CourseSkeleton';
 
-import { authApp } from '#requests';
-
+import {
+    authApp,
+    setCSRF_token
+} from '#requests';
+await setCSRF_token();
 
 
 const user = useUserStore();
