@@ -294,7 +294,7 @@ export const authApp = {
         return !!currentUser.id;
     },
     async signIn(email: string, password: string): Promise<void> {
-        const a = await axios.post(signInURL, {
+        const a = await axios.postForm(signInURL, {
             username: email,
             password
         });
