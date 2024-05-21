@@ -91,14 +91,15 @@ async function redirectToUserProfile(): Promise<void> {
 
 
 
+await authApp.setCSRF_token();
+
 if (await authApp.isUserSignedIn()) {
     await user.loadData();
     if (userInAuth())
         await redirectToUserProfile();
 } else {
-    await authApp.setCSRF_token();if (!userInAuth()) {
+    if (!userInAuth())
         await router.push({ name: 'signIn' });
-    }
 }
 
 provide('noticeSuccess', noticeSuccess);

@@ -180,14 +180,14 @@ export const courseApp = {
         const checkpoints: Checkpoint[] = await this.courseCheckpoints(id);
         return checkpoints.length;
     },
-    async addCourse(course_name: string, description: string, teacher_profile: number, password: string): Promise<Course> {
+    async addCourse(course_name: string, description: string, teacher_profile: number, course_password: string): Promise<Course> {
         return (await axios.postForm(coursesURL, {
             course_name,
             description,
             status: true,
             teacher_profile,
             image: '',
-            password
+            course_password
         })).data;
     },
     async deleteCourse(id: number): Promise<void> {
@@ -294,6 +294,7 @@ export const authApp = {
     async setCSRF_token(): Promise<void> {
         await axios.get(CSRF_URL);
         const token: string = Cookies.get('csrftoken') as string;
+        console.log(`CSRF token changed: ${token}`);
         axios.defaults.headers.common['X-CSRFTOKEN'] = token;
         axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
     },
