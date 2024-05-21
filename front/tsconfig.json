@@ -25,10 +25,16 @@
             "#src/*": [
                 "./src/*.ts",
                 "./src/*.vue",
+                "./src/*.css",
                 "./src/*.scss"
+            ],
+            "#styles/*": [
+                "./src/styles/*.css",
+                "./src/styles/*.sass"
             ],
             "#enums": ["./src/enums.ts"],
             "#types": ["./src/types.ts"],
+            "#classes/*": ["./src/classes/*.ts"],
             "#functions": ["./src/functions.ts"],
             "#store": ["./src/store.ts"],
             "#router": ["./src/router.ts"],

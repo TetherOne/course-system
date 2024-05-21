@@ -37,7 +37,7 @@ const noticeError: Notice = inject('noticeError') as Notice;
 const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
 const redirectToUserProfile: PromiseNoParamsNoReturn = inject('redirectToUserProfile') as PromiseNoParamsNoReturn;
 
-if (await authApp.userSignedIn()) {
+if (await authApp.isUserSignedIn()) {
     await redirectToUserProfile();
 }
 
@@ -64,8 +64,9 @@ async function onSignIn(): Promise<void> {
     try {
         await authApp.signIn(email.value, password.value);
 
-        if (await authApp.userSignedIn()) {
+        if (await authApp.isUserSignedIn()) {
             await user.loadData();
+            await authApp.setCSRF_token();
             await redirectToUserProfile();
         } else {
             noticeError('Проверьте правильность введённых данных и повторите попытку', 'Не удалось войти');

@@ -35,6 +35,7 @@ export default defineConfig({
     },
     resolve: {
         extensions: [
+            '.css',
             '.scss',
             '.ts',
             '.vue'
@@ -42,8 +43,10 @@ export default defineConfig({
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
             '#src': '/src',
+            '#styles': '/src/styles',
             '#enums': '/src/enums.ts',
             '#types': '/src/types.ts',
+            '#classes': '/src/classes',
             '#functions': '/src/functions.ts',
             '#store': '/src/store.ts',
             '#router': '/src/router.ts',

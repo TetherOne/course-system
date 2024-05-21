@@ -25,6 +25,7 @@ from config import (
 )
 
 
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8001']
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

@@ -70,7 +70,7 @@ function toggleMenu(event: Event): void {
                 <div class="flexColumn alignCenter">
                     <UserAvatar size="normal" :avatarPath="user.avatar" :name="user.name"/>
                     <div>
-                        {{ user.name }} {{ user.surname }}
+                        {{ user.fullName }}
                     </div>
                 </div>
             </template>

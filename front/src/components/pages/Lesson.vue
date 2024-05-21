@@ -26,7 +26,7 @@ import { Link } from '@ckeditor/ckeditor5-link';
 import { CodeBlock } from '@ckeditor/ckeditor5-code-block';
 
 import hljs from 'highlight.js';
-import '#src/atom-one-dark.css';
+import '#src/atom-one-dark';
 
 import Button from 'primevue/button';
 import Divider from 'primevue/divider';

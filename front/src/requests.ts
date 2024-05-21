@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import Cookies from 'js-cookie';
 
 import {
     Student,
@@ -16,15 +17,14 @@ import {
     CurrentUser
 } from '#types';
 
-import { getCSRF_token } from '#functions';
 
 
-
-const API_URL: string = 'http://127.0.0.1:8000/api';
+const API_URL: string = '/api';
 
 const userAppURL: string = `${API_URL}/userapp`;
 
 const studentsURL: string = `${userAppURL}/students/`;
+
 const teachersURL: string = `${userAppURL}/teachers/`;
 
 const courseAppURL: string = `${API_URL}/courseapp`;
@@ -50,8 +50,9 @@ const questionsChoicesHistoryURL: string = `${historyURL}/history-of-passed-answ
 
 const authAppURL: string = `${API_URL}/authapp`;
 
+const CSRF_URL: string = `${authAppURL}/csrf/`;
 const signInURL: string = `${authAppURL}/login/`;
-// const signUpURL: string = `${authAppURL}/register/`;
+const signUpURL: string = `${authAppURL}/register/`;
 const signOutURL: string = `${authAppURL}/logout/`;
 const currentUserURL: string = `${authAppURL}/current-user/`;
 
@@ -62,12 +63,6 @@ const standardConfig: AxiosRequestConfig = {
 };
 
 
-
-function getHeadersWithCSRF_token() {
-    return {
-        'X-CSRFTOKEN': getCSRF_token()
-    };
-}
 
 async function getEntity(URL: string, id: number): Promise<any> {
     return (await axios.get(`${URL}${id}/`, standardConfig)).data;
@@ -192,14 +187,11 @@ export const courseApp = {
             status: true,
             teacher_profile,
             image: '',
-            password,
-            csrfmiddlewaretoken: getCSRF_token()
+            password
         })).data;
     },
     async deleteCourse(id: number): Promise<void> {
-        const config: AxiosRequestConfig = structuredClone(standardConfig);
-        config.headers = getHeadersWithCSRF_token();
-        await axios.delete(`${coursesURL}${id}/`, config);
+        await axios.delete(`${coursesURL}${id}/`);
     },
     async module(id: number): Promise<Module> {
         return await getEntity(modulesURL, id);
@@ -218,8 +210,7 @@ export const courseApp = {
         return (await axios.postForm(modulesURL, {
             name,
             course,
-            status: true,
-            csrfmiddlewaretoken: getCSRF_token()
+            status: true
         })).data;
     },
     async lesson(id: number): Promise<Lesson> {
@@ -236,21 +227,17 @@ export const courseApp = {
             description: '',
             module,
             video: '',
-            status: true,
-            csrfmiddlewaretoken: getCSRF_token()
+            status: true
         })).data;
     },
     async updateLesson(id: number, updated: Partial<Lesson>): Promise<Lesson> {
-        const config: AxiosRequestConfig = structuredClone(standardConfig);
-        config.headers = getHeadersWithCSRF_token();
         return (await axios.patchForm(`${lessonsURL}${id}/`, updated)).data;
     },
     async enroll(student: number, course: number, course_password: string): Promise<Enrollment> {
         return (await axios.postForm(enrollmentsURL, {
             student,
             course,
-            course_password,
-            csrfmiddlewaretoken: getCSRF_token()
+            course_password
         })).data;
     }
 };
@@ -263,16 +250,14 @@ export const checkpointApp = {
         return (await axios.postForm(checkpointsURL, {
             name,
             module,
-            checkpoint_number: await courseApp.numberOfLastCheckpointInCourse((await courseApp.module(module)).course) + 1,
-            csrfmiddlewaretoken: getCSRF_token()
+            checkpoint_number: await courseApp.numberOfLastCheckpointInCourse((await courseApp.module(module)).course) + 1
         })).data;
     },
     async sendResult(student: number, checkpoint: number): Promise<PassedCheckpoint> {
         return (await axios.postForm(passedCheckpointsURL, {
             student,
             checkpoint,
-            points: 0,
-            csrfmiddlewaretoken: getCSRF_token()
+            points: 0
         })).data;
     }
 };
@@ -282,19 +267,17 @@ export const questionApp = {
         return (await axios.postForm(questionsURL, {
             question_text,
             max_points,
-            checkpoint,
-            csrfmiddlewaretoken: getCSRF_token()
+            checkpoint
         })).data;
     },
     async addAnswer(answer_text: string, is_correct: boolean, question: number): Promise<Answer> {
         return (await axios.postForm(answersURL, {
             answer_text,
             is_correct,
-            question,
-            csrfmiddlewaretoken: getCSRF_token()
+            question
         })).data;
     }
-}
+};
 
 export const history = {
     async sendQuestionChoice(student: number, question: number, selected_answer: number, checkpoint: number): Promise<QuestionChoice> {
@@ -302,34 +285,36 @@ export const history = {
             student,
             question,
             selected_answer,
-            checkpoint,
-            csrfmiddlewaretoken: getCSRF_token()
+            checkpoint
         })).data;
     }
 };
 
 export const authApp = {
-    async userSignedIn(): Promise<boolean> {
+    async setCSRF_token(): Promise<void> {
+        await axios.get(CSRF_URL);
+        const token: string = Cookies.get('csrftoken') as string;
+        axios.defaults.headers.common['X-CSRFTOKEN'] = token;
+        axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
+    },
+    async isUserSignedIn(): Promise<boolean> {
         const currentUser: CurrentUser = await this.currentUser();
-        return !!currentUser.id;
+        return currentUser.id !== null;
     },
     async signIn(email: string, password: string): Promise<void> {
         await axios.postForm(signInURL, {
             username: email,
-            password,
-            csrfmiddlewaretoken: getCSRF_token()
+            password
         });
     },
-    // async signUp(username: string, email: string, password1: string, is_teacher: boolean): Promise<any> {
-    //     return (await axios.postForm(signUpURL, {
-    //         username,
-    //         email,
-    //         password1,
-    //         is_teacher,
-    //         csrfmiddlewaretoken: getCSRF_token(),
-    //         'g-recaptcha-response':
-    //     })).data;
-    // },
+    async signUp(username: string, email: string, password1: string, is_teacher: boolean): Promise<any> {
+        return (await axios.postForm(signUpURL, {
+            username,
+            email,
+            password1,
+            is_teacher
+        })).data;
+    },
     async signOut(): Promise<void> {
         await axios.get(signOutURL);
     },
@@ -337,3 +322,23 @@ export const authApp = {
         return (await axios.get(currentUserURL)).data;
     }
 };
+
+export async function updateStudent(id: number, updated: Student): Promise<Student> {
+    const URL: string = studentsURL + id + '/';
+    const response = await axios.patchForm(URL, updated);
+    const data = response.data;
+    return data;
+}
+
+export async function updateTeacher(id: number, updated: Teacher): Promise<Teacher> {
+    const URL: string = teachersURL + id + '/';
+    const response = await axios.patchForm(URL, updated);
+    const data = response.data;
+    return data;
+}
+
+export async function addStudentAvatar(avatar: any) {
+    const URL: string = `/media/student-avatars`;
+    const res = await axios.post(URL, avatar);
+    return res.data;
+}

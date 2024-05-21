@@ -3,7 +3,8 @@ import {
     Ref,
     ComputedRef,
     ref,
-    computed
+    computed,
+    inject
 } from 'vue';
 
 import InputGroup from 'primevue/inputgroup';
@@ -14,12 +15,25 @@ import InputSwitch from 'primevue/inputswitch';
 import Button from 'primevue/button';
 import Divider from 'primevue/divider';
 
-// import { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
-// import { authApp } from '#requests';
-// import { handleRequestError } from '#functions';
+import useUserStore from '#store';
+
+import {
+    Notice,
+    ErrorHandler,
+    PromiseNoParamsNoReturn
+} from '#types';
+
+import { authApp } from '#requests';
 
 
+
+const user = useUserStore();
+
+const noticeError = inject('noticeError') as Notice;
+const handleRequestError = inject('handleRequestError') as ErrorHandler;
+const redirectToUserProfile = inject('redirectToUserProfile') as PromiseNoParamsNoReturn;
 
 const btnWasPressed: Ref<boolean> = ref(false);
 
@@ -27,11 +41,6 @@ const username: Ref<string> = ref('');
 const email: Ref<string> = ref('');
 const password: Ref<string> = ref('');
 const isTeacher: Ref<boolean> = ref(false);
-const surname: Ref<string> = ref('');
-const name: Ref<string> = ref('');
-const fatherName: Ref<string> = ref('');
-const faculty: Ref<string> = ref('');
-const group: Ref<string> = ref('');
 
 const usernameInvalid: ComputedRef<boolean> = computed((): boolean => {
     return btnWasPressed.value && !username.value;
@@ -45,31 +54,33 @@ const passwordInvalid: ComputedRef<boolean> = computed((): boolean => {
     return btnWasPressed.value && !password.value;
 });
 
-const surnameInvalid: ComputedRef<boolean> = computed((): boolean => {
-    return btnWasPressed.value && !surname.value;
-});
-
-const nameInvalid: ComputedRef<boolean> = computed((): boolean => {
-    return btnWasPressed.value && !name.value;
-});
-
-const facultyInvalid: ComputedRef<boolean> = computed((): boolean => {
-    return btnWasPressed.value && !faculty.value;
-});
-
-const groupInvalid: ComputedRef<boolean> = computed((): boolean => {
-    return btnWasPressed.value && !isTeacher.value && !group.value;
-});
 
 
-
-async function onSignUp(): Promise<void> {
+async function handleRegistration(): Promise<void> {
     try {
-        // const data = await authApp.signUp(username.value, email.value, password.value, isTeacher.value);
-        // console.log(data);
+        btnWasPressed.value = true;
+
+        if (!areFieldsValid()) {
+            noticeError('Заполните все поля');
+            return;
+        }
+
+        await authApp.signUp(username.value, email.value, password.value, isTeacher.value);
+
+        if (await authApp.isUserSignedIn()) {
+            await user.loadData();
+            await authApp.setCSRF_token();
+            await redirectToUserProfile();
+        } else {
+            noticeError('Попробуйте повторить регистрацию позже', 'Не удалось зарегистрироваться');
+        }
     } catch (error) {
-        // handleRequestError(error as AxiosError);
+        await handleRequestError(error as AxiosError);
     }
+}
+
+function areFieldsValid(): boolean {
+    return !!username.value && !!email.value && !!password.value;
 }
 </script>
 
@@ -103,14 +114,10 @@ async function onSignUp(): Promise<void> {
                     Я преподаватель
                 </div>
             </div>
-            <InputText v-model="surname" placeholder="Фамилия" :invalid="surnameInvalid"/>
-            <InputText v-model="name" placeholder="Имя" :invalid="nameInvalid"/>
-            <InputText v-model="fatherName" placeholder="Отчество"/>
-            <InputText v-model="faculty" placeholder="Факультет" :invalid="facultyInvalid"/>
-            <InputText v-model="group" placeholder="Группа" :invalid="groupInvalid"/>
-            <Button label="Зарегистрироваться" icon="pi pi-sign-up" iconPos="right" class="alignSelfCenter" @click="onSignUp"/>
+            <Button label="Зарегистрироваться" icon="pi pi-sign-up" iconPos="right" class="alignSelfCenter"
+                    @click="handleRegistration"/>
             <Divider/>
-            <div class="flexRow alignCenter">
+            <div class="flexRow alignCenter alignSelfCenter">
                 <div>Уже зарегистрированы?</div>
                 <router-link class="signReverse" :to="{ name: 'signIn' }">
                     Войти

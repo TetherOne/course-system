@@ -1,3 +1,4 @@
+import django.middleware.csrf
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import (
     LoginView,
@@ -16,6 +17,13 @@ from rest_framework.views import APIView
 
 from authentication.forms import CustomPasswordResetForm, CustomUserCreationForm
 from authentication.serializers import CurrentUserSerializer
+
+from django.views.decorators.csrf import ensure_csrf_cookie
+
+
+@ensure_csrf_cookie
+def send_csrf_token(req: HttpRequest) -> HttpResponse:
+    return HttpResponse()
 
 
 class AboutMeView(TemplateView):

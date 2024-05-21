@@ -20,7 +20,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     is_teacher = forms.BooleanField(required=False)
     email = forms.EmailField()
-    captcha = ReCaptchaField()
+    #captcha = ReCaptchaField()
 
     class Meta:
 

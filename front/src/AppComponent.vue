@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import Main from '#pages/Main';
 import ProgressSpinner from 'primevue/progressspinner';
+
+import Main from '#pages/Main';
 </script>
 
 <template>

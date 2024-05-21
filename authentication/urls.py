@@ -1,6 +1,7 @@
 from django.urls import path
 
 from authentication.views import (
+    send_csrf_token,
     AboutMeView,
     CurrentUserView,
     MyLoginView,
@@ -17,6 +18,7 @@ app_name = "authentication"
 
 
 urlpatterns = [
+    path('csrf/', send_csrf_token),
     path(
         "login/",
         MyLoginView.as_view(),
