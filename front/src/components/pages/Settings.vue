@@ -12,6 +12,7 @@ import { AxiosError } from 'axios';
 import Button from 'primevue/button';
 import Divider from 'primevue/divider';
 import InputText from 'primevue/inputtext';
+import FileUpload, { FileUploadUploaderEvent } from 'primevue/fileupload';
 
 import useUserStore from '#store';
 
@@ -37,6 +38,8 @@ import UserAvatar from '#elements/UserAvatar';
 const user = useUserStore();
 
 const noticeSuccess: Notice = inject('noticeSuccess') as Notice;
+const noticeError: Notice = inject('noticeError') as Notice;
+
 const handleRequestError = inject('handleRequestError') as ErrorHandler;
 
 const surname: Ref<string> = ref('');
@@ -118,6 +121,23 @@ async function start(): Promise<void> {
     }
 }
 
+async function handleChangingAvatar(event: FileUploadUploaderEvent): Promise<void> {
+    const avatar: File = (event.files as File[])[0];
+
+    try {
+        if (user.isStudent)
+            await updateStudent(user.id, { avatar } as unknown as Student);
+        else
+            await updateTeacher(user.id, { avatar } as unknown as Teacher);
+
+        await user.loadData();
+        noticeSuccess('Аватар изменён');
+    } catch (error) {
+        const err: AxiosError = error as AxiosError;
+        noticeError(`Ошибка ${err.status}:\n${err.message}`, 'Не удалось обновить фото профиля');
+    }
+}
+
 
 
 await start();
@@ -132,6 +152,7 @@ await start();
             </div>
             <Divider/>
             <UserAvatar size="xlarge" :avatar-path="user.avatar" :name="user.name"/>
+            <FileUpload mode="basic" auto accept="image/*" customUpload @uploader="handleChangingAvatar"/>
             <div class="flexColumn input">
                 <label>Фамилия</label>
                 <InputText v-model="surname" variant="filled"/>

@@ -20,6 +20,7 @@ import CKEditor from '@ckeditor/ckeditor5-vue';
 import AppComponent from '#src/AppComponent';
 import '#src/style';
 import router from '#router';
+import locale from '#src/primevue_locale';
 
 
 
@@ -30,7 +31,7 @@ const pinia: Pinia = createPinia();
 
 app.use(pinia);
 app.use(router);
-app.use(PrimeVue);
+app.use(PrimeVue, { locale });
 app.use(ToastService);
 app.use(ConfirmationService);
 app.use(CKEditor);

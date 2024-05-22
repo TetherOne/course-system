@@ -68,7 +68,7 @@ function toggleMenu(event: Event): void {
         <Menu :model="menuItems" popup ref="menu">
             <template #start>
                 <div class="flexColumn alignCenter">
-                    <UserAvatar size="normal" :avatarPath="user.avatar" :name="user.name"/>
+                    <UserAvatar size="xlarge" :avatarPath="user.avatar" :name="user.name"/>
                     <div>
                         {{ user.fullName }}
                     </div>
