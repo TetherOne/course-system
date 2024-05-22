@@ -144,6 +144,9 @@ async function handleAddingQuestion(): Promise<void> {
             return false;
         }
 
+        if (questionMaker.value.answers.length < 2)
+            return false;
+
         for (const answer of questionMaker.value.answers) {
             if (!answer.text) {
                 return false;
