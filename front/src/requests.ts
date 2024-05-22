@@ -190,6 +190,10 @@ export const courseApp = {
             course_password
         })).data;
     },
+    async updateCourse(id: number, newFields: Partial<Course>): Promise<Course> {
+        const URL: string = `${coursesURL}${id}/`;
+        return (await axios.patchForm(URL, newFields)).data;
+    },
     async deleteCourse(id: number): Promise<void> {
         await axios.delete(`${coursesURL}${id}/`);
     },
@@ -339,10 +343,4 @@ export async function updateTeacher(id: number, updated: Teacher): Promise<Teach
     const response = await axios.patchForm(URL, updated);
     const data = response.data;
     return data;
-}
-
-export async function addStudentAvatar(avatar: any) {
-    const URL: string = `/media/student-avatars`;
-    const res = await axios.post(URL, avatar);
-    return res.data;
 }
