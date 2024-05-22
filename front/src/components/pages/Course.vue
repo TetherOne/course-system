@@ -6,11 +6,15 @@ import {
 } from 'vue';
 
 import {
+    Router,
     RouteLocationNormalizedLoaded,
+    useRouter,
     useRoute
 } from 'vue-router';
 
 import { AxiosError } from 'axios';
+
+import { useConfirm } from 'primevue/useconfirm';
 
 import Button from 'primevue/button';
 import InputGroup from 'primevue/inputgroup';
@@ -19,6 +23,7 @@ import InputText from 'primevue/inputtext';
 import Accordion from 'primevue/accordion';
 import AccordionTab from 'primevue/accordiontab';
 import Dialog from 'primevue/dialog';
+import ConfirmDialog from 'primevue/confirmdialog';
 
 
 
@@ -51,11 +56,18 @@ import ModuleComponent from '#elements/Module';
 
 const user = useUserStore();
 
+const confirm = useConfirm();
+
+
+
 const noticeSuccess: Notice = inject('noticeSuccess') as Notice;
 const noticeError: Notice = inject('noticeError') as Notice;
 
 const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
 
+
+
+const router: Router = useRouter();
 const route: RouteLocationNormalizedLoaded = useRoute();
 
 const id: Ref<number> = ref(parseInt(route.params.id as string));
@@ -98,6 +110,27 @@ async function onAddModule(): Promise<void> {
     } catch (error) {
         await handleRequestError(error as AxiosError);
     }
+}
+
+async function handleCourseDeletion(index: number): Promise<void> {
+    const moduleToBeDeleted: Module = modules.value[index];
+
+    confirm.require({
+        message: `Вы уверены, что хотите удалить модуль "${moduleToBeDeleted.name}"?`,
+        header: 'Удаление модуля',
+        icon: 'pi pi-trash',
+        rejectClass: 'p-button-success p-button-outlined',
+        acceptClass: 'p-button-danger',
+        async accept() {
+            try {
+                await courseApp.deleteModule(moduleToBeDeleted.id);
+                router.go(0);
+            } catch (error) {
+                const err: AxiosError = <AxiosError>error;
+                noticeError(`Ошибка ${err.response?.status}\n${err.message}`, 'Не удалось удалить курс');
+            }
+        }
+    });
 }
 
 
@@ -148,7 +181,15 @@ try {
                 <Button v-if="user.isTeacher" label="Добавить модуль" text @click="newModule.visible=true"/>
             </div>
             <Accordion>
-                <AccordionTab v-for="(module, i) in modules" :key="module.id" :header="`${i + 1}. ${module.name}`">
+                <AccordionTab v-for="(module, i) in modules" :key="module.id">
+                    <template #header>
+                        <div class="flexRow justifyBetween alignCenter">
+                            <div>
+                                {{ i + 1 }}. {{ module.name }}
+                            </div>
+                            <Button v-if="user.isTeacher" icon="pi pi-trash" rounded @click="handleCourseDeletion(i)"/>
+                        </div>
+                    </template>
                     <ModuleComponent :module="module"/>
                 </AccordionTab>
             </Accordion>
@@ -199,6 +240,7 @@ try {
             <Button label="Добавить" @click="onAddModule"/>
         </template>
     </Dialog>
+    <ConfirmDialog/>
 </template>
 
 <style scoped lang="scss">

@@ -221,6 +221,9 @@ export const courseApp = {
             status: true
         })).data;
     },
+    async deleteModule(id: number): Promise<void> {
+        await axios.delete(`${modulesURL}${id}/`);
+    },
     async lesson(id: number): Promise<Lesson> {
         return await getEntity(lessonsURL, id);
     },
