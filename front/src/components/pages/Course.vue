@@ -115,7 +115,7 @@ try {
         for (const student of students) {
             const grades: any[] = [];
             for (const cp of checkpoints.value) {
-                grades.push(await userApp.getStudentGradeOnCheckpoint(student.id, cp.id));
+                grades.push(await userApp.getStudentGradeOnCheckpoint(student.id, cp.id, true));
             }
             studentsGrades.value.push({
                 student: shortenName(student),

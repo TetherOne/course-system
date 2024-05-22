@@ -107,7 +107,7 @@ export const userApp = {
         config.params.student = id;
         return (await axios.get(passedCheckpointsURL, config)).data;
     },
-    async getStudentGradeOnCheckpoint(studentId: number, checkpointId: number): Promise<number | '-'> {
+    async getStudentGradeOnCheckpoint(studentId: number, checkpointId: number, onlyScore?: boolean): Promise<number | '-'> {
         let passedCheckpoints: PassedCheckpoint[] = await this.studentPassedCheckpoints(studentId);
         passedCheckpoints = passedCheckpoints.filter(cp => cp.checkpoint === checkpointId);
 
@@ -116,6 +116,10 @@ export const userApp = {
         }
 
         const passedCheckpoint: PassedCheckpoint = passedCheckpoints[0];
+
+        if (onlyScore)
+            return passedCheckpoint.points;
+
         const checkpoint: Checkpoint = await checkpointApp.checkpoint(checkpointId);
         let maxPoints: number = 0;
         for (const question of checkpoint.questions) {
