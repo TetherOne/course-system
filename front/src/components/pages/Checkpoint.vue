@@ -86,7 +86,7 @@ const questionMaker = ref({
     }[],
     indexOfRightAnswer: -1,
     addAnswer() {
-        this.answers.push({ text: `Вопрос ${this.answers.length + 1}` });
+        this.answers.push({ text: '' });
     },
     reset() {
         this.seen = false;
@@ -270,7 +270,7 @@ try {
                     <div class="sub flexColumn">
                         <div v-for="(answer, i) in questionMaker.answers" :key="i" class="flexRow alignCenter">
                             <RadioButton v-model="questionMaker.indexOfRightAnswer" :value="i" v-tooltip="'Нажмите, чтобы отметить ответ правильным'"/>
-                            <InputText v-model="answer.text" :invalid="!answer.text"/>
+                            <InputText v-model="answer.text" placeholder="Текст ответа" :invalid="!answer.text"/>
                         </div>
                     </div>
                 </div>
