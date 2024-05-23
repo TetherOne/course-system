@@ -35,7 +35,19 @@ class EnrollmentSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        exclude = ("course_password",)
+        fields = (
+            "id", "course_name", "description", "status", "created_at", "teacher_profile", "image", "course_password",)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        request = self.context.get('request')
+        if request:
+            current_user = request.user
+            if instance.teacher_profile.user_id != current_user.id:
+                representation.pop('course_password')
+
+        return representation
 
 
 class ModuleSerializer(serializers.ModelSerializer):
