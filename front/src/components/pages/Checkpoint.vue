@@ -26,6 +26,9 @@ import RadioButton from 'primevue/radiobutton';
 import Divider from 'primevue/divider';
 import Badge from 'primevue/badge';
 import ConfirmDialog from 'primevue/confirmdialog';
+import FileUpload, { FileUploadSelectEvent } from 'primevue/fileupload';
+import Accordion from 'primevue/accordion';
+import AccordionTab from 'primevue/accordiontab';
 
 import useUserStore from '#store';
 
@@ -33,8 +36,10 @@ import {
     Notice,
     ErrorHandler,
     Checkpoint,
-    Question
+    Question, QuestionFile
 } from '#types';
+
+import Path from '#classes/Path';
 
 import {
     userApp,
@@ -85,6 +90,13 @@ const questionMaker = ref({
         isCorrect?: boolean
     }[],
     indexOfRightAnswer: -1,
+    files: {
+        visible: false,
+        items: [],
+        toggle() {
+            this.visible = !this.visible;
+        }
+    },
     addAnswer() {
         this.answers.push({ text: '' });
     },
@@ -154,7 +166,7 @@ async function handleAddingQuestion(): Promise<void> {
         }
 
         return true;
-    }
+    };
 
     if (!questionValid()) {
         noticeError('Проверьте правильность введённых данных и повторите попытку', 'Недостаточно информации');
@@ -163,6 +175,11 @@ async function handleAddingQuestion(): Promise<void> {
 
     try {
         const question: Question = await questionApp.addQuestion(questionMaker.value.text, questionMaker.value.value, id.value);
+
+        question.files = <QuestionFile[]><unknown>[];
+        for (const file of questionMaker.value.files.items) {
+            question.files?.push(await questionApp.addQuestionFile(file, question.id));
+        }
 
         questionMaker.value.answers.forEach((answer, i) => {
             answer.isCorrect = i === questionMaker.value.indexOfRightAnswer;
@@ -184,6 +201,10 @@ async function handleAddingQuestion(): Promise<void> {
     }
 }
 
+function handleSelectionFiles(event: FileUploadSelectEvent): void {
+    questionMaker.value.files.items = event.files;
+}
+
 
 
 try {
@@ -192,6 +213,9 @@ try {
     name.value = checkpoint.name;
     number.value = checkpoint.checkpoint_number;
     questions.value = checkpoint.questions;
+    for (const question of questions.value) {
+        question.files = await questionApp.getQuestionFiles(question.id);
+    }
 
     if (user.isStudent) {
         const res: number | '-' = await userApp.getStudentGradeOnCheckpoint(user.id, id.value);
@@ -212,8 +236,8 @@ try {
 <template>
     <div class="flexColumn alignCenter">
         <Header/>
-        <div class="flexColumn block wide">
-            <div class="h2">
+        <div class="flexColumn block">
+            <div class="h2 alignSelfCenter">
                 КТ {{ number }}. {{ name }}
             </div>
             <Divider/>
@@ -223,8 +247,8 @@ try {
                 </div>
                 <Badge :value="grade" :severity="colors[grade as 2 | 3 | 4 | 5]"/>
             </div>
-            <div v-for="(question, i) in questions" :key="question.id" class="flexColumn alignStretch">
-                <Card>
+            <div class="flexColumn alignSelfCenter alignStretch">
+                <Card v-for="(question, i) in questions" :key="question.id">
                     <template #title>
                         {{ i + 1 }}. {{ question.question_text }}
                     </template>
@@ -239,47 +263,103 @@ try {
                             </div>
                         </div>
                     </template>
+                    <template v-if="question.files?.length" #footer>
+                        <Accordion>
+                            <AccordionTab>
+                                <template #header>
+                                    <div class="alignSelfStart">
+                                        Дополнительные файлы
+                                    </div>
+                                </template>
+                                <template #headericon>
+                                    <div style="display: none;"></div>
+                                </template>
+                                <div class="flexColumn">
+                                    <a v-for="file in question.files" :key="file.id" :href="file.question_file">
+                                        {{ Path.getLastElement(file.question_file) }}
+                                    </a>
+                                </div>
+                            </AccordionTab>
+                        </Accordion>
+                    </template>
                 </Card>
             </div>
-            <Button v-if="user.isTeacher" label="Добавить вопрос" @click="showQuestionMaker" :disabled="questionMaker.seen"/>
-            <div v-if="questionMaker.seen" class="flexColumn">
-                <div class="flexRow alignCenter">
-                    <div>
-                        Текст вопроса
+            <Divider class="alignSelfStretch"/>
+            <Button v-if="user.isTeacher" class="alignSelfStart" label="Добавить вопрос" @click="showQuestionMaker"
+                    :disabled="questionMaker.seen"/>
+            <div v-if="questionMaker.seen" class="flexColumn alignSelfStretch">
+<!--                <div class="flexRow alignCenter">-->
+<!--                    <div>-->
+<!--                        Текст вопроса-->
+<!--                    </div>-->
+<!--                    <InputGroup>-->
+<!--                        <InputGroupAddon>-->
+<!--                            <i class="pi pi-question"/>-->
+<!--                        </InputGroupAddon>-->
+<!--                        <InputText v-model="questionMaker.text" :invalid="!questionMaker.text"/>-->
+<!--                    </InputGroup>-->
+<!--                </div>-->
+<!--                <div class="flexRow alignCenter">-->
+<!--                    <div>-->
+<!--                        Кол-во баллов-->
+<!--                    </div>-->
+<!--                    <InputNumber v-model="questionMaker.value" :min="1"/>-->
+<!--                </div>-->
+
+                <div class="flexColumn alignStretch alignSelfStart">
+                    <div class="grid">
+                        <InputGroup>
+                            <InputGroupAddon>
+                                <i class="pi pi-question"/>
+                            </InputGroupAddon>
+                            <InputText v-model="questionMaker.text" placeholder="Текст вопроса" variant="filled" />
+                        </InputGroup>
+                        <Button icon="pi pi-file" text v-tooltip="'Доп. файлы'" @click="questionMaker.files.toggle()" />
+                        <InputGroup>
+                            <InputGroupAddon>
+                                <i class="pi pi-sort-numeric-down"/>
+                            </InputGroupAddon>
+                            <InputNumber v-model="questionMaker.value" :min="1" placeholder="Балл" variant="filled" />
+                        </InputGroup>
                     </div>
-                    <InputGroup>
-                        <InputGroupAddon>
-                            <i class="pi pi-question"/>
-                        </InputGroupAddon>
-                        <InputText v-model="questionMaker.text" :invalid="!questionMaker.text"/>
-                    </InputGroup>
                 </div>
-                <div class="flexRow alignCenter">
-                    <div>
-                        Кол-во баллов
-                    </div>
-                    <InputNumber v-model="questionMaker.value" :min="1"/>
+
+                <div v-show="questionMaker.files.visible" class="flexColumn">
+                    <div>Файлы к вопросу</div>
+                    <FileUpload multiple @select="handleSelectionFiles">
+                        <template #header="{ chooseCallback }">
+                            <Button label="Выбрать" @click="chooseCallback"/>
+                        </template>
+                    </FileUpload>
                 </div>
-                <div class="flexColumn">
-                    <div class="flexRow alignCenter">
+
+                <div class="flexColumn alignSelfStretch">
+                    <div class="flexRow alignCenter alignSelfStart" style="margin-left: 30px;">
                         <div>
                             Ответы
                         </div>
                         <Button icon="pi pi-plus" text @click="questionMaker.addAnswer()"/>
                     </div>
-                    <div class="sub flexColumn">
+                    <div class="flexColumn">
                         <div v-for="(answer, i) in questionMaker.answers" :key="i" class="flexRow alignCenter">
-                            <RadioButton v-model="questionMaker.indexOfRightAnswer" :value="i" v-tooltip="'Нажмите, чтобы отметить ответ правильным'"/>
-                            <InputText v-model="answer.text" placeholder="Текст ответа" :invalid="!answer.text"/>
+                            <RadioButton v-model="questionMaker.indexOfRightAnswer" :value="i"
+                                         v-tooltip="'Нажмите, чтобы отметить ответ правильным'"/>
+                            <InputText v-model="answer.text" placeholder="Текст ответа" variant="filled" :invalid="!answer.text"/>
                         </div>
                     </div>
                 </div>
-                <Button label="Сохранить" @click="handleAddingQuestion"/>
+                <Button class="alignSelfEnd" label="Сохранить" @click="handleAddingQuestion"/>
             </div>
-            <Divider/>
-            <Button label="Завершить" severity="danger" class="alignSelfCenter" @click="onComplete"
-                    :disabled="!passable"/>
+            <Button v-if="user.isStudent" label="Завершить" severity="danger" class="alignSelfCenter"
+                    @click="onComplete" :disabled="!passable" />
         </div>
     </div>
     <ConfirmDialog/>
 </template>
+
+<style scoped lang="sass">
+.grid
+    display: grid
+    grid-template-columns: 3fr 1fr
+    gap: 8px
+</style>
