@@ -32,6 +32,7 @@ export type Course = Model & {
     description: string
     status: boolean
     image: string | null
+    course_password?: string
     teacher_profile: number
     teacherShortName?: string
     studentHasIt?: boolean

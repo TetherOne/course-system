@@ -176,6 +176,10 @@ try {
                         {{ teacherFullName }}
                     </router-link>
                 </div>
+                <div v-if="user.isTeacher" class="flexRow alignCenter">
+                    <div>Пароль: </div>
+                    <div id="password">{{ course.course_password }}</div>
+                </div>
                 <Button v-if="user.isStudent" label="Оценки" text @click="showStudentGrades"/>
                 <Button v-else label="Успеваемость студентов" text @click="studentsGradesVisible = true"/>
                 <Button v-if="user.isTeacher" label="Добавить модуль" text @click="newModule.visible=true"/>
@@ -265,5 +269,11 @@ th, td {
 
 :deep(.p-accordion-tab) {
     margin-bottom: 10px;
+}
+
+#password {
+    background-color: #18181b;
+    padding: 3px;
+    border-radius: 3px;
 }
 </style>
