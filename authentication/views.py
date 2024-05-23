@@ -1,4 +1,3 @@
-import django.middleware.csrf
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import (
     LoginView,
@@ -10,6 +9,7 @@ from django.contrib.auth.views import (
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import FormView, TemplateView
 from rest_framework import status
 from rest_framework.response import Response
@@ -17,8 +17,6 @@ from rest_framework.views import APIView
 
 from authentication.forms import CustomPasswordResetForm, CustomUserCreationForm
 from authentication.serializers import CurrentUserSerializer
-
-from django.views.decorators.csrf import ensure_csrf_cookie
 
 
 @ensure_csrf_cookie
