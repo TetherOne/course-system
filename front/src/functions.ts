@@ -17,7 +17,7 @@ export function getCaptcha(): string {
 
 export function shortenName(user: Student | Teacher): string {
     if (!user.name) {
-        return '{без имени}';
+        return '';
     }
     const name: string = `${user.name.slice(0, 1)}.`;
     const fatherName: string = user.father_name ? `${user.father_name.slice(0, 1)}.` : '';
@@ -27,7 +27,7 @@ export function shortenName(user: Student | Teacher): string {
 
 export function buildFullName(user: Student | Teacher): string {
     if (!user.name) {
-        return '{без имени}';
+        return '';
     }
     const fatherName: string = user.father_name ?? '';
     return `${user.surname} ${user.name} ${fatherName}`;

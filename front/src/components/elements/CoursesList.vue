@@ -91,7 +91,7 @@ async function onAddCourse(): Promise<void> {
         <div class="flexColumn q">
             <div class="flexColumn alignCenter">
                 <InputText v-model="newCourse.name" placeholder="Название курса" :invalid="newCourseNameInvalid"/>
-                <InlineMessage>Обязательное поле</InlineMessage>
+                <InlineMessage v-if="newCourseNameInvalid">Обязательное поле</InlineMessage>
             </div>
             <Textarea v-model="newCourse.description" placeholder="Краткое описание курса" autoResize/>
         </div>
