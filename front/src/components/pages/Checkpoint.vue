@@ -263,7 +263,7 @@ try {
                             </div>
                         </div>
                     </template>
-                    <template v-if="question.files.length" #footer>
+                    <template v-if="question.files?.length" #footer>
                         <Accordion>
                             <AccordionTab>
                                 <template #header>
@@ -327,7 +327,7 @@ try {
                 <div v-show="questionMaker.files.visible" class="flexColumn">
                     <div>Файлы к вопросу</div>
                     <FileUpload multiple @select="handleSelectionFiles">
-                        <template #header="{ chooseCallback, uploadCallback, clearCallback, files }">
+                        <template #header="{ chooseCallback }">
                             <Button label="Выбрать" @click="chooseCallback"/>
                         </template>
                     </FileUpload>
