@@ -88,17 +88,6 @@ class Course(models.Model):
     if TYPE_CHECKING:
         objects: Manager
 
-    def save(self, *args, **kwargs):
-        """
-        To generate course password
-        """
-        if not self.course_password:
-            self.course_password = str(uuid.uuid4())[:8].replace(
-                "-",
-                "",
-            )
-        super().save(*args, **kwargs)
-
     def __str__(self):
         return f"{self.course_name}"
 
