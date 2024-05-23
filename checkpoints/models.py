@@ -24,7 +24,7 @@ class CheckPoint(models.Model):
         verbose_name=_("модуль"),
     )
     name = models.TextField(_("название"), max_length=255)
-    total = models.IntegerField(_("всего"))
+    total = models.IntegerField(_("всего"), null=True, blank=True)
     created_at = models.DateTimeField(_("дата создания"), auto_now_add=True)
 
     def update_total(self):
