@@ -1,12 +1,18 @@
 from rest_framework import serializers
 
-from questions.models import Answer, Question, QuestionFile
+from questions.models import Answer, Question, QuestionFile, AnswerFile
 
 
 class QuestionFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionFile
         fields = ("id", "question", "question_file")
+
+
+class AnswerFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AnswerFile
+        fields = ("id", "answer", "file")
 
 
 class AnswerSerializer(serializers.ModelSerializer):

@@ -92,7 +92,7 @@ class QuestionFile(models.Model):
         related_name="question_images",
         verbose_name=_("вопрос"),
     )
-    question_file = models.FileField(
+    file = models.FileField(
         _("файл с вопросом"),
         null=True,
         upload_to=question_file_directory_path,

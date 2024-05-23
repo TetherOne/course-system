@@ -1,12 +1,13 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
 
-from questions.models import Answer, Question, QuestionFile
+from questions.models import Answer, Question, QuestionFile, AnswerFile
 from questions.permissions import IsStudentEnrollment, IsTeacherOwner
 from questions.serializers import (
     AnswerSerializer,
     QuestionSerializer,
     QuestionFileSerializer,
+    AnswerFileSerializer,
 )
 
 
@@ -16,6 +17,14 @@ class QuestionFileViewSet(ModelViewSet):
     serializer_class = QuestionFileSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["question"]
+
+
+class AnswerFileViewSet(ModelViewSet):
+
+    queryset = AnswerFile.objects.all()
+    serializer_class = AnswerFileSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["answer"]
 
 
 class QuestionViewSet(ModelViewSet):

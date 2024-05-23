@@ -1,7 +1,12 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from questions.views import AnswerViewSet, QuestionViewSet, QuestionFileViewSet
+from questions.views import (
+    AnswerViewSet,
+    QuestionViewSet,
+    QuestionFileViewSet,
+    AnswerFileViewSet,
+)
 
 app_name = "questions"
 
@@ -23,6 +28,11 @@ routers.register(
     "question-files",
     QuestionFileViewSet,
 )
+routers.register(
+    "answer-files",
+    AnswerFileViewSet,
+)
+
 
 urlpatterns = [
     path("", include(routers.urls)),
