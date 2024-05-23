@@ -183,11 +183,13 @@ try {
             <Accordion>
                 <AccordionTab v-for="(module, i) in modules" :key="module.id">
                     <template #header>
-                        <div class="flexRow justifyBetween alignCenter">
+                        <div class="flexRow spacer alignCenter">
                             <div>
                                 {{ i + 1 }}. {{ module.name }}
                             </div>
-                            <Button v-if="user.isTeacher" icon="pi pi-trash" rounded @click="handleCourseDeletion(i)"/>
+                            <div class="spacer"></div>
+                            <Button v-if="user.isTeacher" icon="pi pi-pencil" text/>
+                            <Button v-if="user.isTeacher" icon="pi pi-trash" text @click="handleCourseDeletion(i)"/>
                         </div>
                     </template>
                     <ModuleComponent :module="module"/>
@@ -259,5 +261,9 @@ table, th, td {
 
 th, td {
     padding: 5px;
+}
+
+:deep(.p-accordion-tab) {
+    margin-bottom: 10px;
 }
 </style>

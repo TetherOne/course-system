@@ -184,14 +184,13 @@ export const courseApp = {
         const checkpoints: Checkpoint[] = await this.courseCheckpoints(id);
         return checkpoints.length;
     },
-    async addCourse(course_name: string, description: string, teacher_profile: number, course_password: string): Promise<Course> {
+    async addCourse(course_name: string, description: string, teacher_profile: number): Promise<Course> {
         return (await axios.postForm(coursesURL, {
             course_name,
             description,
             status: true,
             teacher_profile,
-            image: '',
-            course_password
+            image: ''
         })).data;
     },
     async updateCourse(id: number, newFields: Partial<Course>): Promise<Course> {
