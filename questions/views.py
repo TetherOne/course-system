@@ -14,6 +14,8 @@ class QuestionFileViewSet(ModelViewSet):
 
     queryset = QuestionFile.objects.all()
     serializer_class = QuestionFileSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["question"]
 
 
 class QuestionViewSet(ModelViewSet):
