@@ -12,7 +12,27 @@ class QuestionFileSerializer(serializers.ModelSerializer):
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        exclude = ("is_correct",)
+        fields = (
+            "id",
+            "answer_text",
+            "is_correct",
+            "question",
+        )
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        user = self.context["request"].user
+
+        if (
+            hasattr(
+                user,
+                "student_profile",
+            )
+            and not user.student_profile.is_teacher
+        ):
+            representation.pop("is_correct")
+
+        return representation
 
 
 class QuestionSerializer(serializers.ModelSerializer):
