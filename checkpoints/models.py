@@ -6,9 +6,9 @@ from django.utils.translation import gettext_lazy as _
 
 from checkpoints.utils import (
     calculate_current_points,
+    calculate_grade,
     calculate_points,
     calculate_total_points,
-    calculate_grade,
 )
 from courses.models import Module
 from profiles.models import StudentProfile

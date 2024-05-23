@@ -5,7 +5,6 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-from django_recaptcha.fields import ReCaptchaField
 
 from profiles.models import StudentProfile, TeacherProfile
 
@@ -20,7 +19,6 @@ class CustomUserCreationForm(UserCreationForm):
 
     is_teacher = forms.BooleanField(required=False)
     email = forms.EmailField()
-    #captcha = ReCaptchaField()
 
     class Meta:
 
