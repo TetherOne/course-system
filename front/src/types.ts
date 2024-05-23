@@ -104,7 +104,7 @@ export type Answer = Model & {
 
 export type QuestionFile = Model & {
     question: number
-    question_file: string
+    file: string
 }
 
 export type QuestionChoice = Model & {

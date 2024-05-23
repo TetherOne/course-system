@@ -1,5 +1,6 @@
 export default class Path {
     static getLastElement(path: string): string {
+        console.log(path)
         if (path.includes('/')) {
             path = path.slice(path.lastIndexOf('/') + 1);
         }

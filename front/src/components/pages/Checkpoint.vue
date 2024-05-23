@@ -275,8 +275,8 @@ try {
                                     <div style="display: none;"></div>
                                 </template>
                                 <div class="flexColumn">
-                                    <a v-for="file in question.files" :key="file.id" :href="file.question_file">
-                                        {{ Path.getLastElement(file.question_file) }}
+                                    <a v-for="file in question.files" :key="file.id" :href="file.file">
+                                        {{ Path.getLastElement(file.file) }}
                                     </a>
                                 </div>
                             </AccordionTab>
@@ -324,7 +324,7 @@ try {
                     </div>
                 </div>
 
-                <div v-show="questionMaker.files.visible" class="flexColumn">
+                <div v-show="questionMaker.files.visible" class="flexColumn alignSelfStretch">
                     <div>Файлы к вопросу</div>
                     <FileUpload multiple @select="handleSelectionFiles">
                         <template #header="{ chooseCallback }">
@@ -362,4 +362,7 @@ try {
     display: grid
     grid-template-columns: 3fr 1fr
     gap: 8px
+
+.p-fileupload
+    align-self: stretch
 </style>
