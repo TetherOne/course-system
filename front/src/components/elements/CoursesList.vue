@@ -80,7 +80,7 @@ async function onAddCourse(): Promise<void> {
             <Button v-if="user.isTeacher" icon="pi pi-plus" v-tooltip="'Добавить курс'" text @click="newCourse.dialogVisible=true"/>
         </div>
         <Divider/>
-        <div id="cards" class="flexRow">
+        <div id="cards" class="flexRow alignSelfCenter">
             <CourseCard v-for="course in props.courses" :course="course"/>
         </div>
         <div v-if="!courses.length">

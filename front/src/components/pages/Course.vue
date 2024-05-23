@@ -168,21 +168,22 @@ try {
         <div class="flexRow block wide">
             <div class="flexColumn">
                 <CourseCard :course="course"/>
-                <div v-if="user.isStudent" class="flexColumn">
-                    <div>
-                        Курс ведёт:
+                <div class="flexColumn" id="info">
+                    <div v-if="user.isStudent" class="flexColumn">
+                        <div>
+                            Курс ведёт:
+                        </div>
+                        <router-link :to="{ name: 'teacher', params: { id: course.teacher_profile } }">
+                            {{ teacherFullName }}
+                        </router-link>
                     </div>
-                    <router-link :to="{ name: 'teacher', params: { id: course.teacher_profile } }">
-                        {{ teacherFullName }}
-                    </router-link>
+                    <div v-if="user.isTeacher">
+                        <div>Пароль: {{ course.course_password }}</div>
+                    </div>
+                    <Button v-if="user.isStudent" label="Оценки" text @click="showStudentGrades"/>
+                    <Button v-else label="Успеваемость студентов" text @click="studentsGradesVisible = true"/>
+                    <Button v-if="user.isTeacher" label="Добавить модуль" text @click="newModule.visible=true"/>
                 </div>
-                <div v-if="user.isTeacher" class="flexRow alignCenter">
-                    <div>Пароль: </div>
-                    <div id="password">{{ course.course_password }}</div>
-                </div>
-                <Button v-if="user.isStudent" label="Оценки" text @click="showStudentGrades"/>
-                <Button v-else label="Успеваемость студентов" text @click="studentsGradesVisible = true"/>
-                <Button v-if="user.isTeacher" label="Добавить модуль" text @click="newModule.visible=true"/>
             </div>
             <Accordion>
                 <AccordionTab v-for="(module, i) in modules" :key="module.id">
@@ -271,9 +272,10 @@ th, td {
     margin-bottom: 10px;
 }
 
-#password {
-    background-color: #18181b;
-    padding: 3px;
-    border-radius: 3px;
+#info {
+    margin-left: 1rem;
+    .p-button {
+        padding-left: 0;
+    }
 }
 </style>
