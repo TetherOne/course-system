@@ -63,27 +63,6 @@ class Answer(models.Model):
         return f"{self.answer_text}"
 
 
-class AnswerFile(models.Model):
-
-    answer = models.ForeignKey(
-        Answer,
-        on_delete=models.CASCADE,
-        related_name="answer_files",
-        verbose_name=_("ответ"),
-    )
-    answer_file = models.FileField(
-        _("файл с ответом"),
-        null=True,
-        upload_to=answer_file_directory_path,
-        blank=True,
-    )
-
-    class Meta:
-        db_table = "answer_files"
-        verbose_name = _("файл ответа")
-        verbose_name_plural = _("файлы ответов")
-
-
 class QuestionFile(models.Model):
 
     question = models.ForeignKey(
@@ -103,3 +82,24 @@ class QuestionFile(models.Model):
         db_table = "question_files"
         verbose_name = _("файл вопроса")
         verbose_name_plural = _("файлы вопросов")
+
+
+class AnswerFile(models.Model):
+
+    answer = models.ForeignKey(
+        Answer,
+        on_delete=models.CASCADE,
+        related_name="answer_files",
+        verbose_name=_("ответ"),
+    )
+    answer_file = models.FileField(
+        _("файл с ответом"),
+        null=True,
+        upload_to=answer_file_directory_path,
+        blank=True,
+    )
+
+    class Meta:
+        db_table = "answer_files"
+        verbose_name = _("файл ответа")
+        verbose_name_plural = _("файлы ответов")

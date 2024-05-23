@@ -12,7 +12,7 @@ class QuestionFileSerializer(serializers.ModelSerializer):
 class AnswerFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = AnswerFile
-        fields = ("id", "answer", "file")
+        fields = ("id", "answer", "answer_file")
 
 
 class AnswerSerializer(serializers.ModelSerializer):
