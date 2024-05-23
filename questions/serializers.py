@@ -6,7 +6,7 @@ from questions.models import Answer, Question, QuestionFile
 class QuestionFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionFile
-        fields = "__all__"
+        fields = ("question", "question_file")
 
 
 class AnswerSerializer(serializers.ModelSerializer):

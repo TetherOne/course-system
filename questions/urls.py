@@ -1,8 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from questions.views import AnswerViewSet, QuestionViewSet
-
+from questions.views import AnswerViewSet, QuestionViewSet, QuestionFileViewSet
 
 app_name = "questions"
 
@@ -20,7 +19,10 @@ routers.register(
     AnswerViewSet,
     basename="answers",
 )
-
+routers.register(
+    "question-files",
+    QuestionFileViewSet,
+)
 
 urlpatterns = [
     path("", include(routers.urls)),
