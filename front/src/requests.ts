@@ -14,7 +14,7 @@ import {
     Question,
     Answer,
     QuestionChoice,
-    CurrentUser
+    CurrentUser, QuestionFile
 } from '#types';
 
 
@@ -44,6 +44,7 @@ const questionAppURL: string = `${API_URL}/questionapp`;
 
 const questionsURL: string = `${questionAppURL}/questions/`;
 const answersURL: string = `${questionAppURL}/answers/`;
+const questionsFilesURL: string = `${questionAppURL}/question-files/`;
 
 const historyURL: string = `${API_URL}/history`;
 const questionsChoicesHistoryURL: string = `${historyURL}/history-of-passed-answers/`;
@@ -291,6 +292,17 @@ export const questionApp = {
     },
     async changeAnswer(id: number, newProperties: Partial<Answer> & { is_correct: boolean }): Promise<Answer> {
         return (await axios.patch(`${answersURL}${id}/`, newProperties, standardConfig)).data;
+    },
+    async getQuestionFiles(id: number): Promise<QuestionFile[]> {
+        const config: AxiosRequestConfig = structuredClone(standardConfig);
+        config.params.question = id;
+        return (await axios.get(questionsFilesURL, config)).data;
+    },
+    async addQuestionFile(question_file: File, question: number): Promise<QuestionFile> {
+        return (await axios.postForm(questionsFilesURL, {
+            question,
+            question_file
+        })).data;
     }
 };
 

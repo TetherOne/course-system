@@ -94,11 +94,17 @@ export type Question = Model & {
     max_points: number
     checkpoint: number
     chosenAnswer?: number
+    files?: QuestionFile[]
 }
 
 export type Answer = Model & {
     answer_text: string
     question: number
+}
+
+export type QuestionFile = Model & {
+    question: number
+    question_file: string
 }
 
 export type QuestionChoice = Model & {
