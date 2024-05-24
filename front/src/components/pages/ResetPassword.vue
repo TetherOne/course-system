@@ -6,13 +6,15 @@ import {
     inject, ComputedRef
 } from 'vue';
 
+import { AxiosError } from 'axios';
+
 import InputGroup from 'primevue/inputgroup';
 import InputGroupAddon from 'primevue/inputgroupaddon';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 
 import {
-    // Notice,
+    Notice,
     PromiseNoParamsNoReturn
 } from '#types';
 
@@ -22,7 +24,8 @@ import InlineMessage from 'primevue/inlinemessage';
 
 
 //
-// const noticeError: Notice = inject('noticeError') as Notice;
+const noticeSuccess: Notice = inject('noticeSuccess') as Notice;
+const noticeError: Notice = inject('noticeError') as Notice;
 const redirectToUserProfile: PromiseNoParamsNoReturn = inject('redirectToUserProfile') as PromiseNoParamsNoReturn;
 
 const wasBtnPressed: Ref<boolean> = ref(false);
@@ -39,7 +42,13 @@ async function handleReset(): Promise<void> {
         return;
     }
 
-
+    try {
+        authApp.passwordReset(email.value);
+        noticeSuccess('Проверьте электронную почту', 'Мы отправили вам ссылку');
+    } catch (err) {
+        const error: AxiosError = <AxiosError>err;
+        noticeError(`Код: ${error.response?.status}\n${error.message}`, 'Произошла ошибка');
+    }
 }
 
 

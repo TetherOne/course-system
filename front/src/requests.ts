@@ -56,6 +56,7 @@ const signInURL: string = `${authAppURL}/login/`;
 const signUpURL: string = `${authAppURL}/register/`;
 const signOutURL: string = `${authAppURL}/logout/`;
 const currentUserURL: string = `${authAppURL}/current-user/`;
+const resetPasswordURL: string = `${authAppURL}/password-reset/`;
 
 const standardConfig: AxiosRequestConfig = {
     params: {
@@ -298,10 +299,10 @@ export const questionApp = {
         config.params.question = id;
         return (await axios.get(questionsFilesURL, config)).data;
     },
-    async addQuestionFile(question_file: File, question: number): Promise<QuestionFile> {
+    async addQuestionFile(file: File, question: number): Promise<QuestionFile> {
         return (await axios.postForm(questionsFilesURL, {
             question,
-            question_file
+            file
         })).data;
     }
 };
@@ -348,6 +349,9 @@ export const authApp = {
     },
     async currentUser(): Promise<CurrentUser> {
         return (await axios.get(currentUserURL)).data;
+    },
+    async passwordReset(email: string): Promise<any> {
+        return (await axios.postForm(resetPasswordURL, { email })).data;
     }
 };
 
