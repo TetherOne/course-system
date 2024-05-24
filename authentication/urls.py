@@ -10,6 +10,7 @@ from authentication.views import (
     MyPasswordResetView,
     RegisterView,
     logout_view,
+    send_csrf_token,
 )
 
 
@@ -17,6 +18,10 @@ app_name = "authentication"
 
 
 urlpatterns = [
+    path(
+        "csrf/",
+        send_csrf_token,
+    ),
     path(
         "login/",
         MyLoginView.as_view(),

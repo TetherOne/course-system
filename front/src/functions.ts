@@ -26,6 +26,9 @@ export function shortenName(user: Student | Teacher): string {
 }
 
 export function buildFullName(user: Student | Teacher): string {
+    if (!user.name) {
+        return '  ';
+    }
     const fatherName: string = user.father_name ?? '';
     return `${user.surname} ${user.name} ${fatherName}`;
 }

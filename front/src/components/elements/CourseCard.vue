@@ -20,6 +20,8 @@ import ScrollPanel from 'primevue/scrollpanel';
 import ConfirmDialog from 'primevue/confirmdialog';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
+import Textarea from 'primevue/textarea';
+import FileUpload, { FileUploadUploaderEvent } from 'primevue/fileupload';
 
 import useUserStore from '#store';
 
@@ -41,10 +43,12 @@ interface Props {
 
 const user = useUserStore();
 
+
 const noticeSuccess: Notice = inject('noticeSuccess') as Notice;
 const noticeError: Notice = inject('noticeError') as Notice;
 
 const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
+
 
 const router: Router = useRouter();
 
@@ -54,6 +58,45 @@ const enrollFormVisible: Ref<boolean> = ref(false);
 const password: Ref<string> = ref('');
 
 const confirm = useConfirm();
+
+const newData = ref({
+    dialog: false,
+    name: '',
+    desc: '',
+    reset() {
+        this.name = props.course.course_name;
+        this.desc = props.course.description;
+    },
+    show() {
+        this.reset();
+        this.dialog = true;
+    },
+    close() {
+        this.dialog = false;
+    },
+    async save() {
+        if (!this.name) {
+            noticeError('Название курса обязательно');
+            return;
+        }
+
+        try {
+            const course: Course = await courseApp.updateCourse(props.course.id, {
+                course_name: this.name,
+                description: this.desc
+            });
+
+            props.course.course_name = course.course_name;
+            props.course.description = course.description;
+
+            this.close();
+            noticeSuccess('Информация обновлена');
+        } catch (error) {
+            const err: AxiosError = error as AxiosError;
+            noticeError(`Ошибка ${err.response?.status}`);
+        }
+    }
+});
 
 
 
@@ -100,6 +143,18 @@ async function handleEnrollment(): Promise<void> {
         }
     }
 }
+
+async function changeAvatar(event: FileUploadUploaderEvent): Promise<void> {
+    const image: File = (event.files as File[])[0];console.log(image)
+    try {
+        const course: Course = await courseApp.updateCourse(props.course.id, { image } as unknown as Course);
+        props.course.image = course.image;
+        noticeSuccess('Превью изменено');
+    } catch (error) {
+        const err: AxiosError = error as AxiosError;
+        noticeError(`Ошибка ${err.status}\n${err.message}`, 'Не удалось изменить превью');
+    }
+}
 </script>
 
 <template>
@@ -112,6 +167,8 @@ async function handleEnrollment(): Promise<void> {
             <router-link :to="{ name: 'course', params: { id: course.id } }">
                 {{ props.course.course_name }}
             </router-link>
+            <Button v-if="user.isTeacher" icon="pi pi-pencil" text v-tooltip="'Редактировать'"
+                    @click="newData.show()"/>
             <Button v-if="user.isTeacher" icon="pi pi-trash" text v-tooltip="'Удалить курс'"
                     @click="confirmCourseDeletion"/>
         </template>
@@ -143,6 +200,19 @@ async function handleEnrollment(): Promise<void> {
         <template #footer>
             <Button label="Отмена" severity="danger" outlined @click="password='';enrollFormVisible=false;"/>
             <Button label="Отправить" severity="success" @click="handleEnrollment"/>
+        </template>
+    </Dialog>
+    <Dialog v-model:visible="newData.dialog" modal header="Редактирование курса">
+        <div class="flexColumn alignStretch">
+            <div class="alignSelfCenter">
+                <FileUpload mode="basic" auto accept="image/*" chooseLabel="Превью курса" customUpload @uploader="changeAvatar" />
+            </div>
+            <InputText v-model="newData.name" placeholder="Название курса"/>
+            <Textarea v-model="newData.desc" placeholder="Описание курса" rows="10" cols="50" autoResize />
+        </div>
+        <template #footer>
+            <Button label="Отмена" severity="danger" outlined @click="newData.close()" />
+            <Button label="Сохранить" severity="success" @click="newData.save()" />
         </template>
     </Dialog>
 </template>

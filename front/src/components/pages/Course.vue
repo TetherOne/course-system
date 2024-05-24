@@ -6,11 +6,15 @@ import {
 } from 'vue';
 
 import {
+    Router,
     RouteLocationNormalizedLoaded,
+    useRouter,
     useRoute
 } from 'vue-router';
 
 import { AxiosError } from 'axios';
+
+import { useConfirm } from 'primevue/useconfirm';
 
 import Button from 'primevue/button';
 import InputGroup from 'primevue/inputgroup';
@@ -19,6 +23,7 @@ import InputText from 'primevue/inputtext';
 import Accordion from 'primevue/accordion';
 import AccordionTab from 'primevue/accordiontab';
 import Dialog from 'primevue/dialog';
+import ConfirmDialog from 'primevue/confirmdialog';
 
 
 
@@ -51,11 +56,18 @@ import ModuleComponent from '#elements/Module';
 
 const user = useUserStore();
 
+const confirm = useConfirm();
+
+
+
 const noticeSuccess: Notice = inject('noticeSuccess') as Notice;
 const noticeError: Notice = inject('noticeError') as Notice;
 
 const handleRequestError: ErrorHandler = inject('handleRequestError') as ErrorHandler;
 
+
+
+const router: Router = useRouter();
 const route: RouteLocationNormalizedLoaded = useRoute();
 
 const id: Ref<number> = ref(parseInt(route.params.id as string));
@@ -100,6 +112,27 @@ async function onAddModule(): Promise<void> {
     }
 }
 
+async function handleCourseDeletion(index: number): Promise<void> {
+    const moduleToBeDeleted: Module = modules.value[index];
+
+    confirm.require({
+        message: `Вы уверены, что хотите удалить модуль "${moduleToBeDeleted.name}"?`,
+        header: 'Удаление модуля',
+        icon: 'pi pi-trash',
+        rejectClass: 'p-button-success p-button-outlined',
+        acceptClass: 'p-button-danger',
+        async accept() {
+            try {
+                await courseApp.deleteModule(moduleToBeDeleted.id);
+                router.go(0);
+            } catch (error) {
+                const err: AxiosError = <AxiosError>error;
+                noticeError(`Ошибка ${err.response?.status}\n${err.message}`, 'Не удалось удалить курс');
+            }
+        }
+    });
+}
+
 
 
 try {
@@ -115,7 +148,7 @@ try {
         for (const student of students) {
             const grades: any[] = [];
             for (const cp of checkpoints.value) {
-                grades.push(await userApp.getStudentGradeOnCheckpoint(student.id, cp.id));
+                grades.push(await userApp.getStudentGradeOnCheckpoint(student.id, cp.id, true));
             }
             studentsGrades.value.push({
                 student: shortenName(student),
@@ -135,20 +168,35 @@ try {
         <div class="flexRow block wide">
             <div class="flexColumn">
                 <CourseCard :course="course"/>
-                <div v-if="user.isStudent" class="flexColumn">
-                    <div>
-                        Курс ведёт:
+                <div class="flexColumn" id="info">
+                    <div v-if="user.isStudent" class="flexColumn">
+                        <div>
+                            Курс ведёт:
+                        </div>
+                        <router-link :to="{ name: 'teacher', params: { id: course.teacher_profile } }">
+                            {{ teacherFullName }}
+                        </router-link>
                     </div>
-                    <router-link :to="{ name: 'teacher', params: { id: course.teacher_profile } }">
-                        {{ teacherFullName }}
-                    </router-link>
+                    <div v-if="user.isTeacher">
+                        <div>Пароль: {{ course.course_password }}</div>
+                    </div>
+                    <Button v-if="user.isStudent" label="Оценки" text @click="showStudentGrades"/>
+                    <Button v-else label="Успеваемость студентов" text @click="studentsGradesVisible = true"/>
+                    <Button v-if="user.isTeacher" label="Добавить модуль" text @click="newModule.visible=true"/>
                 </div>
-                <Button v-if="user.isStudent" label="Оценки" text @click="showStudentGrades"/>
-                <Button v-else label="Успеваемость студентов" text @click="studentsGradesVisible = true"/>
-                <Button v-if="user.isTeacher" label="Добавить модуль" text @click="newModule.visible=true"/>
             </div>
             <Accordion>
-                <AccordionTab v-for="(module, i) in modules" :key="module.id" :header="`${i + 1}. ${module.name}`">
+                <AccordionTab v-for="(module, i) in modules" :key="module.id">
+                    <template #header>
+                        <div class="flexRow spacer alignCenter">
+                            <div>
+                                {{ i + 1 }}. {{ module.name }}
+                            </div>
+                            <div class="spacer"></div>
+                            <Button v-if="user.isTeacher" icon="pi pi-pencil" text/>
+                            <Button v-if="user.isTeacher" icon="pi pi-trash" text @click="handleCourseDeletion(i)"/>
+                        </div>
+                    </template>
                     <ModuleComponent :module="module"/>
                 </AccordionTab>
             </Accordion>
@@ -199,6 +247,7 @@ try {
             <Button label="Добавить" @click="onAddModule"/>
         </template>
     </Dialog>
+    <ConfirmDialog/>
 </template>
 
 <style scoped lang="scss">
@@ -217,5 +266,16 @@ table, th, td {
 
 th, td {
     padding: 5px;
+}
+
+:deep(.p-accordion-tab) {
+    margin-bottom: 10px;
+}
+
+#info {
+    margin-left: 1rem;
+    .p-button {
+        padding-left: 0;
+    }
 }
 </style>

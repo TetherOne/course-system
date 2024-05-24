@@ -1,11 +1,12 @@
 from typing import TYPE_CHECKING
 
 from django.db import models
-from django.db.models import Manager
+from django.db.models import Manager, Sum
 from django.utils.translation import gettext_lazy as _
 
 from checkpoints.utils import (
     calculate_current_points,
+    calculate_grade,
     calculate_points,
     calculate_total_points,
 )
@@ -15,7 +16,9 @@ from profiles.models import StudentProfile
 
 class CheckPoint(models.Model):
 
-    checkpoint_number = models.IntegerField(_("номер контрольной точки"))
+    checkpoint_number = models.IntegerField(
+        _("номер контрольной точки"),
+    )
     module = models.ForeignKey(
         Module,
         on_delete=models.CASCADE,
@@ -23,7 +26,17 @@ class CheckPoint(models.Model):
         verbose_name=_("модуль"),
     )
     name = models.TextField(_("название"), max_length=255)
+    total = models.IntegerField(_("всего"), null=True, blank=True)
     created_at = models.DateTimeField(_("дата создания"), auto_now_add=True)
+
+    def update_total(self):
+        self.total = (
+            self.questions.aggregate(
+                Sum("max_points"),
+            )["max_points__sum"]
+            or 0
+        )
+        self.save()
 
     class Meta:
         db_table = "checkpoints"
@@ -72,7 +85,12 @@ class PassedCheckPoint(models.Model):
         Create Summary for student.
         """
         self.points = calculate_points(self.student, self.checkpoint)
+        if self.checkpoint.total:
+            self.percent = (self.points / self.checkpoint.total) * 100
+        else:
+            self.percent = 0
         super().save(*args, **kwargs)
+
         summary = Summary.objects.filter(
             student=self.student,
             course=self.checkpoint.module.course,
@@ -120,4 +138,5 @@ class Summary(models.Model):
         """
         self.total = calculate_total_points(self.course)
         self.current_points = calculate_current_points(self.student, self.course)
+        self.grade = calculate_grade(self.current_points, self.total)
         super().save(*args, **kwargs)

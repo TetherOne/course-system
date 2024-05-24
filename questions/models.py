@@ -30,6 +30,10 @@ class Question(models.Model):
     def __str__(self):
         return f"{self.question_text}"
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.checkpoint.update_total()
+
 
 class Answer(models.Model):
 
@@ -59,6 +63,27 @@ class Answer(models.Model):
         return f"{self.answer_text}"
 
 
+class QuestionFile(models.Model):
+
+    question = models.ForeignKey(
+        Question,
+        on_delete=models.CASCADE,
+        related_name="question_images",
+        verbose_name=_("вопрос"),
+    )
+    file = models.FileField(
+        _("файл с вопросом"),
+        null=True,
+        upload_to=question_file_directory_path,
+        blank=True,
+    )
+
+    class Meta:
+        db_table = "question_files"
+        verbose_name = _("файл вопроса")
+        verbose_name_plural = _("файлы вопросов")
+
+
 class AnswerFile(models.Model):
 
     answer = models.ForeignKey(
@@ -78,24 +103,3 @@ class AnswerFile(models.Model):
         db_table = "answer_files"
         verbose_name = _("файл ответа")
         verbose_name_plural = _("файлы ответов")
-
-
-class QuestionFile(models.Model):
-
-    question = models.ForeignKey(
-        Question,
-        on_delete=models.CASCADE,
-        related_name="question_images",
-        verbose_name=_("вопрос"),
-    )
-    question_file = models.FileField(
-        _("файл с вопросом"),
-        null=True,
-        upload_to=question_file_directory_path,
-        blank=True,
-    )
-
-    class Meta:
-        db_table = "question_files"
-        verbose_name = _("файл вопроса")
-        verbose_name_plural = _("файлы вопросов")

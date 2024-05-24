@@ -25,6 +25,7 @@
             "#src/*": [
                 "./src/*.ts",
                 "./src/*.vue",
+                "./src/*.css",
                 "./src/*.scss"
             ],
             "#styles/*": [

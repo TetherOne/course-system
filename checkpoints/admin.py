@@ -19,6 +19,7 @@ class CheckPointAdmin(admin.ModelAdmin):
         "name",
         "course_name",
         "module_name",
+        "total",
     )
     list_display_links = "id", "name"
     search_fields = ("name",)

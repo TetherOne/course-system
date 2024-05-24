@@ -1,17 +1,53 @@
 from rest_framework import serializers
 
-from questions.models import Answer, Question
+from questions.models import Answer, AnswerFile, Question, QuestionFile
+
+
+class QuestionFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionFile
+        fields = ("id", "question", "file")
+
+
+class AnswerFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AnswerFile
+        fields = ("id", "answer", "answer_file")
 
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        exclude = ("is_correct",)
+        fields = (
+            "id",
+            "answer_text",
+            "is_correct",
+            "question",
+        )
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        user = self.context["request"].user
+
+        if (
+            hasattr(
+                user,
+                "student_profile",
+            )
+            and not user.student_profile.is_teacher
+        ):
+            representation.pop("is_correct")
+
+        return representation
 
 
 class QuestionSerializer(serializers.ModelSerializer):
 
     answers = AnswerSerializer(
+        many=True,
+        read_only=True,
+    )
+    question_files = QuestionFileSerializer(
         many=True,
         read_only=True,
     )

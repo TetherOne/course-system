@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import Cookies from 'js-cookie';
 
 import {
     Student,
@@ -13,7 +14,7 @@ import {
     Question,
     Answer,
     QuestionChoice,
-    CurrentUser
+    CurrentUser, QuestionFile
 } from '#types';
 
 
@@ -43,16 +44,19 @@ const questionAppURL: string = `${API_URL}/questionapp`;
 
 const questionsURL: string = `${questionAppURL}/questions/`;
 const answersURL: string = `${questionAppURL}/answers/`;
+const questionsFilesURL: string = `${questionAppURL}/question-files/`;
 
 const historyURL: string = `${API_URL}/history`;
 const questionsChoicesHistoryURL: string = `${historyURL}/history-of-passed-answers/`;
 
 const authAppURL: string = `${API_URL}/authapp`;
 
+const CSRF_URL: string = `${authAppURL}/csrf/`;
 const signInURL: string = `${authAppURL}/login/`;
 const signUpURL: string = `${authAppURL}/register/`;
 const signOutURL: string = `${authAppURL}/logout/`;
 const currentUserURL: string = `${authAppURL}/current-user/`;
+const resetPasswordURL: string = `${authAppURL}/password-reset/`;
 
 const standardConfig: AxiosRequestConfig = {
     params: {
@@ -105,7 +109,7 @@ export const userApp = {
         config.params.student = id;
         return (await axios.get(passedCheckpointsURL, config)).data;
     },
-    async getStudentGradeOnCheckpoint(studentId: number, checkpointId: number): Promise<number | '-'> {
+    async getStudentGradeOnCheckpoint(studentId: number, checkpointId: number, onlyScore?: boolean): Promise<number | '-'> {
         let passedCheckpoints: PassedCheckpoint[] = await this.studentPassedCheckpoints(studentId);
         passedCheckpoints = passedCheckpoints.filter(cp => cp.checkpoint === checkpointId);
 
@@ -114,6 +118,10 @@ export const userApp = {
         }
 
         const passedCheckpoint: PassedCheckpoint = passedCheckpoints[0];
+
+        if (onlyScore)
+            return passedCheckpoint.points;
+
         const checkpoint: Checkpoint = await checkpointApp.checkpoint(checkpointId);
         let maxPoints: number = 0;
         for (const question of checkpoint.questions) {
@@ -178,15 +186,18 @@ export const courseApp = {
         const checkpoints: Checkpoint[] = await this.courseCheckpoints(id);
         return checkpoints.length;
     },
-    async addCourse(course_name: string, description: string, teacher_profile: number, password: string): Promise<Course> {
+    async addCourse(course_name: string, description: string, teacher_profile: number): Promise<Course> {
         return (await axios.postForm(coursesURL, {
             course_name,
             description,
             status: true,
             teacher_profile,
-            image: '',
-            password
+            image: ''
         })).data;
+    },
+    async updateCourse(id: number, newFields: Partial<Course>): Promise<Course> {
+        const URL: string = `${coursesURL}${id}/`;
+        return (await axios.patchForm(URL, newFields)).data;
     },
     async deleteCourse(id: number): Promise<void> {
         await axios.delete(`${coursesURL}${id}/`);
@@ -210,6 +221,9 @@ export const courseApp = {
             course,
             status: true
         })).data;
+    },
+    async deleteModule(id: number): Promise<void> {
+        await axios.delete(`${modulesURL}${id}/`);
     },
     async lesson(id: number): Promise<Lesson> {
         return await getEntity(lessonsURL, id);
@@ -269,10 +283,26 @@ export const questionApp = {
         })).data;
     },
     async addAnswer(answer_text: string, is_correct: boolean, question: number): Promise<Answer> {
-        return (await axios.postForm(answersURL, {
+        const createdAnswer: Answer = (await axios.post(answersURL, {
             answer_text,
             is_correct,
             question
+        })).data;
+        //return await this.changeAnswer(createdAnswer.id, { is_correct });
+        return createdAnswer;
+    },
+    async changeAnswer(id: number, newProperties: Partial<Answer> & { is_correct: boolean }): Promise<Answer> {
+        return (await axios.patch(`${answersURL}${id}/`, newProperties, standardConfig)).data;
+    },
+    async getQuestionFiles(id: number): Promise<QuestionFile[]> {
+        const config: AxiosRequestConfig = structuredClone(standardConfig);
+        config.params.question = id;
+        return (await axios.get(questionsFilesURL, config)).data;
+    },
+    async addQuestionFile(file: File, question: number): Promise<QuestionFile> {
+        return (await axios.postForm(questionsFilesURL, {
+            question,
+            file
         })).data;
     }
 };
@@ -289,9 +319,16 @@ export const history = {
 };
 
 export const authApp = {
-    async userSignedIn(): Promise<boolean> {
+    async setCSRF_token(): Promise<void> {
+        await axios.get(CSRF_URL);
+        const token: string = Cookies.get('csrftoken') as string;
+        console.log(`CSRF token changed: ${token}`);
+        axios.defaults.headers.common['X-CSRFTOKEN'] = token;
+        axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
+    },
+    async isUserSignedIn(): Promise<boolean> {
         const currentUser: CurrentUser = await this.currentUser();
-        return !!currentUser.id;
+        return currentUser.id !== null;
     },
     async signIn(email: string, password: string): Promise<void> {
         await axios.postForm(signInURL, {
@@ -312,6 +349,9 @@ export const authApp = {
     },
     async currentUser(): Promise<CurrentUser> {
         return (await axios.get(currentUserURL)).data;
+    },
+    async passwordReset(email: string): Promise<any> {
+        return (await axios.postForm(resetPasswordURL, { email })).data;
     }
 };
 
@@ -327,10 +367,4 @@ export async function updateTeacher(id: number, updated: Teacher): Promise<Teach
     const response = await axios.patchForm(URL, updated);
     const data = response.data;
     return data;
-}
-
-export async function addStudentAvatar(filename: string, avatar: any) {
-    const URL: string = `/media/student-avatars/${filename}`;
-    const res = await axios.post(URL, avatar);
-    return res.data;
 }

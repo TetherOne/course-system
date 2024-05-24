@@ -18,6 +18,10 @@ body {
     box-sizing: border-box;
 }
 
+.spacer {
+    flex-grow: 1;
+}
+
 .flexRow {
     display: flex;
     gap: 10px;

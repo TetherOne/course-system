@@ -32,6 +32,7 @@ export type Course = Model & {
     description: string
     status: boolean
     image: string | null
+    course_password?: string
     teacher_profile: number
     teacherShortName?: string
     studentHasIt?: boolean
@@ -93,11 +94,17 @@ export type Question = Model & {
     max_points: number
     checkpoint: number
     chosenAnswer?: number
+    files?: QuestionFile[]
 }
 
 export type Answer = Model & {
     answer_text: string
     question: number
+}
+
+export type QuestionFile = Model & {
+    question: number
+    file: string
 }
 
 export type QuestionChoice = Model & {
