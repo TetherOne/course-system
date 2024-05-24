@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from questions.models import Answer, Question, QuestionFile, AnswerFile
+from questions.models import Answer, AnswerFile, Question, QuestionFile
 
 
 class QuestionFileSerializer(serializers.ModelSerializer):
