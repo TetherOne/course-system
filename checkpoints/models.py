@@ -85,7 +85,12 @@ class PassedCheckPoint(models.Model):
         Create Summary for student.
         """
         self.points = calculate_points(self.student, self.checkpoint)
+        if self.checkpoint.total:
+            self.percent = (self.points / self.checkpoint.total) * 100
+        else:
+            self.percent = 0
         super().save(*args, **kwargs)
+
         summary = Summary.objects.filter(
             student=self.student,
             course=self.checkpoint.module.course,
