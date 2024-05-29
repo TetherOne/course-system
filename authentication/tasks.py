@@ -15,7 +15,6 @@ def send_email_to_reset_password_task(
     to_email,
     html_email_template_name,
 ):
-
     subject = loader.render_to_string(
         subject_template_name,
         context,
@@ -46,7 +45,6 @@ def send_email_to_reset_password_task(
 
 @shared_task
 def send_email_after_registration_task(email):
-
     subject = "Вас приветствует scart сервис!"
     html_message = render_to_string(
         "authentication/after_registration.html",

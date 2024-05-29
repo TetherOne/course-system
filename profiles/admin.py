@@ -5,7 +5,6 @@ from profiles.models import StudentProfile, TeacherProfile
 
 @admin.register(TeacherProfile)
 class TeacherProfileAdmin(admin.ModelAdmin):
-
     list_display = (
         "id",
         "surname",
@@ -33,7 +32,6 @@ class TeacherProfileAdmin(admin.ModelAdmin):
 
 @admin.register(StudentProfile)
 class StudentProfileAdmin(admin.ModelAdmin):
-
     list_display = (
         "id",
         "surname",

@@ -13,7 +13,6 @@ class QuestionFileInline(admin.StackedInline):
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-
     inlines = [
         AnswerInline,
         QuestionFileInline,
@@ -66,7 +65,6 @@ class AnswerFileInLine(admin.StackedInline):
 
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
-
     inlines = [
         AnswerFileInLine,
     ]

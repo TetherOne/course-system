@@ -10,7 +10,6 @@ from checkpoints.serializers import (
 
 
 class CheckPointViewSet(ModelViewSet):
-
     queryset = CheckPoint.objects.prefetch_related(
         "questions",
         "module",
@@ -21,7 +20,6 @@ class CheckPointViewSet(ModelViewSet):
 
 
 class PassedCheckPointViewSet(ModelViewSet):
-
     queryset = PassedCheckPoint.objects.prefetch_related(
         "checkpoint",
         "student",
@@ -36,7 +34,6 @@ class PassedCheckPointViewSet(ModelViewSet):
 
 
 class SummaryViewSet(ModelViewSet):
-
     queryset = Summary.objects.prefetch_related(
         "student",
         "course",

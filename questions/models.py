@@ -9,7 +9,6 @@ from questions.utils import answer_file_directory_path, question_file_directory_
 
 
 class Question(models.Model):
-
     checkpoint = models.ForeignKey(
         CheckPoint,
         on_delete=models.CASCADE,
@@ -36,7 +35,6 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-
     question = models.ForeignKey(
         Question,
         on_delete=models.CASCADE,
@@ -64,7 +62,6 @@ class Answer(models.Model):
 
 
 class QuestionFile(models.Model):
-
     question = models.ForeignKey(
         Question,
         on_delete=models.CASCADE,
@@ -85,7 +82,6 @@ class QuestionFile(models.Model):
 
 
 class AnswerFile(models.Model):
-
     answer = models.ForeignKey(
         Answer,
         on_delete=models.CASCADE,

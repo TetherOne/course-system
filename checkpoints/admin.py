@@ -10,7 +10,6 @@ class QuestionInline(admin.StackedInline):
 
 @admin.register(CheckPoint)
 class CheckPointAdmin(admin.ModelAdmin):
-
     inlines = [
         QuestionInline,
     ]
@@ -45,7 +44,6 @@ class CheckPointAdmin(admin.ModelAdmin):
 
 @admin.register(PassedCheckPoint)
 class PassedCheckPointAdmin(admin.ModelAdmin):
-
     list_display = (
         "id",
         "student",
@@ -74,7 +72,6 @@ class PassedCheckPointAdmin(admin.ModelAdmin):
 
 @admin.register(Summary)
 class SummaryAdmin(admin.ModelAdmin):
-
     list_display = (
         "id",
         "student",

@@ -8,7 +8,6 @@ from history.serializers import HistoryOfSelectedAnswerSerializer
 
 
 class HistoryOfSelectedAnswerViewSet(ModelViewSet):
-
     queryset = HistoryOfSelectedAnswer.objects.prefetch_related(
         "student",
         "checkpoint",

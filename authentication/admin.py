@@ -6,7 +6,6 @@ from authentication.models import CustomUser
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-
     list_display = (
         "id",
         "username",

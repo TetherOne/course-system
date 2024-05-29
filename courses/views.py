@@ -41,7 +41,6 @@ class BasePermissionViewSet(ModelViewSet):
 
 
 class EnrollmentViewSet(ModelViewSet):
-
     queryset = Enrollment.objects.prefetch_related(
         "student",
         "course",
@@ -65,7 +64,6 @@ class EnrollmentViewSet(ModelViewSet):
 
 
 class CourseViewSet(ModelViewSet):
-
     queryset = Course.objects.prefetch_related(
         "teacher_profile",
     ).all()
@@ -80,7 +78,6 @@ class CourseViewSet(ModelViewSet):
 
 
 class ModuleViewSet(ModelViewSet):
-
     queryset = Module.objects.prefetch_related(
         "course",
     ).all()
@@ -93,7 +90,6 @@ class ModuleViewSet(ModelViewSet):
 
 
 class LessonViewSet(ModelViewSet):
-
     queryset = Lesson.objects.prefetch_related(
         "module",
     ).all()
@@ -103,7 +99,6 @@ class LessonViewSet(ModelViewSet):
 
 
 class LessonOtherFileViewSet(ModelViewSet):
-
     queryset = LessonOtherFile.objects.prefetch_related(
         "lesson",
     ).all()

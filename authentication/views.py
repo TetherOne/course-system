@@ -25,7 +25,6 @@ def send_csrf_token(req: HttpRequest) -> HttpResponse:
 
 
 class AboutMeView(TemplateView):
-
     template_name = "authentication/about_me.html"
 
 
@@ -35,15 +34,12 @@ def logout_view(request: HttpRequest) -> HttpResponse:
 
 
 class RegisterView(FormView):
-
     template_name = "authentication/register.html"
     form_class = CustomUserCreationForm
     success_url = reverse_lazy("authentication:about_me")
 
     def form_valid(self, form):
-
         user = form.save()
-
         if user:
             authenticated_user = authenticate(
                 username=user.email,
@@ -58,13 +54,11 @@ class RegisterView(FormView):
 
 
 class MyLoginView(LoginView):
-
     template_name = "authentication/login.html"
     redirect_authenticated_user = True
 
 
 class MyPasswordResetView(PasswordResetView):
-
     template_name = "authentication/password_reset_form.html"
     email_template_name = "authentication/password_reset_email.html"
     success_url = reverse_lazy("authentication:password_reset_done")
@@ -72,18 +66,15 @@ class MyPasswordResetView(PasswordResetView):
 
 
 class MyPasswordResetDoneView(PasswordResetDoneView):
-
     template_name = "authentication/password_reset_done.html"
 
 
 class MyPasswordResetConfirmView(PasswordResetConfirmView):
-
     template_name = "authentication/password_reset_confirm.html"
     success_url = reverse_lazy("authentication:password_reset_complete")
 
 
 class MyPasswordResetCompleteView(PasswordResetCompleteView):
-
     template_name = "authentication/password_reset_complete.html"
 
 

@@ -11,7 +11,6 @@ class CourseInline(admin.StackedInline):
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-
     inlines = [
         CourseInline,
     ]
@@ -47,7 +46,6 @@ class CheckpointInline(admin.TabularInline):
 
 @admin.register(Module)
 class ModuleAdmin(admin.ModelAdmin):
-
     inlines = [
         LessonInline,
         CheckpointInline,
@@ -75,7 +73,6 @@ class LessonOtherFileInline(admin.StackedInline):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-
     inlines = [
         LessonOtherFileInline,
     ]
@@ -104,7 +101,6 @@ class LessonAdmin(admin.ModelAdmin):
 
 @admin.register(LessonOtherFile)
 class LessonOtherFileAdmin(admin.ModelAdmin):
-
     list_display = (
         "id",
         "lesson",
@@ -119,7 +115,6 @@ class LessonOtherFileAdmin(admin.ModelAdmin):
 
 @admin.register(Enrollment)
 class EnrollmentAdmin(admin.ModelAdmin):
-
     list_display = (
         "id",
         "student",

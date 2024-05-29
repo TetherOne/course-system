@@ -12,7 +12,6 @@ from profiles.serializers import (
 
 
 class UserViewSet(ModelViewSet):
-
     queryset = CustomUser.objects.all()
     serializer_class = UserRegistrationSerializer
     permission_classes = [IsOwnerOrReadOnly]
@@ -22,7 +21,6 @@ class UserViewSet(ModelViewSet):
 
 
 class TeacherProfileViewSet(ModelViewSet):
-
     queryset = TeacherProfile.objects.select_related("user").all()
     serializer_class = TeacherSerializer
     filter_backends = [DjangoFilterBackend]
@@ -31,7 +29,6 @@ class TeacherProfileViewSet(ModelViewSet):
 
 
 class StudentProfileViewSet(ModelViewSet):
-
     queryset = StudentProfile.objects.select_related("user").all()
     serializer_class = StudentSerializer
     filter_backends = [DjangoFilterBackend]

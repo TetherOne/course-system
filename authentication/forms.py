@@ -21,7 +21,6 @@ class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField()
 
     class Meta:
-
         model = CustomUser
         fields = [
             "username",
@@ -38,7 +37,6 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields.pop("password2")
 
     def save(self, commit=True):
-
         user = super(
             CustomUserCreationForm,
             self,
@@ -75,7 +73,6 @@ class CustomPasswordResetForm(PasswordResetForm):
         to_email,
         html_email_template_name=None,
     ):
-
         context_dict = {
             "user_email": context["user"].email,
             "domain": context["domain"],
@@ -105,9 +102,7 @@ class CustomPasswordResetForm(PasswordResetForm):
         html_email_template_name=None,
         extra_email_context=None,
     ):
-
         email = self.cleaned_data["email"]
-
         if not domain_override:
             current_site = get_current_site(request)
             site_name = current_site.name

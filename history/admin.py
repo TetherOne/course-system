@@ -5,7 +5,6 @@ from history.models import HistoryOfSelectedAnswer
 
 @admin.register(HistoryOfSelectedAnswer)
 class HistoryOfSelectedAnswerAdmin(admin.ModelAdmin):
-
     list_display = (
         "student",
         "checkpoint",

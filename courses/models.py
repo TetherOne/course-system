@@ -46,7 +46,6 @@ class Enrollment(models.Model):
 
 
 class Course(models.Model):
-
     course_name = models.CharField(
         _("название курса"),
         max_length=100,
@@ -102,7 +101,6 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
-
     name = models.CharField(
         _("название"),
         max_length=100,
@@ -143,7 +141,6 @@ class Lesson(models.Model):
 
 
 class LessonOtherFile(models.Model):
-
     lesson = models.ForeignKey(
         Lesson,
         on_delete=models.CASCADE,
@@ -167,7 +164,6 @@ class LessonOtherFile(models.Model):
 
 
 class Module(models.Model):
-
     name = models.CharField(
         _("название"),
         max_length=100,

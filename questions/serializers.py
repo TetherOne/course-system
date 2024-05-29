@@ -6,13 +6,21 @@ from questions.models import Answer, AnswerFile, Question, QuestionFile
 class QuestionFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionFile
-        fields = ("id", "question", "file")
+        fields = (
+            "id",
+            "question",
+            "file",
+        )
 
 
 class AnswerFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = AnswerFile
-        fields = ("id", "answer", "answer_file")
+        fields = (
+            "id",
+            "answer",
+            "answer_file",
+        )
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -42,7 +50,6 @@ class AnswerSerializer(serializers.ModelSerializer):
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-
     answers = AnswerSerializer(
         many=True,
         read_only=True,

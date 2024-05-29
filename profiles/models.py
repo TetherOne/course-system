@@ -8,7 +8,6 @@ from authentication.models import CustomUser
 
 
 class TeacherProfile(models.Model):
-
     name = models.CharField(_("имя"), max_length=100, blank=True, null=True)
     surname = models.CharField(_("фамилия"), max_length=100, blank=True, null=True)
     father_name = models.CharField(_("отчество"), max_length=100, blank=True, null=True)
@@ -41,7 +40,6 @@ class TeacherProfile(models.Model):
 
 
 class StudentProfile(models.Model):
-
     name = models.CharField(_("имя"), max_length=100, blank=True, null=True)
     surname = models.CharField(_("фамилия"), max_length=100, blank=True, null=True)
     father_name = models.CharField(_("отчество"), max_length=100, blank=True, null=True)

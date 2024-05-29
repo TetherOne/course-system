@@ -15,7 +15,6 @@ from profiles.models import StudentProfile
 
 
 class CheckPoint(models.Model):
-
     checkpoint_number = models.IntegerField(
         _("номер контрольной точки"),
     )
@@ -51,7 +50,6 @@ class CheckPoint(models.Model):
 
 
 class PassedCheckPoint(models.Model):
-
     student = models.ForeignKey(
         StudentProfile,
         on_delete=models.SET_NULL,
@@ -104,7 +102,6 @@ class PassedCheckPoint(models.Model):
 
 
 class Summary(models.Model):
-
     student = models.ForeignKey(
         StudentProfile,
         on_delete=models.SET_NULL,

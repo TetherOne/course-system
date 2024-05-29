@@ -6,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 
 
 class HistoryOfSelectedAnswer(models.Model):
-
     student = models.ForeignKey(
         "profiles.StudentProfile",
         on_delete=models.SET_NULL,

@@ -12,7 +12,6 @@ from questions.serializers import (
 
 
 class QuestionFileViewSet(ModelViewSet):
-
     queryset = QuestionFile.objects.all()
     serializer_class = QuestionFileSerializer
     filter_backends = [DjangoFilterBackend]
@@ -20,7 +19,6 @@ class QuestionFileViewSet(ModelViewSet):
 
 
 class AnswerFileViewSet(ModelViewSet):
-
     queryset = AnswerFile.objects.all()
     serializer_class = AnswerFileSerializer
     filter_backends = [DjangoFilterBackend]
@@ -28,7 +26,6 @@ class AnswerFileViewSet(ModelViewSet):
 
 
 class QuestionViewSet(ModelViewSet):
-
     queryset = Question.objects.prefetch_related(
         "checkpoint",
         "question_file",
@@ -40,7 +37,6 @@ class QuestionViewSet(ModelViewSet):
 
 
 class AnswerViewSet(ModelViewSet):
-
     queryset = Answer.objects.prefetch_related(
         "question",
     ).all()
