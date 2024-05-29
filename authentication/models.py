@@ -7,7 +7,6 @@ from django.utils.translation import gettext_lazy as _
 
 
 class CustomUser(AbstractUser):
-
     email = models.EmailField(_("почта"), unique=True)
     username = models.CharField(_("никнейм"), max_length=30, unique=True)
 
