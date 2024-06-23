@@ -6,12 +6,8 @@ services:
       - "8000:8000"
     volumes:
       - .:/course_system
-    environment:
-      - DB_HOST=database
-      - DB_NAME=course-db
-      - DB_USER=postgres
-      - DB_PASSWORD=qwerty
-      - DB_PORT=5432
+    env_file:
+      - ./envs/db.env
     command: >
       sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     depends_on:
@@ -23,10 +19,8 @@ services:
   database:
     image: postgres:15
     restart: always
-    environment:
-      - POSTGRES_DB=course-db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=qwerty
+    env_file:
+      - ./envs/db.env
 
   redis:
     image: redis:7
@@ -38,8 +32,8 @@ services:
     restart: on-failure
     healthcheck:
       test: rabbitmq-diagnostics -q ping
-      interval: 30s
-      timeout: 30s
+      interval: 5s
+      timeout: 5s
       retries: 3
     ports:
       - "15672:15672"
