@@ -13,4 +13,4 @@ and improved interaction between teacher and student, namely automatic testing o
 - Redis
 - RabbitMQ
 - Celery
-- Black, Flake8
+- Black, Autoflake
