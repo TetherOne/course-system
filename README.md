@@ -1,5 +1,5 @@
 # Course management system
-### Description of the project
+### Description
 The idea of ​​the project is to create an educational platform,
 which will provide courses on various topics.
 Unlike existing analogues such as Moodle,
