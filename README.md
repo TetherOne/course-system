@@ -11,6 +11,5 @@ and improved interaction between teacher and student, namely automatic testing o
 - Vue.js
 - PostgreSQL
 - Redis
-- RabbitMQ
-- Celery
+- Celety + RabbitMQ
 - Black, Autoflake
